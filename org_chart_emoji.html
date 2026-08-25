@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>組織架構圖產生器 (Emoji & 文字圖示版)</title>
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", "Microsoft JhengHei", "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", sans-serif; }
+    body { background-color: #eef2f6; padding: 30px 20px; color: #334155; }
+
+    /* 控制面板區 */
+    .control-panel {
+      max-width: 1200px;
+      margin: 0 auto 30px auto;
+      background: #ffffff;
+      padding: 24px 30px;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .panel-header h2 { font-size: 19px; color: #1e293b; display: flex; align-items: center; gap: 8px; }
+    .btn-export {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 10px rgba(37,99,235,0.25);
+      transition: all 0.2s ease;
+    }
+    .btn-export:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(37,99,235,0.35); }
+
+    /* 提示小工具列 */
+    .emoji-tips {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #1e40af;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+    .emoji-shortcuts {
+      display: inline-flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .emoji-tag {
+      background: #ffffff;
+      border: 1px solid #93c5fd;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .emoji-tag:hover { background: #dbeafe; }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr 2fr;
+      gap: 12px;
+      margin-bottom: 18px;
+      align-items: end;
+    }
+    .input-row label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #64748b;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .input-row input {
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%;
+      background: #f8fafc;
+    }
+    .input-row input:focus { outline: none; border-color: #3b82f6; background: #fff; }
+
+    /* 各組編輯卡片 */
+    .groups-editor {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .group-edit-card {
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .group-edit-header {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .group-edit-header input.icon-input {
+      width: 44px;
+      text-align: center;
+      font-size: 18px;
+      padding: 5px;
+    }
+    .group-edit-header input.name-input {
+      flex: 1;
+      font-weight: bold;
+    }
+    .group-edit-card input {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 12px;
+      background: #fff;
+    }
+
+    /* 細項業務編輯列表 */
+    .items-edit-container {
+      max-height: 270px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-right: 4px;
+    }
+    .item-edit-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .item-edit-row input.item-icon-input {
+      width: 38px;
+      text-align: center;
+      font-size: 15px;
+      padding: 6px 2px;
+      flex-shrink: 0;
+    }
+    .item-edit-row input.item-text-input { flex: 1; }
+    .btn-del {
+      background: #fee2e2;
+      color: #ef4444;
+      border: 1px solid #fecaca;
+      padding: 6px 9px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .btn-del:hover { background: #fca5a5; color: #fff; }
+    .btn-add-item {
+      background: #e2e8f0;
+      border: none;
+      padding: 7px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #334155;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .btn-add-item:hover { background: #cbd5e1; }
+
+    /* ================= 組織架構圖繪製區 (高精度排版) ================= */
+    .canvas-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow-x: auto;
+      background: #eef2f6;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 真正被擷取的畫布 */
+    #org_chart {
+      width: 1160px;
+      background: #ffffff;
+      padding: 40px 45px 35px 45px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    /* 頂部大標題 */
+    .chart-title {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 800;
+      color: #243c68;
+      letter-spacing: 6px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+    .chart-title .line {
+      display: inline-block;
+      width: 45px;
+      height: 3px;
+      background: #cbd5e1;
+      border-radius: 2px;
+    }
+
+    /* 頂層機構 (處室膠囊) */
+    .top-node-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0px;
+    }
+    .top-node {
+      background: #ffffff;
+      border: 1.8px solid #dbeafe;
+      padding: 10px 32px;
+      border-radius: 35px;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.08);
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff;
+    }
+    .top-node .icon-box {
+      width: 46px;
+      height: 46px;
+      background: #eff6ff;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+    .top-node .text-box { text-align: left; }
+    .top-node .text-box h3 { font-size: 20px; color: #1e3a8a; font-weight: 700; margin-bottom: 2px; }
+    .top-node .text-box p { font-size: 12.5px; color: #64748b; font-weight: 500; }
+
+    /* SVG 精準樹狀連接線 */
+    .connector-svg-container {
+      width: 100%;
+      height: 60px;
+      display: block;
+    }
+
+    /* 4 組卡片容器 */
+    .groups-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .group-card {
+      border-radius: 16px;
+      border: 1.5px solid;
+      padding: 0 16px 20px 16px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 卡片懸浮圖示 (支援 Emoji) */
+    .group-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      margin-top: -28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    }
+
+    /* 組名與副標題 */
+    .group-header {
+      text-align: center;
+      margin: 12px 0 12px 0;
+      width: 100%;
+    }
+    .group-header-badge {
+      display: inline-block;
+      padding: 5px 16px;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 5px;
+    }
+    .group-sub-title {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.25;
+      min-height: 28px;
+    }
+
+    /* 業務細項清單 (支援 Emoji) */
+    .items-list {
+      width: 100%;
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #334155;
+      line-height: 1.4;
+    }
+    .item-row .emoji-icon {
+      font-size: 14px;
+      width: 18px;
+      text-align: center;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+
+    /* 底部標語 */
+    .chart-footer {
+      margin-top: 35px;
+      padding-top: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 13.5px;
+      color: #334155;
+      font-weight: 600;
+    }
+    .chart-footer .footer-icon { font-size: 18px; }
+
+    /* 主題色系樣式 */
+    .theme-blue { border-color: #bfdbfe; background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 22%); }
+    .theme-blue .group-icon, .theme-blue .group-header-badge { background: #3b82f6; }
+    .theme-blue .group-sub-title { color: #2563eb; }
+
+    .theme-green { border-color: #bbf7d0; background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 22%); }
+    .theme-green .group-icon, .theme-green .group-header-badge { background: #22c55e; }
+    .theme-green .group-sub-title { color: #16a34a; }
+
+    .theme-purple { border-color: #e9d5ff; background: linear-gradient(180deg, #faf5ff 0%, #ffffff 22%); }
+    .theme-purple .group-icon, .theme-purple .group-header-badge { background: #8b5cf6; }
+    .theme-purple .group-sub-title { color: #7c3aed; }
+
+    .theme-orange { border-color: #fed7aa; background: linear-gradient(180deg, #fff7ed 0%, #ffffff 22%); }
+    .theme-orange .group-icon, .theme-orange .group-header-badge { background: #f97316; }
+    .theme-orange .group-sub-title { color: #ea580c; }
+  </style>
+</head>
+<body>
+
+  <!-- 控制面板 -->
+  <div class="control-panel">
+    <div class="panel-header">
+      <h2>⚙️ 組織架構資料與 Emoji 圖示編輯器</h2>
+      <button class="btn-export" onclick="exportToImage()">
+        📥 匯出高清組織架構圖 (PNG)
+      </button>
+    </div>
+
+    <!-- Emoji 輸入提示 -->
+    <div class="emoji-tips">
+      <span>💡 <strong>打字輸入 Icon 秘訣：</strong> Windows 按 <code>Win + .</code> (句點) ｜ Mac 按 <code>Command + Control + 空白鍵</code> 即可召喚表情符號鍵盤！</span>
+      <div class="emoji-shortcuts">
+        <span>常用速選：</span>
+        <span class="emoji-tag" onclick="copyEmoji('📄')">📄</span>
+        <span class="emoji-tag" onclick="copyEmoji('📂')">📂</span>
+        <span class="emoji-tag" onclick="copyEmoji('📋')">📋</span>
+        <span class="emoji-tag" onclick="copyEmoji('🎓')">🎓</span>
+        <span class="emoji-tag" onclick="copyEmoji('📖')">📖</span>
+        <span class="emoji-tag" onclick="copyEmoji('💡')">💡</span>
+        <span class="emoji-tag" onclick="copyEmoji('🖨️')">🖨️</span>
+        <span class="emoji-tag" onclick="copyEmoji('💰')">💰</span>
+        <span class="emoji-tag" onclick="copyEmoji('📢')">📢</span>
+        <span class="emoji-tag" onclick="copyEmoji('👥')">👥</span>
+        <span class="emoji-tag" onclick="copyEmoji('🏛️')">🏛️</span>
+        <span class="emoji-tag" onclick="copyEmoji('🏅')">🏅</span>
+        <span class="emoji-tag" onclick="copyEmoji('📝')">📝</span>
+      </div>
+    </div>
+    
+    <div class="input-row">
+      <div>
+        <label>處室圖示：</label>
+        <input type="text" id="ipt-top-icon" value="🏛️" style="text-align:center; font-size:18px;" oninput="updateChart()">
+      </div>
+      <div>
+        <label>處室名稱：</label>
+        <input type="text" id="ipt-top-name" value="教務處" oninput="updateChart()">
+      </div>
+      <div>
+        <label>英文名稱：</label>
+        <input type="text" id="ipt-top-en" value="Office of Academic Affairs" oninput="updateChart()">
+      </div>
+      <div>
+        <label>底部標語/備註：</label>
+        <input type="text" id="ipt-footer-text" value="本處各組分工合作，致力於提升教學品質與學生學習成效，實踐卓越的教育服務。" oninput="updateChart()">
+      </div>
+    </div>
+
+    <!-- 各組編輯欄位 -->
+    <div class="groups-editor" id="groups-editor-container"></div>
+  </div>
+
+  <!-- 組織圖展示與擷取區域 -->
+  <div class="canvas-wrapper">
+    <div id="org_chart">
+      <div class="chart-title">
+        <div class="line"></div> 組 織 架 構 <div class="line"></div>
+      </div>
+
+      <!-- 頂部處室卡片 -->
+      <div class="top-node-wrapper">
+        <div class="top-node">
+          <div class="icon-box" id="view-top-icon">🏛️</div>
+          <div class="text-box">
+            <h3 id="view-top-name">教務處</h3>
+            <p id="view-top-en">(Office of Academic Affairs)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SVG 精準連接線 -->
+      <svg class="connector-svg-container" viewBox="0 0 1070 60" preserveAspectRatio="none">
+        <line x1="535" y1="0" x2="535" y2="30" stroke="#94a3b8" stroke-width="2" />
+        <line x1="133.75" y1="30" x2="936.25" y2="30" stroke="#94a3b8" stroke-width="2" />
+        <line x1="133.75" y1="30" x2="133.75" y2="60" stroke="#94a3b8" stroke-width="2" />
+        <line x1="401.25" y1="30" x2="401.25" y2="60" stroke="#94a3b8" stroke-width="2" />
+        <line x1="668.75" y1="30" x2="668.75" y2="60" stroke="#94a3b8" stroke-width="2" />
+        <line x1="936.25" y1="30" x2="936.25" y2="60" stroke="#94a3b8" stroke-width="2" />
+      </svg>
+
+      <!-- 4 組卡片容器 -->
+      <div class="groups-container" id="groups-container"></div>
+
+      <!-- 底部標語 -->
+      <div class="chart-footer">
+        <span class="footer-icon">💡</span>
+        <span id="view-footer-text">本處各組分工合作，致力於提升教學品質與學生學習成效，實踐卓越的教育服務。</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 初始資料：全面改用直接文字輸入的 Emoji / 符號
+    let orgData = [
+      {
+        theme: 'theme-blue',
+        icon: '📋',
+        name: '註冊課務組',
+        en: 'Registration & Curriculum Division',
+        items: [
+          { icon: '📄', text: '總量報部' },
+          { icon: '📂', text: '學籍事務' },
+          { icon: '📝', text: '選課業務' },
+          { icon: '🏅', text: '學分管理' },
+          { icon: '🪪', text: '證件業務' },
+          { icon: '👤', text: '學習輔導' },
+          { icon: '🎓', text: '畢業審查' }
+        ]
+      },
+      {
+        theme: 'theme-green',
+        icon: '📖',
+        name: '教學組',
+        en: 'Academic Development Division',
+        items: [
+          { icon: '📄', text: '教學業務' },
+          { icon: '📋', text: '評量業務' },
+          { icon: '🏅', text: '評鑑業務' },
+          { icon: '💡', text: '教學創新' },
+          { icon: '🖨️', text: '試卷印製' }
+        ]
+      },
+      {
+        theme: 'theme-purple',
+        icon: '🎓',
+        name: '研究生教務組',
+        en: 'Graduate Academic Affairs Division',
+        items: [
+          { icon: '🪪', text: '研究所教務相關業務' },
+          { icon: '👤', text: '預修生甄選' },
+          { icon: '🎓', text: '逕修讀博士班甄選' },
+          { icon: '💰', text: '研究生獎助金' },
+          { icon: '👥', text: '研究生教學助理TA' },
+          { icon: '📖', text: '校級課程規劃與推動' }
+        ]
+      },
+      {
+        theme: 'theme-orange',
+        icon: '👥',
+        name: '招生組',
+        en: 'Admissions Division',
+        items: [
+          { icon: '📢', text: '大學繁星推薦' },
+          { icon: '📢', text: '大學申請入學' },
+          { icon: '📢', text: '大學分發入學' },
+          { icon: '📢', text: '四技二專聯合甄選' },
+          { icon: '👤', text: '身心障礙學生申請入學' },
+          { icon: '🏅', text: '運動績優生甄試' },
+          { icon: '🎓', text: '碩士班甄試招生' },
+          { icon: '🎓', text: '博士班甄試招生' },
+          { icon: '📢', text: '國內招生宣傳' }
+        ]
+      }
+    ];
+
+    function init() {
+      renderEditor();
+      renderChart();
+    }
+
+    // 複製 Emoji 快速填入
+    function copyEmoji(emoji) {
+      navigator.clipboard.writeText(emoji);
+      alert(`已複製圖示「${emoji}」，可直接貼上到任何 Icon 輸入格！`);
+    }
+
+    // 渲染上方編輯面板
+    function renderEditor() {
+      const editor = document.getElementById('groups-editor-container');
+      editor.innerHTML = '';
+
+      orgData.forEach((g, gIdx) => {
+        const itemsEditHtml = g.items.map((item, iIdx) => `
+          <div class="item-edit-row">
+            <input type="text" class="item-icon-input" value="${item.icon}" oninput="updateItemIcon(${gIdx}, ${iIdx}, this.value)" title="輸入 Emoji 或文字符號">
+            <input type="text" class="item-text-input" value="${item.text}" oninput="updateItemText(${gIdx}, ${iIdx}, this.value)" placeholder="業務名稱">
+            <button class="btn-del" onclick="deleteItem(${gIdx}, ${iIdx})" title="刪除">✕</button>
+          </div>
+        `).join('');
+
+        editor.innerHTML += `
+          <div class="group-edit-card">
+            <strong>組別 ${gIdx + 1}</strong>
+            <div class="group-edit-header">
+              <input type="text" class="icon-input" value="${g.icon}" oninput="updateGroupIcon(${gIdx}, this.value)" title="組別大圖示 (直接輸入 Emoji)">
+              <input type="text" class="name-input" value="${g.name}" oninput="updateGroupName(${gIdx}, this.value)" placeholder="組別名稱">
+            </div>
+            <input type="text" value="${g.en}" oninput="updateGroupEn(${gIdx}, this.value)" placeholder="英文名稱">
+            
+            <label style="font-size:11px; color:#64748b; margin-top:2px;">業務細項 [圖示 / 業務名稱]：</label>
+            <div class="items-edit-container">
+              ${itemsEditHtml}
+            </div>
+            <button class="btn-add-item" onclick="addItem(${gIdx})">➕ 新增細項</button>
+          </div>
+        `;
+      });
+    }
+
+    // 渲染組織圖
+    function renderChart() {
+      const container = document.getElementById('groups-container');
+      container.innerHTML = '';
+
+      orgData.forEach(g => {
+        const itemsHtml = g.items
+          .filter(t => t.text.trim() !== '')
+          .map(item => `
+            <div class="item-row">
+              <span class="emoji-icon">${item.icon || '•'}</span>
+              <span>${item.text}</span>
+            </div>
+          `).join('');
+
+        container.innerHTML += `
+          <div class="group-card ${g.theme}">
+            <div class="group-icon">${g.icon || '📌'}</div>
+            <div class="group-header">
+              <div class="group-header-badge">${g.name}</div>
+              <div class="group-sub-title">${g.en}</div>
+            </div>
+            <div class="items-list">
+              ${itemsHtml}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function updateGroupName(gIdx, val) { orgData[gIdx].name = val; renderChart(); }
+    function updateGroupEn(gIdx, val) { orgData[gIdx].en = val; renderChart(); }
+    function updateGroupIcon(gIdx, val) { orgData[gIdx].icon = val; renderChart(); }
+    function updateItemText(gIdx, iIdx, val) { orgData[gIdx].items[iIdx].text = val; renderChart(); }
+    function updateItemIcon(gIdx, iIdx, val) { orgData[gIdx].items[iIdx].icon = val; renderChart(); }
+
+    function addItem(gIdx) {
+      orgData[gIdx].items.push({ icon: '📄', text: '新業務項目' });
+      renderEditor();
+      renderChart();
+    }
+
+    function deleteItem(gIdx, iIdx) {
+      orgData[gIdx].items.splice(iIdx, 1);
+      renderEditor();
+      renderChart();
+    }
+
+    function updateChart() {
+      document.getElementById('view-top-icon').textContent = document.getElementById('ipt-top-icon').value || '🏛️';
+      document.getElementById('view-top-name').textContent = document.getElementById('ipt-top-name').value;
+      document.getElementById('view-top-en').textContent = `(${document.getElementById('ipt-top-en').value})`;
+      document.getElementById('view-footer-text').textContent = document.getElementById('ipt-footer-text').value;
+    }
+
+    // 匯出高解析 PNG
+    function exportToImage() {
+      const chartElement = document.getElementById('org_chart');
+      
+      html2canvas(chartElement, {
+        scale: 2.5,
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 1200
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `組織架構圖_${new Date().toISOString().slice(0, 10)}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
