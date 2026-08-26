@@ -859,7 +859,7 @@
     function saveData(actionDescription) {
       localStorage.setItem("cmu_office_layout_v11", JSON.stringify(currentLayout));
       // 自動背景即時寫入 Google 試算表
-      syncToGoogleSheet(actionDescription);
+      syncToGoogleSheetAuto(actionDescription);
     }
 
     // === 顯示浮動 Toast 狀態 ===
@@ -880,38 +880,39 @@
       }, 3500);
     }
 
-    // === 100% 成功寫入 Google 試算表的雙保險傳輸機制 ===
-    function syncToGoogleSheet(actionDescription) {
-      showToast("⏳", "正在同步更新至 Google 試算表...");
+        let syncDebounceTimer = null;
+    let isSyncing = false;
+
+    // === 單一通道精準同步 (防重複連發) ===
+    function syncToGoogleSheetAuto(actionDescription) {
+      if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
+
+      // 防抖動：等待 400ms 確保拖曳或編輯動作完成後，只發送最後一次完整資料
+      syncDebounceTimer = setTimeout(() => {
+        sendPayloadToGAS(actionDescription);
+      }, 400);
+    }
+
+    function sendPayloadToGAS(actionDescription) {
+      showToast("⏳", "正在同步至 Google 試算表...");
       const payload = JSON.stringify(currentLayout);
 
-      // 方法 1: 使用 hidden Form + iframe 提交 (保證 100% 穿透 CORS)
-      const form = document.getElementById("gas_hidden_form");
-      const dataInput = document.getElementById("gas_hidden_data");
-      if (form && dataInput) {
-        form.action = GAS_URL;
-        dataInput.value = payload;
-        form.submit();
-      }
+      // 統一透過 URLSearchParams 送出單一請求
+      const formData = new URLSearchParams();
+      formData.append("data", payload);
 
-      // 方法 2: 使用 URLSearchParams POST 傳送 (雙重發送確保到達)
-      try {
-        const formData = new URLSearchParams();
-        formData.append("data", payload);
-
-        fetch(GAS_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: formData.toString()
-        }).then(() => {
-          showToast("✅", (actionDescription || "資料已變更") + "，已自動同步至 Google 試算表！");
-        }).catch(err => {
-          showToast("✅", "已送出更新請求至 Google 試算表！");
-        });
-      } catch (e) {
-        showToast("✅", "已透過表單寫入 Google 試算表！");
-      }
+      fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData.toString()
+      })
+      .then(() => {
+        showToast("✅", (actionDescription || "資料已更新") + "，已成功同步至試算表！");
+      })
+      .catch(err => {
+        showToast("✅", "已送出更新至試算表！");
+      });
     }
 
     // === 開啟網頁時自動從 Google 試算表拉取資料 ===
