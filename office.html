@@ -652,10 +652,8 @@
 
     <!-- 提示操作說明與即時同步狀態 -->
     <div class="instruction-bar">
-      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 即可編輯。點擊<strong>「💾 儲存並同步更新」</strong>後，網頁與 Google 試算表將會<strong>自動同步更新</strong>！</span>
-      <div class="sync-status" id="syncStatusIndicator" title="點擊可設定/檢測 Google 試算表 API 網址" onclick="openSheetModal()" style="cursor:pointer;">
-        <span id="syncStatusDot">🟢</span> <span id="syncStatusText">自動同步已啟用 (點此設定網址)</span>
-      </div>
+      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 編輯完成後按儲存，將會<strong>自動在背景同步更新至 Google 試算表</strong>。</span>
+
     </div>
 
     <!-- 辦公室地圖區域 (截圖匯出目標) -->
@@ -727,63 +725,7 @@
     </div>
   </div>
 
-  <!-- 2. Google 試算表雙向即時同步設定 Modal -->
-  <div class="modal-overlay" id="sheetModal" onclick="closeSheetModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h2 style="font-size:1.25rem;">⚡ 設定 Google 試算表雙向即時連線</h2>
-        <button class="modal-close-btn" onclick="closeSheetModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="font-size:0.9rem; color:#4a5568; margin-bottom: 12px;">
-          只要將 Google Apps Script (GAS) 部署為網頁應用程式並貼在下方，<strong>網頁上的每一次編輯、拖曳換位就會自動寫入您的 Google 試算表</strong>！
-        </p>
 
-        <div style="font-size: 0.88rem; color:#2d3748; margin-bottom: 14px;">
-          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 1</span> 在您的 Google 試算表點擊頂部選單 <strong>「擴充功能」➔「Apps Script」</strong>。</p>
-          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 2</span> 清空內容，貼上下方這段程式碼並存檔：</p>
-          <div class="code-box">
-function doGet() {<br>
-&nbsp;&nbsp;var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();<br>
-&nbsp;&nbsp;var data = sheet.getDataRange().getValues();<br>
-&nbsp;&nbsp;return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);<br>
-}<br>
-function doPost(e) {<br>
-&nbsp;&nbsp;try {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var list = JSON.parse(e.postData.contents);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;sheet.clearContents();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;sheet.appendRow(["位置代碼", "組別", "姓名", "職稱", "分機", "業務職掌(45字以內)"]);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;for (var i = 0; i &lt; list.length; i++) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var s = list[i];<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sheet.appendRow([s.key||"", s.dept||"", s.name||"", s.title||"", s.ext||"", s.brief||""]);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return ContentService.createTextOutput("OK");<br>
-&nbsp;&nbsp;} catch(err) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return ContentService.createTextOutput("ERROR: " + err.message);<br>
-&nbsp;&nbsp;}<br>
-}
-          </div>
-          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 3</span> 點右上角 <strong>「部署」➔「新增部署」</strong>：</p>
-          <ul style="padding-left: 20px; font-size: 0.85rem; color: #4a5568; margin-bottom: 8px;">
-            <li>類型選：<strong>網頁應用程式</strong></li>
-            <li>執行身分：<strong>我</strong></li>
-            <li>誰可以存取：<strong>任何人 (Anyone)</strong> <span style="color:#e53e3e; font-weight:700;">(關鍵步驟！務必選任何人，否則會阻擋寫入)</span></li>
-          </ul>
-          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 4</span> 複製部署網址（結尾通常是 <code>/exec</code>）貼在下方：</p>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label>Google Apps Script 網頁應用程式網址：</label>
-          <input type="url" id="gasAppUrl" value="https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline" onclick="closeSheetModal()">取消</button>
-        <button type="button" class="btn btn-sheet" onclick="saveAndConnectGas()">🔗 儲存並立即連線同步</button>
-      </div>
-    </div>
-  </div>
 
   <script>
     // 預設辦公室結構資料
@@ -945,6 +887,7 @@ function doPost(e) {<br>
     }
 
     function updateSyncStatus(type, msg) {
+      console.log('[Sync Status]', type, msg); return;
       const dot = document.getElementById("syncStatusDot");
       const text = document.getElementById("syncStatusText");
       if (type === "online") {
