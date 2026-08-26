@@ -623,7 +623,6 @@
           <div class="search-box">
             <input type="text" id="searchInput" placeholder="🔍 搜尋同仁、分機、業務關鍵字..." oninput="handleSearch()">
           </div>
-          <button class="btn btn-sheet" onclick="openSheetModal()">⚡ 設定 Google 試算表即時雙向連線</button>
           <button class="btn btn-outline" onclick="resetToDefault()">🔄 還原預設</button>
           <button class="btn btn-success" onclick="exportOfficeImage()" id="btnExportImg">🖼️ 匯出辦公室配置圖片</button>
         </div>
@@ -652,9 +651,9 @@
 
     <!-- 提示操作說明與即時同步狀態 -->
     <div class="instruction-bar">
-      <span>✋ <strong>操作提示：</strong> 網頁上任何<strong>編輯、拖曳換位或刪除</strong>，都會<strong>自動即時寫入並同步更新至 Google 試算表</strong>！</span>
-      <div class="sync-status" id="syncStatusIndicator">
-        <span id="syncStatusDot">⚪</span> <span id="syncStatusText">本地儲存模式</span>
+      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 即可編輯。點擊<strong>「💾 儲存變更」</strong>後，網頁與 Google 試算表將會<strong>自動同步更新</strong>！</span>
+      <div class="sync-status" id="syncStatusIndicator" title="點擊可設定/變更 Google 試算表 API 網址" onclick="openSheetModal()" style="cursor:pointer;">
+        <span id="syncStatusDot">🟢</span> <span id="syncStatusText">自動同步已啟用 (點此設定網址)</span>
       </div>
     </div>
 
