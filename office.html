@@ -775,7 +775,7 @@ function doPost(e) {<br>
 
         <div class="form-group" style="margin-bottom: 14px;">
           <label>Google Apps Script 網頁應用程式網址：</label>
-          <input type="url" id="gasAppUrl" placeholder="https://script.google.com/macros/s/.../exec">
+          <input type="url" id="gasAppUrl" value="https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec">
         </div>
       </div>
       <div class="modal-footer">
@@ -928,7 +928,8 @@ function doPost(e) {<br>
 
       renderMap();
 
-      const gasUrl = localStorage.getItem("cmu_gas_app_url");
+      let gasUrl = localStorage.getItem("cmu_gas_app_url") || "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
+      localStorage.setItem("cmu_gas_app_url", gasUrl);
       if (gasUrl) {
         document.getElementById("gasAppUrl").value = gasUrl;
         fetchLatestFromGoogleSheet(gasUrl);
@@ -963,7 +964,8 @@ function doPost(e) {<br>
 
     // === 超穩定非同步寫入 Google 試算表 (使用 text/plain 避免 CORS 阻擋) ===
     function syncToGoogleSheetAuto() {
-      const gasUrl = localStorage.getItem("cmu_gas_app_url");
+      let gasUrl = localStorage.getItem("cmu_gas_app_url") || "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
+      localStorage.setItem("cmu_gas_app_url", gasUrl);
       if (!gasUrl) {
         updateSyncStatus("local", "已儲存於本機 (未連線 Google 試算表)");
         return;
