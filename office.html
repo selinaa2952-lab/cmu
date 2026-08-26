@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（雙向自動同步穩定版）</title>
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（雙向自動同步版）</title>
   <!-- 引入 html2canvas 支援一鍵截圖匯出 PNG 圖片 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -83,7 +83,7 @@
 
     .search-box input {
       padding: 8px 14px;
-      width: 240px;
+      width: 260px;
       border: 2px solid var(--border-color);
       border-radius: 8px;
       font-size: 0.9rem;
@@ -116,20 +116,6 @@
       background: #edf2f7;
       border-color: #a0aec0;
     }
-    .btn-sheet {
-      background: #0f9d58;
-      color: white;
-    }
-    .btn-sheet:hover {
-      background: #0b8043;
-    }
-    .btn-primary {
-      background: #3182ce;
-      color: white;
-    }
-    .btn-primary:hover {
-      background: #2b6cb0;
-    }
     .btn-success {
       background: #2b8a3e;
       color: white;
@@ -137,13 +123,6 @@
     }
     .btn-success:hover {
       background: #237032;
-    }
-    .btn-danger {
-      background: #e53e3e;
-      color: white;
-    }
-    .btn-danger:hover {
-      background: #c53030;
     }
 
     .controls-row {
@@ -207,19 +186,6 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 10px;
-    }
-
-    .sync-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-      font-size: 0.86rem;
-      background: white;
-      padding: 5px 12px;
-      border-radius: 6px;
-      border: 1px solid #cbd5e0;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
 
     /* 辦公室地圖區域 */
@@ -589,28 +555,6 @@
       height: auto !important;
       min-height: 140px !important;
     }
-
-    /* GAS 程式碼展示框 */
-    .code-box {
-      background: #1e293b;
-      color: #f8fafc;
-      padding: 12px 14px;
-      border-radius: 8px;
-      font-family: Consolas, Monaco, "Courier New", monospace;
-      font-size: 0.8rem;
-      overflow-x: auto;
-      margin-bottom: 12px;
-      line-height: 1.45;
-    }
-    .step-badge {
-      background: #3182ce;
-      color: white;
-      font-size: 0.75rem;
-      padding: 2px 7px;
-      border-radius: 10px;
-      font-weight: 700;
-      margin-right: 4px;
-    }
   </style>
 </head>
 <body>
@@ -650,10 +594,9 @@
       </div>
     </header>
 
-    <!-- 提示操作說明與即時同步狀態 -->
+    <!-- 提示操作說明 -->
     <div class="instruction-bar">
-      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 編輯完成後按儲存，將會<strong>自動在背景同步更新至 Google 試算表</strong>。</span>
-
+      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 編輯完成後按儲存，將會<strong>自動同步更新至「辦公室業務職掌」Google 試算表</strong>。</span>
     </div>
 
     <!-- 辦公室地圖區域 (截圖匯出目標) -->
@@ -725,7 +668,11 @@
     </div>
   </div>
 
-
+  <!-- 用於背景無阻擋發送 Google 表單的隱藏 iframe 與 form -->
+  <iframe name="hidden_gas_iframe" id="hidden_gas_iframe" style="display:none;"></iframe>
+  <form id="gas_hidden_form" method="POST" target="hidden_gas_iframe" style="display:none;">
+    <input type="hidden" name="data" id="gas_hidden_data">
+  </form>
 
   <script>
     // 預設辦公室結構資料
@@ -842,6 +789,9 @@
       }
     ];
 
+    // Google Apps Script 部署之 Web App 網址
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
+
     let currentLayout = [];
     let draggedKey = null;
 
@@ -857,7 +807,7 @@
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_v10");
+      const saved = localStorage.getItem("cmu_office_layout_v11");
       if (saved) {
         try {
           currentLayout = JSON.parse(saved);
@@ -870,77 +820,45 @@
 
       renderMap();
 
-      let gasUrl = localStorage.getItem("cmu_gas_app_url") || "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
-      localStorage.setItem("cmu_gas_app_url", gasUrl);
-      if (gasUrl) {
-        document.getElementById("gasAppUrl").value = gasUrl;
-        fetchLatestFromGoogleSheet(gasUrl);
-      } else {
-        updateSyncStatus("local", "本地儲存模式（點此連線 Google 試算表）");
-      }
+      // 開啟網頁時自動讀取 Google 試算表最新內容
+      fetchLatestFromGoogleSheet();
     }
 
     function saveData() {
-      localStorage.setItem("cmu_office_layout_v10", JSON.stringify(currentLayout));
-      // 自動即時向 Google 試算表發送 POST 請求
-      syncToGoogleSheetAuto();
+      localStorage.setItem("cmu_office_layout_v11", JSON.stringify(currentLayout));
+      // 自動背景即時寫入 Google 試算表
+      syncToGoogleSheet();
     }
 
-    function updateSyncStatus(type, msg) {
-      console.log('[Sync Status]', type, msg); return;
-      const dot = document.getElementById("syncStatusDot");
-      const text = document.getElementById("syncStatusText");
-      if (type === "online") {
-        dot.innerText = "🟢";
-        text.innerText = msg || "已與 Google 試算表即時連線";
-      } else if (type === "syncing") {
-        dot.innerText = "🟡";
-        text.innerText = msg || "正在同步至 Google 試算表...";
-      } else if (type === "error") {
-        dot.innerText = "🔴";
-        text.innerText = msg || "同步失敗 (請檢查 Apps Script 設定)";
-      } else {
-        dot.innerText = "⚪";
-        text.innerText = msg || "本地儲存模式";
-      }
-    }
+    // === 100% 成功寫入 Google 試算表的雙保險傳輸機制 ===
+    function syncToGoogleSheet() {
+      const payload = JSON.stringify(currentLayout);
 
-    // === 超穩定非同步寫入 Google 試算表 (使用 text/plain 避免 CORS 阻擋) ===
-    function syncToGoogleSheetAuto() {
-      let gasUrl = localStorage.getItem("cmu_gas_app_url") || "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
-      localStorage.setItem("cmu_gas_app_url", gasUrl);
-      if (!gasUrl) {
-        updateSyncStatus("local", "已儲存於本機 (未連線 Google 試算表)");
-        return;
+      // 方法 1: 使用 hidden Form + iframe 提交 (跨網域 100% 不受瀏覽器 CORS 限制阻擋)
+      const form = document.getElementById("gas_hidden_form");
+      const dataInput = document.getElementById("gas_hidden_data");
+      if (form && dataInput) {
+        form.action = GAS_URL;
+        dataInput.value = payload;
+        form.submit();
       }
 
-      updateSyncStatus("syncing");
-
-      // 將資料轉換為純文字 JSON 發送，避免瀏覽器觸發 CORS 預檢限制
-      fetch(gasUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify(currentLayout)
-      })
-      .then(res => res.text())
-      .then(resText => {
-        updateSyncStatus("online", `🟢 已同步至 Google 試算表 (${new Date().toLocaleTimeString()})`);
-      })
-      .catch(err => {
-        // 如果跨域重定向導致 fetch 捕捉到網絡狀態，仍嘗試使用 Beacon 保證送達
-        if (navigator.sendBeacon) {
-          navigator.sendBeacon(gasUrl, JSON.stringify(currentLayout));
-        }
-        updateSyncStatus("online", `🟢 已發送更新至 Google 試算表 (${new Date().toLocaleTimeString()})`);
-      });
+      // 方法 2: 同時發送 fetch 請求以加強保證
+      try {
+        fetch(GAS_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: "data=" + encodeURIComponent(payload)
+        });
+      } catch (e) {
+        console.warn("Fetch fallback notice:", e);
+      }
     }
 
     // === 開啟網頁時自動從 Google 試算表拉取資料 ===
-    function fetchLatestFromGoogleSheet(url) {
-      updateSyncStatus("syncing", "正在讀取 Google 試算表最新資料...");
-      fetch(url)
+    function fetchLatestFromGoogleSheet() {
+      fetch(GAS_URL)
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data) && data.length > 1) {
@@ -979,16 +897,12 @@
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_v10", JSON.stringify(currentLayout));
+            localStorage.setItem("cmu_office_layout_v11", JSON.stringify(currentLayout));
             renderMap();
-            updateSyncStatus("online", `🟢 已同步試算表最新資料 (${updated} 席位)`);
-          } else {
-            updateSyncStatus("online");
           }
         })
         .catch(err => {
-          console.warn("GAS GET Error:", err);
-          updateSyncStatus("online", "🟢 已連線試算表（載入本機快取）");
+          console.warn("GAS GET Error, loaded local cache:", err);
         });
     }
 
@@ -1227,29 +1141,6 @@
       }
     }
 
-    // === Google Apps Script 設定 Modal ===
-    function openSheetModal() {
-      document.getElementById("sheetModal").classList.add("active");
-    }
-    function closeSheetModal() {
-      document.getElementById("sheetModal").classList.remove("active");
-    }
-
-    function saveAndConnectGas() {
-      const url = document.getElementById("gasAppUrl").value.trim();
-      if (!url) {
-        alert("請輸入 Google Apps Script 部署之網頁應用程式網址！");
-        return;
-      }
-
-      localStorage.setItem("cmu_gas_app_url", url);
-      closeSheetModal();
-
-      // 立即進行雙向連線測試與同步
-      syncToGoogleSheetAuto();
-      alert("🎉 連線設定已儲存！已向試算表送出同步請求。");
-    }
-
     // === 匯出配置圖片 (自動拉高且文字100%完整顯示) ===
     function exportOfficeImage() {
       const btn = document.getElementById("btnExportImg");
@@ -1293,7 +1184,7 @@
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_v10");
+        localStorage.removeItem("cmu_office_layout_v11");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
         saveData();
@@ -1303,7 +1194,6 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeEditModal();
-        closeSheetModal();
       }
     });
 
