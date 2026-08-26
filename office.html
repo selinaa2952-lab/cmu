@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（支援 Google 試算表串聯）</title>
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（雙向即時同步版）</title>
   <!-- 引入 html2canvas 支援一鍵截圖匯出 PNG 圖片 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <!-- 引入 PapaParse 解析 Google Sheet 發布的 CSV -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <style>
     :root {
       --bg-color: #f0f4f8;
@@ -209,6 +207,18 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 10px;
+    }
+
+    .sync-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      background: white;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #bee3f8;
     }
 
     /* 辦公室地圖區域 */
@@ -466,7 +476,7 @@
     .modal-content {
       background: white;
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
       border-radius: 12px;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
       overflow: hidden;
@@ -557,8 +567,7 @@
       min-height: 90px;
     }
 
-    
-    /* 截圖匯出專用樣式：清空席位時隱藏「點擊新增席位」提示字樣 */
+    /* 截圖匯出專用樣式 */
     .exporting-image .empty-seat span {
       display: none !important;
     }
@@ -566,8 +575,6 @@
       background: #fafafa !important;
       border: 1.5px dashed #e2e8f0 !important;
     }
-
-    /* 截圖匯出專用樣式 */
     .exporting-image .card-actions-hover {
       display: none !important;
     }
@@ -582,22 +589,26 @@
       min-height: 140px !important;
     }
 
-    /* Google Sheets 連線設定說明區塊 */
-    .sheet-help-box {
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
+    /* GAS 程式碼展示框 */
+    .code-box {
+      background: #1e293b;
+      color: #f8fafc;
       padding: 12px 14px;
       border-radius: 8px;
-      font-size: 0.84rem;
-      color: #166534;
-      line-height: 1.5;
-      margin-bottom: 16px;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      margin-bottom: 12px;
+      line-height: 1.45;
     }
-    .sheet-help-box code {
-      background: #dcfce7;
-      padding: 2px 5px;
-      border-radius: 4px;
-      font-weight: 600;
+    .step-badge {
+      background: #3182ce;
+      color: white;
+      font-size: 0.75rem;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 700;
+      margin-right: 4px;
     }
   </style>
 </head>
@@ -612,7 +623,7 @@
           <div class="search-box">
             <input type="text" id="searchInput" placeholder="🔍 搜尋同仁、分機、業務關鍵字..." oninput="handleSearch()">
           </div>
-          <button class="btn btn-sheet" onclick="openSheetModal()">📊 串聯 Google 試算表同步</button>
+          <button class="btn btn-sheet" onclick="openSheetModal()">⚡ 設定 Google 試算表即時雙向連線</button>
           <button class="btn btn-outline" onclick="resetToDefault()">🔄 還原預設</button>
           <button class="btn btn-success" onclick="exportOfficeImage()" id="btnExportImg">🖼️ 匯出辦公室配置圖片</button>
         </div>
@@ -639,9 +650,12 @@
       </div>
     </header>
 
-    <!-- 提示操作說明 -->
+    <!-- 提示操作說明與即時同步狀態 -->
     <div class="instruction-bar">
-      <span>✋ <strong>操作提示：</strong> 可直接在網頁上<strong>按住拖曳座位卡片</strong>調整位置，或點擊 ✏️ 快速編輯。點擊<strong>「📊 串聯 Google 試算表」</strong>可將線上試算表資料一鍵同步到配置圖！</span>
+      <span>✋ <strong>操作提示：</strong> 網頁上任何<strong>編輯、拖曳換位或刪除</strong>，都會<strong>自動即時寫入並同步更新至 Google 試算表</strong>！</span>
+      <div class="sync-status" id="syncStatusIndicator">
+        <span id="syncStatusDot">⚪</span> <span id="syncStatusText">本地儲存模式</span>
+      </div>
     </div>
 
     <!-- 辦公室地圖區域 (截圖匯出目標) -->
@@ -656,7 +670,7 @@
     </div>
   </div>
 
-  <!-- 1. 編輯 / 新增同仁資料彈跳視窗 (已移除冗餘詳細職掌，專注於圖片呈現) -->
+  <!-- 1. 編輯 / 新增同仁資料彈跳視窗 -->
   <div class="modal-overlay" id="editModal" onclick="closeEditModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
@@ -708,40 +722,55 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" onclick="closeEditModal()">取消</button>
         <button type="button" class="btn btn-danger" onclick="deleteSeatData()">🗑️ 清空/刪除此席位</button>
-        <button type="button" class="btn btn-primary" onclick="submitEditForm()">💾 儲存變更</button>
+        <button type="button" class="btn btn-primary" onclick="submitEditForm()">💾 儲存並即時同步</button>
       </div>
     </div>
   </div>
 
-  <!-- 2. Google 試算表串聯設定 Modal -->
+  <!-- 2. Google 試算表雙向即時同步設定 Modal -->
   <div class="modal-overlay" id="sheetModal" onclick="closeSheetModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <h2 style="font-size:1.25rem;">📊 串聯 Google 試算表（即時同步更新）</h2>
+        <h2 style="font-size:1.25rem;">⚡ 設定 Google 試算表雙向即時連線</h2>
         <button class="modal-close-btn" onclick="closeSheetModal()">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="sheet-help-box">
-          <strong>💡 如何取得 Google 試算表 CSV 連結：</strong><br>
-          1. 打開您的 Google 試算表。<br>
-          2. 點擊頂部選單 <code>檔案</code> ➔ <code>共用</code> ➔ <code>發布到網路</code>。<br>
-          3. 選擇 <code>主要工作表</code>，格式切換為 <code>逗號分隔值 (.csv)</code>。<br>
-          4. 點擊「發布」並複製產生的網址貼在下方。
+        <p style="font-size:0.9rem; color:#4a5568; margin-bottom: 12px;">
+          只要完成 1 次簡單設定，之後<strong>網頁上所有修改、拖曳換位都會自動即時寫入 Google 試算表</strong>，且開啟網頁也會自動載入最新試算表資料！
+        </p>
+
+        <div style="font-size: 0.88rem; color:#2d3748; margin-bottom: 14px;">
+          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 1</span> 在您的 Google 試算表點擊頂部選單 <strong>「擴充功能」➔「Apps Script」</strong>。</p>
+          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 2</span> 將下方短短的連線程式碼貼上並存檔：</p>
+          <div class="code-box">
+function doGet() {<br>
+&nbsp;&nbsp;var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();<br>
+&nbsp;&nbsp;var data = sheet.getDataRange().getValues();<br>
+&nbsp;&nbsp;return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);<br>
+}<br>
+function doPost(e) {<br>
+&nbsp;&nbsp;var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();<br>
+&nbsp;&nbsp;var list = JSON.parse(e.postData.contents);<br>
+&nbsp;&nbsp;sheet.clearContents();<br>
+&nbsp;&nbsp;sheet.appendRow(["位置代碼", "組別", "姓名", "職稱", "分機", "業務職掌"]);<br>
+&nbsp;&nbsp;for (var i = 0; i &lt; list.length; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var s = list[i];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sheet.appendRow([s.key, s.dept || "", s.name || "", s.title || "", s.ext || "", s.brief || ""]);<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;return ContentService.createTextOutput("OK");<br>
+}
+          </div>
+          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 3</span> 點右上角 <strong>「部署」➔「新增部署」</strong>，類型選 <strong>「網頁應用程式」</strong>，執行身分選 <strong>「我」</strong>，誰可以存取選 <strong>「任何人」</strong>，複製部署產生的網址貼在下方：</p>
         </div>
 
         <div class="form-group" style="margin-bottom: 14px;">
-          <label>Google 試算表發布之 CSV 網址：</label>
-          <input type="url" id="sheetCsvUrl" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv">
-        </div>
-
-        <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
-          📌 <strong>試算表欄位順序（第一行為標題）：</strong><br>
-          <code>位置代碼(如 r1_c7)</code> | <code>組別</code> | <code>姓名</code> | <code>職稱</code> | <code>分機</code> | <code>業務職掌</code>
+          <label>Google Apps Script 網頁應用程式網址：</label>
+          <input type="url" id="gasAppUrl" placeholder="https://script.google.com/macros/s/.../exec">
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" onclick="closeSheetModal()">取消</button>
-        <button type="button" class="btn btn-sheet" onclick="syncFromGoogleSheet()">🔄 立即從 Google 試算表同步</button>
+        <button type="button" class="btn btn-sheet" onclick="saveAndConnectGas()">🔗 儲存並立即雙向連線</button>
       </div>
     </div>
   </div>
@@ -752,29 +781,29 @@
       // Row 1 (Col 7~10)
       {
         key: "r1_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳巧璇", title: "約聘人員", ext: "1177",
-        brief: "學分學程統整/TAICA、學分抵免系統、成績單與列印機、雙主修輔系、學生證製作、所屬系所學籍成績管理"
+        brief: "公衛學院各系教務、學分學程與TAICA、學分抵免、成績單與列印機、雙主修輔系、學生證製發"
       },
       {
         key: "r1_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳盈君", title: "專案助理", ext: "1128",
-        brief: "暑修先修排課、中亞聯大/校課程會議、課程教室排課、學生選課、M6教務對口、所屬系所學籍成績管理"
+        brief: "物治/運醫系教務、暑修排課、中亞聯大/校課程會議、課程教室排課、學生選課、M6教務窗口"
       },
       {
         key: "r1_c9", span: 1, dept: "雙語教學中心", deptClass: "dept-other", name: "雙語中心", title: "同仁", ext: "0000",
-        brief: "雙語教學資源整合、EMI 課程推動與全校雙語教學各項行政支援"
+        brief: "雙語教學資源整合、EMI課程推動與全校雙語教學各項行政支援"
       },
       {
         key: "r1_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "張瑀涵", title: "專任助理", ext: "1152",
-        brief: "國內高中招生宣傳、高中生參訪活動規劃執行、大學招生專業化發展試辦計畫及主管交辦事務"
+        brief: "國內高中招生宣傳、高中生參訪活動規劃執行、大學招生專業化發展試辦計畫"
       },
 
       // Row 2 (Col 7~10)
       {
         key: "r2_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "王毓萍", title: "技佐", ext: "1180",
-        brief: "預警弱勢課輔總窗口、國考集體報名與統計、考選部學歷查驗、學生課業輔導、畢審系統、工讀生管理、所屬系所學籍成績"
+        brief: "營養/生科/藥妝系教務、預警弱勢課輔窗口、國考報名統計、考選部學歷查驗、畢審系統、工讀生"
       },
       {
         key: "r2_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "黃凱璟", title: "約聘人員", ext: "1127",
-        brief: "總量報部、註冊課務公文窗口、新生舊生轉學註冊學號編製、學籍人數統計彙整、藥學系學籍選課成績管理畢審"
+        brief: "藥學系教務、總量報部、註課組公文窗口、新生/舊生/轉學註冊與學號編製、學籍人數統計"
       },
       {
         key: "r2_c9", span: 1, dept: "其他", deptClass: "dept-other", name: "預留位置", title: "同仁", ext: "0000",
@@ -782,82 +811,82 @@
       },
       {
         key: "r2_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "余芷葳", title: "約聘人員", ext: "1151",
-        brief: "碩博甄試與一般考試入學招生、博士班學程考招、新住民入學甄試招生、經費申請核銷、高中端招生宣傳"
+        brief: "碩博士班甄試與考試入學招生、新住民入學甄試、經費核銷、高中端招生宣傳"
       },
 
       // Row 3 (Col 1, 2, 3-4(教務長), 5-6(教務處), 7, 8, 9, 10)
       {
         key: "r3_c1", span: 1, dept: "教學組", deptClass: "dept-tch", name: "林怡君", title: "組員", ext: "1188",
-        brief: "教師請假調課查堂、教學組經費財產管理、卓越大樓 PBL 教室管理借用、考試業務協助"
+        brief: "教師請假調課查堂、教學組經費與財產管理、卓越大樓PBL教室管理借用、考試業務協助"
       },
       {
         key: "r3_c2", span: 1, dept: "董事會", deptClass: "dept-other", name: "董事會", title: "辦公室", ext: "-",
-        brief: "董事會行政事務與跨單位聯繫"
+        brief: "董事會行政事務與跨單位會議公文連繫"
       },
       {
         key: "r3_c3_span2", span: 2, dept: "校本部", deptClass: "dept-dir", name: "余永倫", title: "教務長", ext: "7933",
-        brief: "綜理全校教務推動、教學創新、招生策略與學術發展規劃，督導註冊、課務、教學、招生、研究生教務等全處業務之執行"
+        brief: "綜理全校教務推動、教學創新、招生策略與學術發展規劃，督導全處教務業務執行"
       },
       {
         key: "r3_c5_span2", span: 2, dept: "教務處", deptClass: "dept-cmu", name: "教務處", title: "服務總機", ext: "1100",
-        brief: "教務處總機電話諮詢、公務通訊與處務行政窗口，協助師生與家長各項教務問題導引轉接"
+        brief: "教務處電話總機諮詢、公務通訊與處務行政窗口，協助師生家長教務問題引導轉接"
       },
       {
         key: "r3_c7", span: 1, dept: "研教組", deptClass: "dept-grd", name: "蕭俊傑", title: "專任助理", ext: "1163",
-        brief: "公衛/生科碩博教務(學籍/課程/成績/畢審)、現代生醫講座、TA 教學助理行政管理、菁英博士獎勵遴選、優秀研究生入學獎勵"
+        brief: "公衛學院碩博教務、現代生醫講座、TA教學助理行政管理、菁英博士遴選與獎勵、入學獎勵金"
       },
       {
         key: "r3_c8", span: 1, dept: "教學組", deptClass: "dept-tch", name: "趙婉萍", title: "組員", ext: "1130",
-        brief: "教師授課時數計算控管與鐘點費計算、教師資料數據分析、系所評鑑、校務教學資料填報與評鑑會議"
+        brief: "教師授課時數控管與鐘點費計算、教師資料數據分析、系所與校務評鑑、教學資料填報"
       },
       {
         key: "r3_c9", span: 1, dept: "教學組", deptClass: "dept-tch", name: "譚羽汝", title: "組員", ext: "1123",
-        brief: "教學評估與課程評量、優良教材評選、校內外教學獎勵、教育部教學實踐研究計畫、業界教師聘任、夏季學院"
+        brief: "教學評估與課程評量、優良教材與教學獎勵、教育部教學實踐研究計畫、業界教師、夏季學院"
       },
       {
         key: "r3_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "楊鋌鈺", title: "書記", ext: "1150",
-        brief: "繁星推薦/申請/分發、後中招生、寒暑轉(私醫聯招)、四技二專、離島公費生甄試、身障運優甄試、招生經費核銷"
+        brief: "大學繁星/申請/分發、後中招生、寒暑轉(私醫聯招)、四技二專、離島公費生與身障運優甄試"
       },
 
       // Row 4 (Col 1~10)
       {
         key: "r4_c1", span: 1, dept: "教學組", deptClass: "dept-tch", name: "羅逸珊", title: "教學設計師", ext: "1186",
-        brief: "數位教材製作諮詢、推動健康照護/生科/牙醫學院校內數位教材製作與推廣"
+        brief: "數位教材製作諮詢、推動健康照護/生科/牙醫學院校內數位教材製作"
       },
       {
         key: "r4_c2", span: 1, dept: "教學組", deptClass: "dept-tch", name: "謝琬琳", title: "教學設計師", ext: "1187",
-        brief: "遠距課程會議、磨課師(CMU MOOCs)平台管理、推動人科/藥學院/醫工校內數位教材製作"
+        brief: "遠距課程會議、磨課師(CMU MOOCs)平台管理、人科/藥學院/醫工數位教材推動"
       },
       {
         key: "r4_c3", span: 1, dept: "招生組", deptClass: "dept-adm", name: "劉曉芳", title: "專任助理", ext: "1156",
-        brief: "中醫大招生王 FB/IG/YT 社群經營與影音管理、未來學生專區網站維護、招生文宣視覺設計與影音剪輯、官網視覺改版"
+        brief: "中醫大招生王 FB/IG/YT 社群與影音管理、未來學生專區維護、招生文宣視覺設計與影音剪輯"
       },
       {
         key: "r4_c4", span: 1, type: "empty"
       },
       {
         key: "r4_c5", span: 1, dept: "研教組", deptClass: "dept-grd", name: "童雯琳", title: "約聘人員", ext: "1160",
-        brief: "負責學院碩博教務(註冊/學籍/選課/成績/畢審)、研究生助學金、研究倫理/工安行政、學基庫公文窗口、網頁維護、生醫講座菁英博"
+        brief: "中醫/照護/牙醫/人科/醫工碩博教務、研究生助學金、研究倫理/工安行政、學基庫公文窗口"
       },
       {
         key: "r4_c6", span: 1, dept: "研教組", deptClass: "dept-grd", name: "李琳庭", title: "專任助理", ext: "1161",
-        brief: "負責學院學程碩博教務、培英計畫、預修生與產學博士獎助、在校生人數統計、資安個資窗口、英文網頁維護"
+        brief: "醫學/藥學/產博/國際學程碩博教務、培英計畫、預修生與產博獎助、資安窗口、英文網頁"
       },
       {
         key: "r4_c7", span: 1, dept: "研教組", deptClass: "dept-grd", name: "陳佳彣", title: "書記", ext: "1162",
-        brief: "綜理研究生事務處業務、規章制度、逕博/預修甄選、畢業資格審核、博士獎助金(拔萃/礪金)、校庫填報、深耕計畫資料統整"
+        brief: "研究生規章制度、逕博/預修甄選、畢業資格審核、優秀博士生獎助學金(拔萃/礪金)、校庫填報"
       },
       {
         key: "r4_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "顧國棟", title: "組長", ext: "1133",
-        brief: "深耕計畫與獎補款、學則法規統整修訂、教務系統設定、見實習業務、財產盤點、高中端聯盟、所屬系所學籍成績畢審"
+        brief: "護理/呼吸/牙一/中醫一/醫學一教務、深耕計畫與獎補款、學則法規、教務系統設定、見實習"
       },
       {
         key: "r4_c9", span: 1, dept: "教學組", deptClass: "dept-tch", name: "王慧如", title: "組長", ext: "1126",
-        brief: "綜理、規劃與督導教學組各項業務之推動與創新推廣"
+        brief: "綜理、規劃與督導全校教學組各項業務之推動與創新推廣"
       },
       {
         key: "r4_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "鄒瑞煌", title: "組長", ext: "1155",
-        brief: "綜理各項招生試務規劃與控管、各項招生法規制定修訂、招生統計報表研析、招生方針與原則制度規劃"
+        brief: "綜理全校各項招生試務規劃與控管、招生法規制定修訂、招生統計報表研析與制度規劃"
       }
     ];
 
@@ -876,7 +905,7 @@
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_v7");
+      const saved = localStorage.getItem("cmu_office_layout_v8");
       if (saved) {
         try {
           currentLayout = JSON.parse(saved);
@@ -887,17 +916,117 @@
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
       }
 
-      // 載入儲存的 Google Sheet 網址（若有）
-      const savedUrl = localStorage.getItem("cmu_google_sheet_url");
-      if (savedUrl) {
-        document.getElementById("sheetCsvUrl").value = savedUrl;
-      }
-
       renderMap();
+
+      // 檢查是否有設定 GAS 網址，有則自動連線拉取最新資料
+      const gasUrl = localStorage.getItem("cmu_gas_app_url");
+      if (gasUrl) {
+        document.getElementById("gasAppUrl").value = gasUrl;
+        fetchLatestFromGoogleSheet(gasUrl);
+      } else {
+        updateSyncStatus("local", "本地儲存模式（未連線試算表）");
+      }
     }
 
     function saveData() {
-      localStorage.setItem("cmu_office_layout_v7", JSON.stringify(currentLayout));
+      localStorage.setItem("cmu_office_layout_v8", JSON.stringify(currentLayout));
+      // 自動即時同步寫入 Google 試算表
+      syncToGoogleSheetAuto();
+    }
+
+    function updateSyncStatus(type, msg) {
+      const dot = document.getElementById("syncStatusDot");
+      const text = document.getElementById("syncStatusText");
+      if (type === "online") {
+        dot.innerText = "🟢";
+        text.innerText = msg || "已與 Google 試算表即時連線";
+      } else if (type === "syncing") {
+        dot.innerText = "🟡";
+        text.innerText = msg || "正在同步更新至 Google 試算表...";
+      } else if (type === "error") {
+        dot.innerText = "🔴";
+        text.innerText = msg || "同步失敗，目前以本地儲存";
+      } else {
+        dot.innerText = "⚪";
+        text.innerText = msg || "本地儲存模式";
+      }
+    }
+
+    // === 自動向 Google 試算表寫入最新資料 (POST) ===
+    function syncToGoogleSheetAuto() {
+      const gasUrl = localStorage.getItem("cmu_gas_app_url");
+      if (!gasUrl) return;
+
+      updateSyncStatus("syncing");
+
+      // 將目前資料打包傳送
+      fetch(gasUrl, {
+        method: "POST",
+        mode: "no-cors", // 避免瀏覽器 CORS 阻擋
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(currentLayout)
+      }).then(() => {
+        updateSyncStatus("online", "🟢 已即時同步至 Google 試算表 (" + new Date().toLocaleTimeString() + ")");
+      }).catch(err => {
+        console.error("Auto sync failed:", err);
+        updateSyncStatus("error", "⚠️ 同步失敗，請檢查網路或 GAS 網址");
+      });
+    }
+
+    // === 開啟網頁時自動從 Google 試算表拉取資料 (GET) ===
+    function fetchLatestFromGoogleSheet(url) {
+      updateSyncStatus("syncing", "正在從 Google 試算表讀取最新資料...");
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data) && data.length > 1) {
+            // 第一行是標題，從第 2 行開始解析
+            let updated = 0;
+            for (let i = 1; i < data.length; i++) {
+              const row = data[i];
+              const key = row[0];
+              if (!key) continue;
+
+              const idx = currentLayout.findIndex(s => s.key === key);
+              if (idx !== -1) {
+                const dept = row[1] || currentLayout[idx].dept;
+                const name = row[2] || "";
+                const title = row[3] || "";
+                const ext = row[4] || "";
+                const brief = row[5] || "";
+
+                if (name === "" || name === "空位" || name === "空") {
+                  currentLayout[idx] = {
+                    key: key,
+                    span: currentLayout[idx].span || 1,
+                    type: "empty"
+                  };
+                } else {
+                  currentLayout[idx] = {
+                    key: key,
+                    span: currentLayout[idx].span || 1,
+                    dept: dept,
+                    deptClass: getDeptClass(dept),
+                    name: name,
+                    title: title,
+                    ext: ext,
+                    brief: brief
+                  };
+                }
+                updated++;
+              }
+            }
+            localStorage.setItem("cmu_office_layout_v8", JSON.stringify(currentLayout));
+            renderMap();
+            updateSyncStatus("online", `🟢 已同步 Google 試算表最新配置 (${updated} 個席位)`);
+          } else {
+            updateSyncStatus("online");
+          }
+        })
+        .catch(err => {
+          console.warn("GAS GET failed, using local cache:", err);
+          updateSyncStatus("online", "🟢 已連線試算表（載入本機快取）");
+        });
     }
 
     function renderMap() {
@@ -917,7 +1046,6 @@
 
         const spanClass = seat.span === 2 ? "seat-span-2" : "";
 
-        // 綁定拖曳事件
         card.addEventListener("dragstart", handleDragStart);
         card.addEventListener("dragover", handleDragOver);
         card.addEventListener("dragleave", handleDragLeave);
@@ -954,7 +1082,7 @@
       updateVisibility();
     }
 
-    // === 拖曳交換位置 (Drag and Drop Swap) ===
+    // === 拖曳交換位置 ===
     function handleDragStart(e) {
       draggedKey = this.getAttribute("data-key");
       this.classList.add("dragging");
@@ -989,7 +1117,6 @@
           const tgtKey = tgtSeat.key;
           const tgtSpan = tgtSeat.span;
 
-          // 交換內容
           currentLayout[srcIdx] = { ...tgtSeat, key: srcKey, span: srcSpan };
           currentLayout[tgtIdx] = { ...srcSeat, key: tgtKey, span: tgtSpan };
 
@@ -1137,7 +1264,7 @@
       }
     }
 
-    // === Google 試算表串聯同步 (Google Sheets Sync) ===
+    // === Google Apps Script 設定 Modal ===
     function openSheetModal() {
       document.getElementById("sheetModal").classList.add("active");
     }
@@ -1145,72 +1272,19 @@
       document.getElementById("sheetModal").classList.remove("active");
     }
 
-    function syncFromGoogleSheet() {
-      const url = document.getElementById("sheetCsvUrl").value.trim();
+    function saveAndConnectGas() {
+      const url = document.getElementById("gasAppUrl").value.trim();
       if (!url) {
-        alert("請輸入 Google 試算表發布的 CSV 網址！");
+        alert("請輸入 Google Apps Script 部署之網頁應用程式網址！");
         return;
       }
 
-      // 保存網址到 LocalStorage
-      localStorage.setItem("cmu_google_sheet_url", url);
+      localStorage.setItem("cmu_gas_app_url", url);
+      closeSheetModal();
 
-      Papa.parse(url, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-          if (!results.data || results.data.length === 0) {
-            alert("讀取試算表失敗或試算表內沒有資料！");
-            return;
-          }
-
-          let updatedCount = 0;
-          results.data.forEach(row => {
-            // 支援中英文欄位名稱
-            const key = row["位置代碼"] || row["key"] || row["Key"];
-            if (!key) return;
-
-            const idx = currentLayout.findIndex(s => s.key === key);
-            if (idx !== -1) {
-              const dept = row["組別"] || row["dept"] || currentLayout[idx].dept;
-              const name = row["姓名"] || row["name"] || "";
-              const title = row["職稱"] || row["title"] || "";
-              const ext = row["分機"] || row["ext"] || "";
-              const brief = row["業務職掌"] || row["brief"] || row["業務簡介"] || "";
-
-              if (name === "" || name === "空位" || name === "空") {
-                currentLayout[idx] = {
-                  key: key,
-                  span: currentLayout[idx].span || 1,
-                  type: "empty"
-                };
-              } else {
-                currentLayout[idx] = {
-                  key: key,
-                  span: currentLayout[idx].span || 1,
-                  dept: dept,
-                  deptClass: getDeptClass(dept),
-                  name: name,
-                  title: title,
-                  ext: ext,
-                  brief: brief
-                };
-              }
-              updatedCount++;
-            }
-          });
-
-          saveData();
-          renderMap();
-          closeSheetModal();
-          alert(`🎉 成功從 Google 試算表同步 ${updatedCount} 個座位資料！`);
-        },
-        error: function(err) {
-          alert("無法讀取 Google 試算表，請確認您已點選「發布到網路」並選擇 CSV 格式。");
-          console.error(err);
-        }
-      });
+      // 立即進行雙向初次同步
+      syncToGoogleSheetAuto();
+      alert("🎉 雙向連線設定完成！今後在網頁上的所有修改與拖曳都會自動寫入 Google 試算表。");
     }
 
     // === 匯出配置圖片 (自動拉高且文字100%完整顯示) ===
@@ -1256,9 +1330,10 @@
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_v7");
+        localStorage.removeItem("cmu_office_layout_v8");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
+        saveData();
       }
     }
 
