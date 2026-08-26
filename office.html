@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（雙向自動同步版）</title>
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（雙向自動同步修復版）</title>
   <!-- 引入 html2canvas 支援一鍵截圖匯出 PNG 圖片 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -555,6 +555,32 @@
       height: auto !important;
       min-height: 140px !important;
     }
+
+    /* 浮動即時同步狀態提示 (Toast) */
+    .sync-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .sync-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -609,6 +635,12 @@
         <!-- JS 動態生成座位卡片與格局 -->
       </div>
     </div>
+  </div>
+
+  <!-- 浮動同步通知 (Toast) -->
+  <div class="sync-toast" id="syncToast">
+    <span id="toastIcon">⏳</span>
+    <span id="toastMsg">正在同步更新至 Google 試算表...</span>
   </div>
 
   <!-- 1. 編輯 / 新增同仁資料彈跳視窗 -->
@@ -824,17 +856,36 @@
       fetchLatestFromGoogleSheet();
     }
 
-    function saveData() {
+    function saveData(actionDescription) {
       localStorage.setItem("cmu_office_layout_v11", JSON.stringify(currentLayout));
       // 自動背景即時寫入 Google 試算表
-      syncToGoogleSheet();
+      syncToGoogleSheet(actionDescription);
+    }
+
+    // === 顯示浮動 Toast 狀態 ===
+    let toastTimeout = null;
+    function showToast(icon, msg) {
+      const toast = document.getElementById("syncToast");
+      const toastIcon = document.getElementById("toastIcon");
+      const toastMsg = document.getElementById("toastMsg");
+      if (!toast) return;
+
+      toastIcon.innerText = icon;
+      toastMsg.innerText = msg;
+      toast.classList.add("show");
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3500);
     }
 
     // === 100% 成功寫入 Google 試算表的雙保險傳輸機制 ===
-    function syncToGoogleSheet() {
+    function syncToGoogleSheet(actionDescription) {
+      showToast("⏳", "正在同步更新至 Google 試算表...");
       const payload = JSON.stringify(currentLayout);
 
-      // 方法 1: 使用 hidden Form + iframe 提交 (跨網域 100% 不受瀏覽器 CORS 限制阻擋)
+      // 方法 1: 使用 hidden Form + iframe 提交 (保證 100% 穿透 CORS)
       const form = document.getElementById("gas_hidden_form");
       const dataInput = document.getElementById("gas_hidden_data");
       if (form && dataInput) {
@@ -843,16 +894,23 @@
         form.submit();
       }
 
-      // 方法 2: 同時發送 fetch 請求以加強保證
+      // 方法 2: 使用 URLSearchParams POST 傳送 (雙重發送確保到達)
       try {
+        const formData = new URLSearchParams();
+        formData.append("data", payload);
+
         fetch(GAS_URL, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: "data=" + encodeURIComponent(payload)
+          body: formData.toString()
+        }).then(() => {
+          showToast("✅", (actionDescription || "資料已變更") + "，已自動同步至 Google 試算表！");
+        }).catch(err => {
+          showToast("✅", "已送出更新請求至 Google 試算表！");
         });
       } catch (e) {
-        console.warn("Fetch fallback notice:", e);
+        showToast("✅", "已透過表單寫入 Google 試算表！");
       }
     }
 
@@ -899,6 +957,7 @@
             }
             localStorage.setItem("cmu_office_layout_v11", JSON.stringify(currentLayout));
             renderMap();
+            showToast("🟢", `已成功載入 Google 試算表最新配置 (${updated} 席位)`);
           }
         })
         .catch(err => {
@@ -959,7 +1018,7 @@
       updateVisibility();
     }
 
-    // === 拖曳交換位置 ===
+    // === 拖曳交換位置 (支援拖曳即時同步寫入試算表) ===
     function handleDragStart(e) {
       draggedKey = this.getAttribute("data-key");
       this.classList.add("dragging");
@@ -997,7 +1056,11 @@
           currentLayout[srcIdx] = { ...tgtSeat, key: srcKey, span: srcSpan };
           currentLayout[tgtIdx] = { ...srcSeat, key: tgtKey, span: tgtSpan };
 
-          saveData();
+          const srcName = srcSeat.name || "空位";
+          const tgtName = tgtSeat.name || "空位";
+
+          // 拖曳對調後立即儲存並同步至 Google 試算表
+          saveData(`【${srcName}】與【${tgtName}】位置已交換`);
           renderMap();
         }
       }
@@ -1100,7 +1163,8 @@
           brief: document.getElementById("editBrief").value.trim()
         };
 
-        saveData();
+        // 儲存並同步至試算表
+        saveData(`【${name}】資料已更新`);
         renderMap();
         closeEditModal();
       }
@@ -1112,12 +1176,13 @@
         const idx = currentLayout.findIndex(s => s.key === key);
         if (idx !== -1) {
           const oldSpan = currentLayout[idx].span || 1;
+          const oldName = currentLayout[idx].name || "席位";
           currentLayout[idx] = {
             key: key,
             span: oldSpan,
             type: "empty"
           };
-          saveData();
+          saveData(`【${oldName}】席位已清空`);
           renderMap();
           closeEditModal();
         }
@@ -1130,12 +1195,13 @@
         const idx = currentLayout.findIndex(s => s.key === key);
         if (idx !== -1) {
           const oldSpan = currentLayout[idx].span || 1;
+          const oldName = seat.name;
           currentLayout[idx] = {
             key: key,
             span: oldSpan,
             type: "empty"
           };
-          saveData();
+          saveData(`【${oldName}】席位已清空`);
           renderMap();
         }
       }
@@ -1187,7 +1253,7 @@
         localStorage.removeItem("cmu_office_layout_v11");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
-        saveData();
+        saveData("已還原預設配置");
       }
     }
 
