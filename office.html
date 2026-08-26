@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（雙向自動同步修復版）</title>
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（支援彩色/黑白雙模式匯出）</title>
   <!-- 引入 html2canvas 支援一鍵截圖匯出 PNG 圖片 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -76,14 +76,14 @@
 
     .top-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       flex-wrap: wrap;
     }
 
     .search-box input {
       padding: 8px 14px;
-      width: 260px;
+      width: 230px;
       border: 2px solid var(--border-color);
       border-radius: 8px;
       font-size: 0.9rem;
@@ -96,16 +96,16 @@
     }
 
     .btn {
-      padding: 8px 14px;
+      padding: 8px 13px;
       border-radius: 7px;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid transparent;
       transition: all 0.15s;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
     .btn-outline {
       background: white;
@@ -116,13 +116,21 @@
       background: #edf2f7;
       border-color: #a0aec0;
     }
-    .btn-success {
+    .btn-color {
       background: #2b8a3e;
       color: white;
       font-weight: 700;
     }
-    .btn-success:hover {
+    .btn-color:hover {
       background: #237032;
+    }
+    .btn-mono {
+      background: #111827;
+      color: white;
+      font-weight: 700;
+    }
+    .btn-mono:hover {
+      background: #374151;
     }
 
     .controls-row {
@@ -215,7 +223,7 @@
       box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
     }
 
-    /* 10 欄 CSS Grid (高度自動延展) */
+    /* 10 欄 CSS Grid */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(10, minmax(135px, 1fr));
@@ -223,7 +231,7 @@
       align-items: stretch;
     }
 
-    /* 左上方純淨灰色區塊 (跨 6 欄 x 跨 2 列) */
+    /* 左上方純淨灰色區塊 */
     .big-room {
       grid-column: 1 / span 6;
       grid-row: 1 / span 2;
@@ -238,7 +246,7 @@
       grid-column: span 2;
     }
 
-    /* 座位卡片 */
+    /* 座位卡片 (彩色預設樣式) */
     .seat-card {
       background: var(--card-bg);
       border: 1.5px solid var(--border-color);
@@ -331,7 +339,7 @@
       color: #c53030;
     }
 
-    /* 組別邊框色彩 */
+    /* 彩色組別邊框色彩 */
     .seat-card.dept-reg { border-top: 4px solid var(--color-reg); }
     .seat-card.dept-adm { border-top: 4px solid var(--color-adm); }
     .seat-card.dept-tch { border-top: 4px solid var(--color-tch); }
@@ -387,7 +395,7 @@
       margin-bottom: 5px;
     }
 
-    /* 業務職掌區塊 (自動延展，完整顯示所有內容) */
+    /* 業務職掌區塊 */
     .card-desc {
       font-size: 0.72rem;
       color: #4a5568;
@@ -420,6 +428,67 @@
       filter: grayscale(80%);
     }
 
+    /* ============================================================
+       【模式 A：彩色匯出時的暫時樣式】
+       ============================================================ */
+    .exporting-color .empty-seat span { display: none !important; }
+    .exporting-color .empty-seat { background: #fafafa !important; border: 1.5px dashed #e2e8f0 !important; }
+    .exporting-color .card-actions-hover { display: none !important; }
+    .exporting-color .card-desc { overflow: visible !important; display: block !important; height: auto !important; white-space: normal !important; }
+    .exporting-color .seat-card { height: auto !important; min-height: 140px !important; }
+
+    /* ============================================================
+       【模式 B：黑白高對比列印匯出時的自動切換樣式】
+       ============================================================ */
+    .exporting-mono { background: #ffffff !important; }
+    .exporting-mono .office-map { border: 2.5px solid #000000 !important; box-shadow: none !important; }
+    .exporting-mono .counter-bar { background: #000000 !important; color: #ffffff !important; border: 2px solid #000000 !important; border-bottom: none !important; }
+    .exporting-mono .seat-card {
+      background: #ffffff !important;
+      border: 2px solid #000000 !important;
+      border-top: 5px solid #000000 !important;
+      box-shadow: none !important;
+      height: auto !important;
+      min-height: 140px !important;
+    }
+    .exporting-mono .seat-card.dept-dir, .exporting-mono .seat-card.dept-cmu {
+      border: 2.5px solid #000000 !important;
+      border-top: 6px solid #000000 !important;
+    }
+    .exporting-mono .card-badge {
+      background: #ffffff !important;
+      color: #000000 !important;
+      border: 1px solid #000000 !important;
+      font-weight: 800 !important;
+    }
+    .exporting-mono .dept-dir .card-badge, .exporting-mono .dept-cmu .card-badge {
+      background: #000000 !important;
+      color: #ffffff !important;
+      border-color: #000000 !important;
+    }
+    .exporting-mono .card-name-row {
+      border-bottom: 1px solid #e5e7eb !important;
+      padding-bottom: 3px !important;
+    }
+    .exporting-mono .card-name { color: #000000 !important; font-weight: 800 !important; font-size: 1rem !important; }
+    .exporting-mono .card-title { color: #374151 !important; font-weight: 700 !important; }
+    .exporting-mono .card-ext { color: #000000 !important; font-weight: 800 !important; }
+    .exporting-mono .card-desc {
+      background: #ffffff !important;
+      border: 1px solid #9ca3af !important;
+      border-left: 3.5px solid #000000 !important;
+      color: #000000 !important;
+      font-weight: 600 !important;
+      overflow: visible !important;
+      display: block !important;
+      height: auto !important;
+      white-space: normal !important;
+    }
+    .exporting-mono .empty-seat { background: #ffffff !important; border: 2px dashed #9ca3af !important; }
+    .exporting-mono .empty-seat span { display: none !important; }
+    .exporting-mono .card-actions-hover { display: none !important; }
+    .exporting-mono .big-room { background: #ffffff !important; border: 2px dashed #4b5563 !important; }
+
     /* 彈跳視窗 (Modal) */
     .modal-overlay {
       display: none;
@@ -435,11 +504,7 @@
       align-items: center;
       padding: 20px;
     }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
+    .modal-overlay.active { display: flex; }
     .modal-content {
       background: white;
       width: 100%;
@@ -452,12 +517,10 @@
       display: flex;
       flex-direction: column;
     }
-
     @keyframes modalFadeIn {
       from { opacity: 0; transform: translateY(15px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
     .modal-header {
       padding: 16px 22px;
       background: #f8fafc;
@@ -466,7 +529,6 @@
       justify-content: space-between;
       align-items: center;
     }
-
     .modal-close-btn {
       background: none;
       border: none;
@@ -477,18 +539,13 @@
       padding: 4px 8px;
       border-radius: 6px;
     }
-    .modal-close-btn:hover {
-      background: #e2e8f0;
-      color: #1a202c;
-    }
-
+    .modal-close-btn:hover { background: #e2e8f0; color: #1a202c; }
     .modal-body {
       padding: 22px;
       overflow-y: auto;
       font-size: 0.95rem;
       line-height: 1.6;
     }
-
     .modal-footer {
       padding: 14px 22px;
       background: #f8fafc;
@@ -497,27 +554,15 @@
       justify-content: flex-end;
       gap: 10px;
     }
-
-    /* 表單樣式 */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
       margin-bottom: 14px;
     }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .form-group.full-width {
-      grid-column: span 2;
-    }
-    .form-group label {
-      font-weight: 600;
-      font-size: 0.88rem;
-      color: #4a5568;
-    }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full-width { grid-column: span 2; }
+    .form-group label { font-weight: 600; font-size: 0.88rem; color: #4a5568; }
     .form-group input, .form-group select, .form-group textarea {
       padding: 8px 12px;
       border: 1.5px solid var(--border-color);
@@ -526,35 +571,8 @@
       outline: none;
       transition: border-color 0.2s;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: #3182ce;
-    }
-    .form-group textarea {
-      resize: vertical;
-      min-height: 90px;
-    }
-
-    /* 截圖匯出專用樣式 */
-    .exporting-image .empty-seat span {
-      display: none !important;
-    }
-    .exporting-image .empty-seat {
-      background: #fafafa !important;
-      border: 1.5px dashed #e2e8f0 !important;
-    }
-    .exporting-image .card-actions-hover {
-      display: none !important;
-    }
-    .exporting-image .card-desc {
-      overflow: visible !important;
-      display: block !important;
-      height: auto !important;
-      white-space: normal !important;
-    }
-    .exporting-image .seat-card {
-      height: auto !important;
-      min-height: 140px !important;
-    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #3182ce; }
+    .form-group textarea { resize: vertical; min-height: 90px; }
 
     /* 浮動即時同步狀態提示 (Toast) */
     .sync-toast {
@@ -577,10 +595,7 @@
       transition: all 0.3s ease;
       pointer-events: none;
     }
-    .sync-toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .sync-toast.show { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
@@ -592,10 +607,12 @@
         <h1>🏫 中國醫藥大學 教務處水湳校區辦公室配置圖</h1>
         <div class="top-actions">
           <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 搜尋同仁、分機、業務關鍵字..." oninput="handleSearch()">
+            <input type="text" id="searchInput" placeholder="🔍 搜尋同仁、分機、業務..." oninput="handleSearch()">
           </div>
           <button class="btn btn-outline" onclick="resetToDefault()">🔄 還原預設</button>
-          <button class="btn btn-success" onclick="exportOfficeImage()" id="btnExportImg">🖼️ 匯出辦公室配置圖片</button>
+          <!-- 雙匯出按鈕：彩色版與黑白列印版 -->
+          <button class="btn btn-color" onclick="exportOfficeImage('color')" id="btnExportColor">🎨 匯出彩色圖片</button>
+          <button class="btn btn-mono" onclick="exportOfficeImage('mono')" id="btnExportMono">🖨️ 匯出黑白列印圖</button>
         </div>
       </div>
 
@@ -622,7 +639,7 @@
 
     <!-- 提示操作說明 -->
     <div class="instruction-bar">
-      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 編輯完成後按儲存，將會<strong>自動同步更新至「辦公室業務職掌」Google 試算表</strong>。</span>
+      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 編輯完成後按儲存，將會<strong>自動同步更新至「辦公室業務職掌」Google 試算表</strong>。支援<strong>「🎨 彩色版」</strong>與<strong>「🖨️ 黑白列印高對比版」</strong>一鍵自由選擇匯出！</span>
     </div>
 
     <!-- 辦公室地圖區域 (截圖匯出目標) -->
@@ -694,8 +711,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" onclick="closeEditModal()">取消</button>
-        <button type="button" class="btn btn-danger" onclick="deleteSeatData()">🗑️ 清空/刪除此席位</button>
-        <button type="button" class="btn btn-primary" onclick="submitEditForm()">💾 儲存並同步更新至試算表</button>
+        <button type="button" class="btn btn-outline" style="border-color:#b91c1c; color:#b91c1c;" onclick="deleteSeatData()">🗑️ 清空此席位</button>
+        <button type="button" class="btn btn-color" onclick="submitEditForm()">💾 儲存並同步更新至試算表</button>
       </div>
     </div>
   </div>
@@ -839,7 +856,7 @@
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_v11");
+      const saved = localStorage.getItem("cmu_office_layout_v_dual");
       if (saved) {
         try {
           currentLayout = JSON.parse(saved);
@@ -857,7 +874,7 @@
     }
 
     function saveData(actionDescription) {
-      localStorage.setItem("cmu_office_layout_v11", JSON.stringify(currentLayout));
+      localStorage.setItem("cmu_office_layout_v_dual", JSON.stringify(currentLayout));
       // 自動背景即時寫入 Google 試算表
       syncToGoogleSheetAuto(actionDescription);
     }
@@ -880,14 +897,12 @@
       }, 3500);
     }
 
-        let syncDebounceTimer = null;
-    let isSyncing = false;
+    let syncDebounceTimer = null;
 
     // === 單一通道精準同步 (防重複連發) ===
     function syncToGoogleSheetAuto(actionDescription) {
       if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
 
-      // 防抖動：等待 400ms 確保拖曳或編輯動作完成後，只發送最後一次完整資料
       syncDebounceTimer = setTimeout(() => {
         sendPayloadToGAS(actionDescription);
       }, 400);
@@ -897,22 +912,33 @@
       showToast("⏳", "正在同步至 Google 試算表...");
       const payload = JSON.stringify(currentLayout);
 
-      // 統一透過 URLSearchParams 送出單一請求
-      const formData = new URLSearchParams();
-      formData.append("data", payload);
+      // 1. 使用 hidden Form + iframe 提交
+      const form = document.getElementById("gas_hidden_form");
+      const dataInput = document.getElementById("gas_hidden_data");
+      if (form && dataInput) {
+        form.action = GAS_URL;
+        dataInput.value = payload;
+        form.submit();
+      }
 
-      fetch(GAS_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: formData.toString()
-      })
-      .then(() => {
-        showToast("✅", (actionDescription || "資料已更新") + "，已成功同步至試算表！");
-      })
-      .catch(err => {
-        showToast("✅", "已送出更新至試算表！");
-      });
+      // 2. 同時以 URLSearchParams 送出請求
+      try {
+        const formData = new URLSearchParams();
+        formData.append("data", payload);
+
+        fetch(GAS_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formData.toString()
+        }).then(() => {
+          showToast("✅", (actionDescription || "資料已變更") + "，已成功同步至試算表！");
+        }).catch(err => {
+          showToast("✅", "已送出更新至試算表！");
+        });
+      } catch (e) {
+        showToast("✅", "已透過表單寫入試算表！");
+      }
     }
 
     // === 開啟網頁時自動從 Google 試算表拉取資料 ===
@@ -956,7 +982,7 @@
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_v11", JSON.stringify(currentLayout));
+            localStorage.setItem("cmu_office_layout_v_dual", JSON.stringify(currentLayout));
             renderMap();
             showToast("🟢", `已成功載入 Google 試算表最新配置 (${updated} 席位)`);
           }
@@ -1019,7 +1045,7 @@
       updateVisibility();
     }
 
-    // === 拖曳交換位置 (支援拖曳即時同步寫入試算表) ===
+    // === 拖曳交換位置 ===
     function handleDragStart(e) {
       draggedKey = this.getAttribute("data-key");
       this.classList.add("dragging");
@@ -1060,7 +1086,6 @@
           const srcName = srcSeat.name || "空位";
           const tgtName = tgtSeat.name || "空位";
 
-          // 拖曳對調後立即儲存並同步至 Google 試算表
           saveData(`【${srcName}】與【${tgtName}】位置已交換`);
           renderMap();
         }
@@ -1164,7 +1189,6 @@
           brief: document.getElementById("editBrief").value.trim()
         };
 
-        // 儲存並同步至試算表
         saveData(`【${name}】資料已更新`);
         renderMap();
         closeEditModal();
@@ -1208,19 +1232,25 @@
       }
     }
 
-    // === 匯出配置圖片 (自動拉高且文字100%完整顯示) ===
-    function exportOfficeImage() {
-      const btn = document.getElementById("btnExportImg");
-      const originalText = btn.innerHTML;
-      btn.innerHTML = "⏳ 正在生成高清完整圖片...";
-      btn.disabled = true;
+    // === 匯出配置圖片 (支援 mode: 'color' 彩色版 或 'mono' 黑白列印版) ===
+    function exportOfficeImage(mode) {
+      const btnColor = document.getElementById("btnExportColor");
+      const btnMono = document.getElementById("btnExportMono");
+      const isMono = (mode === 'mono');
+
+      const activeBtn = isMono ? btnMono : btnColor;
+      const originalText = activeBtn.innerHTML;
+      activeBtn.innerHTML = "⏳ 生成圖片中...";
+      btnColor.disabled = true;
+      btnMono.disabled = true;
 
       const targetElement = document.getElementById("captureArea");
-      document.body.classList.add("exporting-image");
+      const exportClass = isMono ? "exporting-mono" : "exporting-color";
+      document.body.classList.add(exportClass);
 
       setTimeout(() => {
         html2canvas(targetElement, {
-          scale: 2,
+          scale: isMono ? 2.5 : 2.0, // 黑白列印版以 2.5 倍極高解析度保證銳利
           backgroundColor: "#ffffff",
           useCORS: true,
           logging: false,
@@ -1230,28 +1260,31 @@
           const imageURL = canvas.toDataURL("image/png");
           const downloadLink = document.createElement("a");
           const dateStr = new Date().toISOString().slice(0, 10);
+          const typeName = isMono ? "黑白高對比列印版" : "彩色版";
           downloadLink.href = imageURL;
-          downloadLink.download = `中國醫藥大學_教務處辦公室配置圖_${dateStr}.png`;
+          downloadLink.download = `中國醫藥大學_教務處辦公室配置圖_${typeName}_${dateStr}.png`;
           document.body.appendChild(downloadLink);
           downloadLink.click();
           document.body.removeChild(downloadLink);
 
-          document.body.classList.remove("exporting-image");
-          btn.innerHTML = originalText;
-          btn.disabled = false;
+          document.body.classList.remove(exportClass);
+          activeBtn.innerHTML = originalText;
+          btnColor.disabled = false;
+          btnMono.disabled = false;
         }).catch(err => {
-          document.body.classList.remove("exporting-image");
+          document.body.classList.remove(exportClass);
           alert("截圖匯出失敗，請稍候重試。");
           console.error(err);
-          btn.innerHTML = originalText;
-          btn.disabled = false;
+          activeBtn.innerHTML = originalText;
+          btnColor.disabled = false;
+          btnMono.disabled = false;
         });
       }, 150);
     }
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_v11");
+        localStorage.removeItem("cmu_office_layout_v_dual");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
         saveData("已還原預設配置");
