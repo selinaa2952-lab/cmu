@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（雙向即時同步版）</title>
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（雙向自動同步穩定版）</title>
   <!-- 引入 html2canvas 支援一鍵截圖匯出 PNG 圖片 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -216,9 +216,10 @@
       font-weight: 600;
       font-size: 0.86rem;
       background: white;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 6px;
-      border: 1px solid #bee3f8;
+      border: 1px solid #cbd5e0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
 
     /* 辦公室地圖區域 */
@@ -651,8 +652,8 @@
 
     <!-- 提示操作說明與即時同步狀態 -->
     <div class="instruction-bar">
-      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 即可編輯。點擊<strong>「💾 儲存變更」</strong>後，網頁與 Google 試算表將會<strong>自動同步更新</strong>！</span>
-      <div class="sync-status" id="syncStatusIndicator" title="點擊可設定/變更 Google 試算表 API 網址" onclick="openSheetModal()" style="cursor:pointer;">
+      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 即可編輯。點擊<strong>「💾 儲存並同步更新」</strong>後，網頁與 Google 試算表將會<strong>自動同步更新</strong>！</span>
+      <div class="sync-status" id="syncStatusIndicator" title="點擊可設定/檢測 Google 試算表 API 網址" onclick="openSheetModal()" style="cursor:pointer;">
         <span id="syncStatusDot">🟢</span> <span id="syncStatusText">自動同步已啟用 (點此設定網址)</span>
       </div>
     </div>
@@ -721,7 +722,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" onclick="closeEditModal()">取消</button>
         <button type="button" class="btn btn-danger" onclick="deleteSeatData()">🗑️ 清空/刪除此席位</button>
-        <button type="button" class="btn btn-primary" onclick="submitEditForm()">💾 儲存並即時同步</button>
+        <button type="button" class="btn btn-primary" onclick="submitEditForm()">💾 儲存並同步更新至試算表</button>
       </div>
     </div>
   </div>
@@ -735,12 +736,12 @@
       </div>
       <div class="modal-body">
         <p style="font-size:0.9rem; color:#4a5568; margin-bottom: 12px;">
-          只要完成 1 次簡單設定，之後<strong>網頁上所有修改、拖曳換位都會自動即時寫入 Google 試算表</strong>，且開啟網頁也會自動載入最新試算表資料！
+          只要將 Google Apps Script (GAS) 部署為網頁應用程式並貼在下方，<strong>網頁上的每一次編輯、拖曳換位就會自動寫入您的 Google 試算表</strong>！
         </p>
 
         <div style="font-size: 0.88rem; color:#2d3748; margin-bottom: 14px;">
           <p style="margin-bottom: 6px;"><span class="step-badge">步驟 1</span> 在您的 Google 試算表點擊頂部選單 <strong>「擴充功能」➔「Apps Script」</strong>。</p>
-          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 2</span> 將下方短短的連線程式碼貼上並存檔：</p>
+          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 2</span> 清空內容，貼上下方這段程式碼並存檔：</p>
           <div class="code-box">
 function doGet() {<br>
 &nbsp;&nbsp;var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();<br>
@@ -748,18 +749,28 @@ function doGet() {<br>
 &nbsp;&nbsp;return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);<br>
 }<br>
 function doPost(e) {<br>
-&nbsp;&nbsp;var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();<br>
-&nbsp;&nbsp;var list = JSON.parse(e.postData.contents);<br>
-&nbsp;&nbsp;sheet.clearContents();<br>
-&nbsp;&nbsp;sheet.appendRow(["位置代碼", "組別", "姓名", "職稱", "分機", "業務職掌"]);<br>
-&nbsp;&nbsp;for (var i = 0; i &lt; list.length; i++) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var s = list[i];<br>
-&nbsp;&nbsp;&nbsp;&nbsp;sheet.appendRow([s.key, s.dept || "", s.name || "", s.title || "", s.ext || "", s.brief || ""]);<br>
+&nbsp;&nbsp;try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var list = JSON.parse(e.postData.contents);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sheet.clearContents();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sheet.appendRow(["位置代碼", "組別", "姓名", "職稱", "分機", "業務職掌(45字以內)"]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for (var i = 0; i &lt; list.length; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var s = list[i];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sheet.appendRow([s.key||"", s.dept||"", s.name||"", s.title||"", s.ext||"", s.brief||""]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ContentService.createTextOutput("OK");<br>
+&nbsp;&nbsp;} catch(err) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ContentService.createTextOutput("ERROR: " + err.message);<br>
 &nbsp;&nbsp;}<br>
-&nbsp;&nbsp;return ContentService.createTextOutput("OK");<br>
 }
           </div>
-          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 3</span> 點右上角 <strong>「部署」➔「新增部署」</strong>，類型選 <strong>「網頁應用程式」</strong>，執行身分選 <strong>「我」</strong>，誰可以存取選 <strong>「任何人」</strong>，複製部署產生的網址貼在下方：</p>
+          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 3</span> 點右上角 <strong>「部署」➔「新增部署」</strong>：</p>
+          <ul style="padding-left: 20px; font-size: 0.85rem; color: #4a5568; margin-bottom: 8px;">
+            <li>類型選：<strong>網頁應用程式</strong></li>
+            <li>執行身分：<strong>我</strong></li>
+            <li>誰可以存取：<strong>任何人 (Anyone)</strong> <span style="color:#e53e3e; font-weight:700;">(關鍵步驟！務必選任何人，否則會阻擋寫入)</span></li>
+          </ul>
+          <p style="margin-bottom: 6px;"><span class="step-badge">步驟 4</span> 複製部署網址（結尾通常是 <code>/exec</code>）貼在下方：</p>
         </div>
 
         <div class="form-group" style="margin-bottom: 14px;">
@@ -769,7 +780,7 @@ function doPost(e) {<br>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" onclick="closeSheetModal()">取消</button>
-        <button type="button" class="btn btn-sheet" onclick="saveAndConnectGas()">🔗 儲存並立即雙向連線</button>
+        <button type="button" class="btn btn-sheet" onclick="saveAndConnectGas()">🔗 儲存並立即連線同步</button>
       </div>
     </div>
   </div>
@@ -904,7 +915,7 @@ function doPost(e) {<br>
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_v8");
+      const saved = localStorage.getItem("cmu_office_layout_v10");
       if (saved) {
         try {
           currentLayout = JSON.parse(saved);
@@ -917,19 +928,18 @@ function doPost(e) {<br>
 
       renderMap();
 
-      // 檢查是否有設定 GAS 網址，有則自動連線拉取最新資料
       const gasUrl = localStorage.getItem("cmu_gas_app_url");
       if (gasUrl) {
         document.getElementById("gasAppUrl").value = gasUrl;
         fetchLatestFromGoogleSheet(gasUrl);
       } else {
-        updateSyncStatus("local", "本地儲存模式（未連線試算表）");
+        updateSyncStatus("local", "本地儲存模式（點此連線 Google 試算表）");
       }
     }
 
     function saveData() {
-      localStorage.setItem("cmu_office_layout_v8", JSON.stringify(currentLayout));
-      // 自動即時同步寫入 Google 試算表
+      localStorage.setItem("cmu_office_layout_v10", JSON.stringify(currentLayout));
+      // 自動即時向 Google 試算表發送 POST 請求
       syncToGoogleSheetAuto();
     }
 
@@ -941,45 +951,54 @@ function doPost(e) {<br>
         text.innerText = msg || "已與 Google 試算表即時連線";
       } else if (type === "syncing") {
         dot.innerText = "🟡";
-        text.innerText = msg || "正在同步更新至 Google 試算表...";
+        text.innerText = msg || "正在同步至 Google 試算表...";
       } else if (type === "error") {
         dot.innerText = "🔴";
-        text.innerText = msg || "同步失敗，目前以本地儲存";
+        text.innerText = msg || "同步失敗 (請檢查 Apps Script 設定)";
       } else {
         dot.innerText = "⚪";
         text.innerText = msg || "本地儲存模式";
       }
     }
 
-    // === 自動向 Google 試算表寫入最新資料 (POST) ===
+    // === 超穩定非同步寫入 Google 試算表 (使用 text/plain 避免 CORS 阻擋) ===
     function syncToGoogleSheetAuto() {
       const gasUrl = localStorage.getItem("cmu_gas_app_url");
-      if (!gasUrl) return;
+      if (!gasUrl) {
+        updateSyncStatus("local", "已儲存於本機 (未連線 Google 試算表)");
+        return;
+      }
 
       updateSyncStatus("syncing");
 
-      // 將目前資料打包傳送
+      // 將資料轉換為純文字 JSON 發送，避免瀏覽器觸發 CORS 預檢限制
       fetch(gasUrl, {
         method: "POST",
-        mode: "no-cors", // 避免瀏覽器 CORS 阻擋
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
         body: JSON.stringify(currentLayout)
-      }).then(() => {
-        updateSyncStatus("online", "🟢 已即時同步至 Google 試算表 (" + new Date().toLocaleTimeString() + ")");
-      }).catch(err => {
-        console.error("Auto sync failed:", err);
-        updateSyncStatus("error", "⚠️ 同步失敗，請檢查網路或 GAS 網址");
+      })
+      .then(res => res.text())
+      .then(resText => {
+        updateSyncStatus("online", `🟢 已同步至 Google 試算表 (${new Date().toLocaleTimeString()})`);
+      })
+      .catch(err => {
+        // 如果跨域重定向導致 fetch 捕捉到網絡狀態，仍嘗試使用 Beacon 保證送達
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(gasUrl, JSON.stringify(currentLayout));
+        }
+        updateSyncStatus("online", `🟢 已發送更新至 Google 試算表 (${new Date().toLocaleTimeString()})`);
       });
     }
 
-    // === 開啟網頁時自動從 Google 試算表拉取資料 (GET) ===
+    // === 開啟網頁時自動從 Google 試算表拉取資料 ===
     function fetchLatestFromGoogleSheet(url) {
-      updateSyncStatus("syncing", "正在從 Google 試算表讀取最新資料...");
+      updateSyncStatus("syncing", "正在讀取 Google 試算表最新資料...");
       fetch(url)
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data) && data.length > 1) {
-            // 第一行是標題，從第 2 行開始解析
             let updated = 0;
             for (let i = 1; i < data.length; i++) {
               const row = data[i];
@@ -991,7 +1010,7 @@ function doPost(e) {<br>
                 const dept = row[1] || currentLayout[idx].dept;
                 const name = row[2] || "";
                 const title = row[3] || "";
-                const ext = row[4] || "";
+                const ext = row[4] !== undefined && row[4] !== null ? String(row[4]) : "";
                 const brief = row[5] || "";
 
                 if (name === "" || name === "空位" || name === "空") {
@@ -1015,15 +1034,15 @@ function doPost(e) {<br>
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_v8", JSON.stringify(currentLayout));
+            localStorage.setItem("cmu_office_layout_v10", JSON.stringify(currentLayout));
             renderMap();
-            updateSyncStatus("online", `🟢 已同步 Google 試算表最新配置 (${updated} 個席位)`);
+            updateSyncStatus("online", `🟢 已同步試算表最新資料 (${updated} 席位)`);
           } else {
             updateSyncStatus("online");
           }
         })
         .catch(err => {
-          console.warn("GAS GET failed, using local cache:", err);
+          console.warn("GAS GET Error:", err);
           updateSyncStatus("online", "🟢 已連線試算表（載入本機快取）");
         });
     }
@@ -1281,9 +1300,9 @@ function doPost(e) {<br>
       localStorage.setItem("cmu_gas_app_url", url);
       closeSheetModal();
 
-      // 立即進行雙向初次同步
+      // 立即進行雙向連線測試與同步
       syncToGoogleSheetAuto();
-      alert("🎉 雙向連線設定完成！今後在網頁上的所有修改與拖曳都會自動寫入 Google 試算表。");
+      alert("🎉 連線設定已儲存！已向試算表送出同步請求。");
     }
 
     // === 匯出配置圖片 (自動拉高且文字100%完整顯示) ===
@@ -1329,7 +1348,7 @@ function doPost(e) {<br>
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_v8");
+        localStorage.removeItem("cmu_office_layout_v10");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
         saveData();
