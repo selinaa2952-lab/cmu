@@ -3,29 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（支援彩色/黑白雙模式匯出）</title>
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（A4滿版極致清晰版）</title>
   <!-- 引入 html2canvas 支援一鍵截圖匯出 PNG 圖片 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
       --bg-color: #f0f4f8;
       --card-bg: #ffffff;
-      --text-main: #2d3748;
-      --text-muted: #718096;
-      --border-color: #cbd5e0;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
       
-      --color-reg: #2b6cb0;
-      --color-reg-bg: #ebf8ff;
-      --color-adm: #c53030;
-      --color-adm-bg: #fff5f5;
-      --color-tch: #2f855a;
-      --color-tch-bg: #f0fff4;
-      --color-grd: #805ad5;
+      --color-reg: #1d4ed8;
+      --color-reg-bg: #eff6ff;
+      --color-adm: #b91c1c;
+      --color-adm-bg: #fef2f2;
+      --color-tch: #15803d;
+      --color-tch-bg: #f0fdf4;
+      --color-grd: #6d28d9;
       --color-grd-bg: #faf5ff;
-      --color-dir: #d69e2e;
-      --color-dir-bg: #fffdf5;
-      --color-other: #4a5568;
-      --color-other-bg: #edf2f7;
+      --color-dir: #b45309;
+      --color-dir-bg: #fffbeb;
+      --color-other: #475569;
+      --color-other-bg: #f8fafc;
     }
 
     * {
@@ -42,7 +42,7 @@
     }
 
     .container {
-      max-width: 1580px;
+      max-width: 1560px;
       margin: 0 auto;
     }
 
@@ -67,8 +67,8 @@
 
     h1 {
       font-size: 1.45rem;
-      font-weight: 700;
-      color: #1a202c;
+      font-weight: 800;
+      color: #0f172a;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -76,14 +76,14 @@
 
     .top-actions {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
       flex-wrap: wrap;
     }
 
     .search-box input {
       padding: 8px 14px;
-      width: 230px;
+      width: 250px;
       border: 2px solid var(--border-color);
       border-radius: 8px;
       font-size: 0.9rem;
@@ -96,16 +96,16 @@
     }
 
     .btn {
-      padding: 8px 13px;
+      padding: 8px 15px;
       border-radius: 7px;
-      font-size: 0.86rem;
-      font-weight: 600;
+      font-size: 0.88rem;
+      font-weight: 700;
       cursor: pointer;
       border: 1px solid transparent;
       transition: all 0.15s;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
     .btn-outline {
       background: white;
@@ -117,20 +117,18 @@
       border-color: #a0aec0;
     }
     .btn-color {
-      background: #2b8a3e;
+      background: #15803d;
       color: white;
-      font-weight: 700;
     }
     .btn-color:hover {
-      background: #237032;
+      background: #166534;
     }
     .btn-mono {
-      background: #111827;
+      background: #0f172a;
       color: white;
-      font-weight: 700;
     }
     .btn-mono:hover {
-      background: #374151;
+      background: #334155;
     }
 
     .controls-row {
@@ -154,15 +152,15 @@
       gap: 6px;
       cursor: pointer;
       font-size: 0.92rem;
-      font-weight: 500;
+      font-weight: 600;
       user-select: none;
     }
 
     .checkbox-label input[type="checkbox"] {
-      width: 17px;
-      height: 17px;
+      width: 18px;
+      height: 18px;
       cursor: pointer;
-      accent-color: #3182ce;
+      accent-color: #1d4ed8;
     }
 
     .legend-group {
@@ -172,19 +170,19 @@
     }
 
     .legend-tag {
-      padding: 4px 9px;
+      padding: 4px 10px;
       border-radius: 6px;
       font-size: 0.78rem;
-      font-weight: 600;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
 
     .instruction-bar {
-      background: #ebf8ff;
-      border: 1px solid #bee3f8;
-      color: #2b6cb0;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
       padding: 10px 16px;
       border-radius: 8px;
       font-size: 0.88rem;
@@ -197,48 +195,56 @@
     }
 
     /* 辦公室地圖區域 */
+    .office-map-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
     .office-map {
       background: white;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
-      overflow-x: auto;
+      padding: 16px;
+      border-radius: 8px;
+      border: 2px solid #0f172a;
+      width: 100%;
+      min-width: 1320px;
+      margin: 0 auto;
     }
 
     .map-header-bar {
       text-align: right;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .counter-bar {
       display: inline-block;
       width: 40%;
-      background: #334155;
+      background: #0f172a;
       color: white;
       text-align: center;
-      padding: 9px 0;
-      font-weight: 700;
+      padding: 8px 0;
+      font-weight: 800;
       letter-spacing: 6px;
+      font-size: 1.05rem;
       border-radius: 6px 6px 0 0;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
     }
 
-    /* 10 欄 CSS Grid */
+    /* 10 欄 CSS Grid (固定比例分佈，永不溢出裁切) */
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(10, minmax(135px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 10px;
       align-items: stretch;
+      width: 100%;
     }
 
-    /* 左上方純淨灰色區塊 */
+    /* 左上方純淨灰色區塊 (跨 6 欄 x 跨 2 列) */
     .big-room {
       grid-column: 1 / span 6;
       grid-row: 1 / span 2;
-      background: #f1f5f9;
-      border: 1.5px dashed #cbd5e1;
-      border-radius: 10px;
-      min-height: 180px;
+      background: #f8fafc;
+      border: 1.5px dashed #94a3b8;
+      border-radius: 6px;
+      min-height: 140px;
     }
 
     /* 合併跨欄座位 (教務長室 / 教務處總機) */
@@ -246,21 +252,20 @@
       grid-column: span 2;
     }
 
-    /* 座位卡片 (彩色預設樣式) */
+    /* 座位卡片基礎設定 */
     .seat-card {
-      background: var(--card-bg);
-      border: 1.5px solid var(--border-color);
-      border-radius: 8px;
-      padding: 10px 9px;
-      min-height: 120px;
-      height: 100%;
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 8px 6px;
+      min-height: 95px;
       display: flex;
       flex-direction: column;
+      justify-content: flex-start;
       position: relative;
-      transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
       user-select: none;
       cursor: grab;
+      transition: all 0.15s ease;
     }
 
     .seat-card:active {
@@ -268,52 +273,49 @@
     }
 
     .seat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 12px rgba(0,0,0,0.1);
-      border-color: #3182ce;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+      border-color: #1d4ed8;
       z-index: 5;
     }
 
     /* 拖曳狀態樣式 */
     .seat-card.dragging {
       opacity: 0.35;
-      border: 2px dashed #3182ce;
-      transform: scale(0.96);
+      border: 2px dashed #1d4ed8;
     }
 
     .seat-card.drag-over {
-      border: 2.5px dashed #38a169 !important;
-      background-color: #f0fff4 !important;
-      transform: scale(1.02);
+      border: 2.5px dashed #15803d !important;
+      background-color: #f0fdf4 !important;
     }
 
     /* 空座位 */
     .seat-card.empty-seat {
       background: #f8fafc;
-      border: 1.5px dashed #cbd5e0;
+      border: 1.5px dashed #cbd5e1;
       align-items: center;
       justify-content: center;
-      color: #a0aec0;
+      color: #94a3b8;
       font-size: 0.8rem;
       cursor: pointer;
     }
     .seat-card.empty-seat:hover {
-      border-color: #3182ce;
-      color: #3182ce;
-      background: #ebf8ff;
+      border-color: #1d4ed8;
+      color: #1d4ed8;
+      background: #eff6ff;
     }
 
     /* 卡片操作小工具列 */
     .card-actions-hover {
       position: absolute;
-      top: 4px;
-      right: 4px;
+      top: 3px;
+      right: 3px;
       display: none;
-      gap: 3px;
+      gap: 2px;
       background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #cbd5e1;
       border-radius: 4px;
-      padding: 2px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      padding: 1px 2px;
       z-index: 10;
     }
 
@@ -325,18 +327,14 @@
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       padding: 2px 4px;
       border-radius: 3px;
-      color: #4a5568;
+      color: #334155;
     }
     .mini-btn:hover {
-      background: #edf2f7;
-      color: #2b6cb0;
-    }
-    .mini-btn.del-btn:hover {
-      background: #fed7d7;
-      color: #c53030;
+      background: #f1f5f9;
+      color: #1d4ed8;
     }
 
     /* 彩色組別邊框色彩 */
@@ -344,18 +342,19 @@
     .seat-card.dept-adm { border-top: 4px solid var(--color-adm); }
     .seat-card.dept-tch { border-top: 4px solid var(--color-tch); }
     .seat-card.dept-grd { border-top: 4px solid var(--color-grd); }
-    .seat-card.dept-dir { border-top: 4px solid var(--color-dir); background: var(--color-dir-bg); }
-    .seat-card.dept-cmu { border-top: 4px solid var(--color-dir); background: var(--color-dir-bg); }
+    .seat-card.dept-dir { border-top: 5px solid var(--color-dir); background: var(--color-dir-bg); }
+    .seat-card.dept-cmu { border-top: 5px solid var(--color-dir); background: var(--color-dir-bg); }
     .seat-card.dept-other { border-top: 4px solid var(--color-other); }
 
     .card-badge {
       font-size: 0.72rem;
       font-weight: 700;
-      padding: 2px 6px;
+      padding: 2px 5px;
       border-radius: 4px;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       display: inline-block;
       width: fit-content;
+      line-height: 1.2;
     }
     .dept-reg .card-badge { background: var(--color-reg-bg); color: var(--color-reg); }
     .dept-adm .card-badge { background: var(--color-adm-bg); color: var(--color-adm); }
@@ -374,36 +373,38 @@
     }
 
     .card-name {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #1a202c;
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.5px;
     }
 
     .card-title {
       font-size: 0.72rem;
       color: var(--text-muted);
       white-space: nowrap;
+      font-weight: 600;
     }
 
     .card-ext {
       font-size: 0.8rem;
-      font-weight: 600;
-      color: #4a5568;
+      font-weight: 700;
+      color: #334155;
       display: flex;
       align-items: center;
       gap: 2px;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
 
     /* 業務職掌區塊 */
     .card-desc {
       font-size: 0.72rem;
-      color: #4a5568;
-      line-height: 1.4;
-      background: #f7fafc;
-      padding: 5px 6px;
+      color: #334155;
+      line-height: 1.38;
+      background: #f8fafc;
+      padding: 4px 6px;
       border-radius: 4px;
-      border-left: 2px solid #cbd5e0;
+      border-left: 2px solid #94a3b8;
       flex-grow: 1;
       word-break: break-all;
       white-space: normal;
@@ -411,95 +412,115 @@
 
     .seat-span-2 .card-desc {
       background: #ffffff;
-      border-left-color: #d69e2e;
+      border-left-color: #b45309;
+    }
+
+    /* ============================================================
+       🔥【智能字體自適應放大：當「業務職掌」隱藏時自動啟用】🔥
+       ============================================================ */
+    body.hide-desc-mode .seat-card {
+      min-height: 85px;
+      padding: 10px 8px;
+      justify-content: space-around;
+    }
+    body.hide-desc-mode .card-badge {
+      font-size: 0.78rem;
+      padding: 2px 6px;
+      margin-bottom: 2px;
+    }
+    body.hide-desc-mode .card-name {
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+    body.hide-desc-mode .card-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    body.hide-desc-mode .card-ext {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 0px;
+    }
+    body.hide-desc-mode .big-room {
+      min-height: 120px;
     }
 
     /* 搜尋高亮 */
     .seat-card.search-match {
-      border: 2.5px solid #e53e3e !important;
+      border: 2.5px solid #b91c1c !important;
       background-color: #fffaf0 !important;
-      transform: scale(1.03);
-      box-shadow: 0 0 12px rgba(229, 62, 62, 0.35);
+      transform: scale(1.02);
       z-index: 10;
     }
 
     .seat-card.search-dimmed {
-      opacity: 0.25;
-      filter: grayscale(80%);
+      opacity: 0.2;
     }
 
-    
-    /* A4 滿版匯出專用設定 (無多餘外圍白邊、精準 A4 比例) */
-    .exporting-color #captureArea,
-    .exporting-mono #captureArea {
-      padding: 6px !important;
+    /* ============================================================
+       🖨️【A4 滿版零留白匯出專用設定 (Zero Margins Full-Bleed)】
+       ============================================================ */
+    .export-active-mode {
+      background: #ffffff !important;
+      padding: 0 !important;
       margin: 0 !important;
+    }
+    .export-active-mode #captureArea {
+      border: 2px solid #000000 !important;
       border-radius: 0 !important;
       box-shadow: none !important;
-      width: 1400px !important;
-      max-width: 1400px !important;
+      padding: 8px !important;
+      margin: 0 auto !important;
+      width: 1414px !important;       /* 精確鎖定 A4 橫向比例 297:210 */
+      max-width: 1414px !important;
+      min-width: 1414px !important;
+      box-sizing: border-box !important;
+    }
+    .export-active-mode .card-actions-hover { display: none !important; }
+    .export-active-mode .empty-seat span { display: none !important; }
+
+    /* 彩色匯出模式專用微調 */
+    .export-color-mode .seat-card {
+      border: 1.5px solid #94a3b8;
     }
 
-    /* ============================================================
-       【模式 A：彩色匯出時的暫時樣式】
-       ============================================================ */
-    .exporting-color .empty-seat span { display: none !important; }
-    .exporting-color .empty-seat { background: #fafafa !important; border: 1.5px dashed #e2e8f0 !important; }
-    .exporting-color .card-actions-hover { display: none !important; }
-    .exporting-color .card-desc { overflow: visible !important;  height: auto !important; white-space: normal !important; }
-    .exporting-color .seat-card { height: auto !important; min-height: 140px !important; }
-
-    /* ============================================================
-       【模式 B：黑白高對比列印匯出時的自動切換樣式】
-       ============================================================ */
-    .exporting-mono { background: #ffffff !important; }
-    .exporting-mono .office-map { border: 2.5px solid #000000 !important; box-shadow: none !important; }
-    .exporting-mono .counter-bar { background: #000000 !important; color: #ffffff !important; border: 2px solid #000000 !important; border-bottom: none !important; }
-    .exporting-mono .seat-card {
+    /* 黑白高對比匯出模式專用微調 */
+    .export-mono-mode #captureArea { border: 2.5px solid #000000 !important; }
+    .export-mono-mode .counter-bar { background: #000000 !important; color: #ffffff !important; border: 2px solid #000000 !important; }
+    .export-mono-mode .seat-card {
       background: #ffffff !important;
       border: 2px solid #000000 !important;
       border-top: 5px solid #000000 !important;
       box-shadow: none !important;
-      height: auto !important;
-      min-height: 140px !important;
     }
-    .exporting-mono .seat-card.dept-dir, .exporting-mono .seat-card.dept-cmu {
+    .export-mono-mode .seat-card.dept-dir, .export-mono-mode .seat-card.dept-cmu {
       border: 2.5px solid #000000 !important;
       border-top: 6px solid #000000 !important;
     }
-    .exporting-mono .card-badge {
+    .export-mono-mode .card-badge {
       background: #ffffff !important;
       color: #000000 !important;
       border: 1px solid #000000 !important;
       font-weight: 800 !important;
     }
-    .exporting-mono .dept-dir .card-badge, .exporting-mono .dept-cmu .card-badge {
+    .export-mono-mode .dept-dir .card-badge, .export-mono-mode .dept-cmu .card-badge {
       background: #000000 !important;
       color: #ffffff !important;
       border-color: #000000 !important;
     }
-    .exporting-mono .card-name-row {
-      border-bottom: 1px solid #e5e7eb !important;
-      padding-bottom: 3px !important;
-    }
-    .exporting-mono .card-name { color: #000000 !important; font-weight: 800 !important; font-size: 1rem !important; }
-    .exporting-mono .card-title { color: #374151 !important; font-weight: 700 !important; }
-    .exporting-mono .card-ext { color: #000000 !important; font-weight: 800 !important; }
-    .exporting-mono .card-desc {
+    .export-mono-mode .card-name { color: #000000 !important; font-weight: 900 !important; }
+    .export-mono-mode .card-title { color: #334155 !important; font-weight: 700 !important; }
+    .export-mono-mode .card-ext { color: #000000 !important; font-weight: 800 !important; }
+    .export-mono-mode .card-desc {
       background: #ffffff !important;
-      border: 1px solid #9ca3af !important;
+      border: 1px solid #94a3b8 !important;
       border-left: 3.5px solid #000000 !important;
       color: #000000 !important;
       font-weight: 600 !important;
-      overflow: visible !important;
-      
-      height: auto !important;
-      white-space: normal !important;
     }
-    .exporting-mono .empty-seat { background: #ffffff !important; border: 2px dashed #9ca3af !important; }
-    .exporting-mono .empty-seat span { display: none !important; }
-    .exporting-mono .card-actions-hover { display: none !important; }
-    .exporting-mono .big-room { background: #ffffff !important; border: 2px dashed #4b5563 !important; }
+    .export-mono-mode .empty-seat { background: #ffffff !important; border: 2px dashed #94a3b8 !important; }
+    .export-mono-mode .big-room { background: #ffffff !important; border: 2px dashed #475569 !important; }
 
     /* 彈跳視窗 (Modal) */
     .modal-overlay {
@@ -520,7 +541,7 @@
     .modal-content {
       background: white;
       width: 100%;
-      max-width: 650px;
+      max-width: 600px;
       border-radius: 12px;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
       overflow: hidden;
@@ -591,12 +612,12 @@
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #1e293b;
+      background: #0f172a;
       color: #f8fafc;
       padding: 10px 18px;
       border-radius: 8px;
       font-size: 0.88rem;
-      font-weight: 500;
+      font-weight: 600;
       box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
       display: flex;
       align-items: center;
@@ -622,20 +643,20 @@
             <input type="text" id="searchInput" placeholder="🔍 搜尋同仁、分機、業務..." oninput="handleSearch()">
           </div>
           <button class="btn btn-outline" onclick="resetToDefault()">🔄 還原預設</button>
-          <!-- 雙匯出按鈕：彩色版與黑白列印版 -->
-          <button class="btn btn-color" onclick="exportOfficeImage('color')" id="btnExportColor">🎨 匯出彩色圖片</button>
-          <button class="btn btn-mono" onclick="exportOfficeImage('mono')" id="btnExportMono">🖨️ 匯出黑白列印圖</button>
+          <!-- 雙匯出按鈕：A4滿版彩色 / A4滿版黑白 -->
+          <button class="btn btn-color" onclick="exportOfficeImage('color')" id="btnExportColor">🎨 匯出 A4 滿版彩色圖</button>
+          <button class="btn btn-mono" onclick="exportOfficeImage('mono')" id="btnExportMono">🖨️ 匯出 A4 滿版黑白圖</button>
         </div>
       </div>
 
       <div class="controls-row">
         <!-- 顯示勾選框 -->
         <div class="checkbox-group">
-          <span style="font-weight:700; color:#4a5568; margin-right:4px;">顯示選項：</span>
+          <span style="font-weight:800; color:#0f172a; margin-right:4px;">顯示選項：</span>
           <label class="checkbox-label"><input type="checkbox" id="chkDept" checked onchange="updateVisibility()"> 組別</label>
           <label class="checkbox-label"><input type="checkbox" id="chkName" checked onchange="updateVisibility()"> 姓名/職稱</label>
           <label class="checkbox-label"><input type="checkbox" id="chkExt" checked onchange="updateVisibility()"> 分機</label>
-          <label class="checkbox-label"><input type="checkbox" id="chkDesc" checked onchange="updateVisibility()"> 業務職掌</label>
+          <label class="checkbox-label"><input type="checkbox" id="chkDesc" onchange="updateVisibility()"> 業務職掌</label>
         </div>
 
         <!-- 圖例 -->
@@ -651,17 +672,19 @@
 
     <!-- 提示操作說明 -->
     <div class="instruction-bar">
-      <span>✋ <strong>操作提示：</strong> 在網頁上<strong>按住拖曳座位卡片</strong>即可交換位置，點擊 ✏️ 編輯完成後按儲存，將會<strong>自動同步更新至「辦公室業務職掌」Google 試算表</strong>。支援<strong>「🎨 彩色版」</strong>與<strong>「🖨️ 黑白列印高對比版」</strong>一鍵自由選擇匯出！</span>
+      <span>💡 <strong>智能自適應排版：</strong> 當取消勾選「業務職掌」時，姓名與分機<strong>自動放大 1.3 倍</strong>並均勻填滿畫面！匯出圖片已鎖定 <strong>A4 滿版零裁切</strong>。</span>
     </div>
 
     <!-- 辦公室地圖區域 (截圖匯出目標) -->
-    <div class="office-map" id="captureArea">
-      <div class="map-header-bar">
-        <div class="counter-bar">【 櫃 台 】</div>
-      </div>
+    <div class="office-map-wrapper">
+      <div class="office-map" id="captureArea">
+        <div class="map-header-bar">
+          <div class="counter-bar">【 櫃 台 】</div>
+        </div>
 
-      <div class="grid-container" id="gridMap">
-        <!-- JS 動態生成座位卡片與格局 -->
+        <div class="grid-container" id="gridMap">
+          <!-- JS 動態生成座位卡片與格局 -->
+        </div>
       </div>
     </div>
   </div>
@@ -676,7 +699,7 @@
   <div class="modal-overlay" id="editModal" onclick="closeEditModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <h2 style="font-size:1.25rem;" id="editModalTitle">✏️ 編輯人員與職掌資料</h2>
+        <h2 style="font-size:1.25rem; font-weight:800;" id="editModalTitle">✏️ 編輯人員與職掌資料</h2>
         <button class="modal-close-btn" onclick="closeEditModal()">&times;</button>
       </div>
       <div class="modal-body">
@@ -736,7 +759,7 @@
   </form>
 
   <script>
-    // 預設辦公室結構資料
+    // 預設辦公室結構資料 (已包含您最新調整的名單)
     const defaultOfficeLayout = [
       // Row 1 (Col 7~10)
       {
@@ -748,7 +771,7 @@
         brief: "物治/運醫系教務、暑修排課、中亞聯大/校課程會議、課程教室排課、學生選課、M6教務窗口"
       },
       {
-        key: "r1_c9", span: 1, dept: "雙語教學中心", deptClass: "dept-other", name: "雙語中心", title: "同仁", ext: "0000",
+        key: "r1_c9", span: 1, dept: "雙語教學中心", deptClass: "dept-other", name: "賴晏翎", title: "計畫人員", ext: "1129",
         brief: "雙語教學資源整合、EMI課程推動與全校雙語教學各項行政支援"
       },
       {
@@ -766,7 +789,7 @@
         brief: "藥學系教務、總量報部、註課組公文窗口、新生/舊生/轉學註冊與學號編製、學籍人數統計"
       },
       {
-        key: "r2_c9", span: 1, dept: "其他", deptClass: "dept-other", name: "預留位置", title: "同仁", ext: "0000",
+        key: "r2_c9", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "顧國棟", title: "技士", ext: "-",
         brief: "彈性辦公與臨時教務行政業務支援預留席位"
       },
       {
@@ -788,8 +811,7 @@
         brief: "綜理全校教務推動、教學創新、招生策略與學術發展規劃，督導全處教務業務執行"
       },
       {
-        key: "r3_c5_span2", span: 2, dept: "教務處", deptClass: "dept-cmu", name: "教務處", title: "服務總機", ext: "1100",
-        brief: "教務處電話總機諮詢、公務通訊與處務行政窗口，協助師生家長教務問題引導轉接"
+        key: "r3_c5_span2", span: 2, type: "empty"
       },
       {
         key: "r3_c7", span: 1, dept: "研教組", deptClass: "dept-grd", name: "蕭俊傑", title: "專任助理", ext: "1163",
@@ -837,7 +859,7 @@
         brief: "研究生規章制度、逕博/預修甄選、畢業資格審核、優秀博士生獎助學金(拔萃/礪金)、校庫填報"
       },
       {
-        key: "r4_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "顧國棟", title: "組長", ext: "1133",
+        key: "r4_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "朱育秀", title: "組長", ext: "1133",
         brief: "護理/呼吸/牙一/中醫一/醫學一教務、深耕計畫與獎補款、學則法規、教務系統設定、見實習"
       },
       {
@@ -845,12 +867,11 @@
         brief: "綜理、規劃與督導全校教學組各項業務之推動與創新推廣"
       },
       {
-        key: "r4_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "鄒瑞煌", title: "組長", ext: "1155",
+        key: "r4_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "鄒瑞煌", title: "組長", ext: "7935",
         brief: "綜理全校各項招生試務規劃與控管、招生法規制定修訂、招生統計報表研析與制度規劃"
       }
     ];
 
-    // Google Apps Script 部署之 Web App 網址
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
 
     let currentLayout = [];
@@ -868,7 +889,7 @@
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_v_dual");
+      const saved = localStorage.getItem("cmu_office_layout_v_perfect_a4");
       if (saved) {
         try {
           currentLayout = JSON.parse(saved);
@@ -880,18 +901,15 @@
       }
 
       renderMap();
-
-      // 開啟網頁時自動讀取 Google 試算表最新內容
       fetchLatestFromGoogleSheet();
     }
 
     function saveData(actionDescription) {
-      localStorage.setItem("cmu_office_layout_v_dual", JSON.stringify(currentLayout));
-      // 自動背景即時寫入 Google 試算表
+      localStorage.setItem("cmu_office_layout_v_perfect_a4", JSON.stringify(currentLayout));
       syncToGoogleSheetAuto(actionDescription);
     }
 
-    // === 顯示浮動 Toast 狀態 ===
+    // === 顯示浮動 Toast ===
     let toastTimeout = null;
     function showToast(icon, msg) {
       const toast = document.getElementById("syncToast");
@@ -910,8 +928,6 @@
     }
 
     let syncDebounceTimer = null;
-
-    // === 單一通道精準同步 (防重複連發) ===
     function syncToGoogleSheetAuto(actionDescription) {
       if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
 
@@ -924,7 +940,6 @@
       showToast("⏳", "正在同步至 Google 試算表...");
       const payload = JSON.stringify(currentLayout);
 
-      // 1. 使用 hidden Form + iframe 提交
       const form = document.getElementById("gas_hidden_form");
       const dataInput = document.getElementById("gas_hidden_data");
       if (form && dataInput) {
@@ -933,7 +948,6 @@
         form.submit();
       }
 
-      // 2. 同時以 URLSearchParams 送出請求
       try {
         const formData = new URLSearchParams();
         formData.append("data", payload);
@@ -953,7 +967,6 @@
       }
     }
 
-    // === 開啟網頁時自動從 Google 試算表拉取資料 ===
     function fetchLatestFromGoogleSheet() {
       fetch(GAS_URL)
         .then(res => res.json())
@@ -994,7 +1007,7 @@
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_v_dual", JSON.stringify(currentLayout));
+            localStorage.setItem("cmu_office_layout_v_perfect_a4", JSON.stringify(currentLayout));
             renderMap();
             showToast("🟢", `已成功載入 Google 試算表最新配置 (${updated} 席位)`);
           }
@@ -1008,12 +1021,10 @@
       const grid = document.getElementById("gridMap");
       grid.innerHTML = "";
 
-      // 1. 左上方純淨灰色區塊
       const bigRoom = document.createElement("div");
       bigRoom.className = "big-room";
       grid.appendChild(bigRoom);
 
-      // 2. 渲染所有座位卡片
       currentLayout.forEach((seat) => {
         const card = document.createElement("div");
         card.setAttribute("data-key", seat.key);
@@ -1057,7 +1068,6 @@
       updateVisibility();
     }
 
-    // === 拖曳交換位置 ===
     function handleDragStart(e) {
       draggedKey = this.getAttribute("data-key");
       this.classList.add("dragging");
@@ -1110,12 +1120,19 @@
       draggedKey = null;
     }
 
-    // === 欄位開關顯示 ===
+    // === 控制各欄位顯示/隱藏與自適應字體切換 ===
     function updateVisibility() {
       const showDept = document.getElementById("chkDept").checked;
       const showName = document.getElementById("chkName").checked;
       const showExt = document.getElementById("chkExt").checked;
       const showDesc = document.getElementById("chkDesc").checked;
+
+      // 當業務職掌隱藏時，替 body 加入特定 class 觸發大字體自適應排版
+      if (!showDesc) {
+        document.body.classList.add("hide-desc-mode");
+      } else {
+        document.body.classList.remove("hide-desc-mode");
+      }
 
       document.querySelectorAll(".item-dept").forEach(el => el.style.display = showDept ? "inline-block" : "none");
       document.querySelectorAll(".item-name").forEach(el => el.style.display = showName ? "flex" : "none");
@@ -1123,7 +1140,6 @@
       document.querySelectorAll(".item-desc").forEach(el => el.style.display = showDesc ? "block" : "none");
     }
 
-    // === 即時搜尋 ===
     function handleSearch() {
       const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
       
@@ -1157,7 +1173,6 @@
       });
     }
 
-    // === 編輯 Modal ===
     function openEditModal(key, isNew) {
       document.getElementById("editSeatKey").value = key;
       document.getElementById("editModalTitle").innerText = isNew ? "➕ 新增人員席位" : "✏️ 編輯人員與職掌資料";
@@ -1244,7 +1259,7 @@
       }
     }
 
-    // === 匯出配置圖片 (支援 mode: 'color' 彩色版 或 'mono' 黑白列印版) ===
+    // === 🔥【全滿版 A4 零裁切、無邊界留白截圖匯出核心】🔥 ===
     function exportOfficeImage(mode) {
       const btnColor = document.getElementById("btnExportColor");
       const btnMono = document.getElementById("btnExportMono");
@@ -1252,40 +1267,52 @@
 
       const activeBtn = isMono ? btnMono : btnColor;
       const originalText = activeBtn.innerHTML;
-      activeBtn.innerHTML = "⏳ 生成圖片中...";
+      activeBtn.innerHTML = "⏳ 生成 A4 圖片中...";
       btnColor.disabled = true;
       btnMono.disabled = true;
 
       const targetElement = document.getElementById("captureArea");
-      const exportClass = isMono ? "exporting-mono" : "exporting-color";
-      document.body.classList.add(exportClass);
+      
+      // 確保欄位顯示狀態正確套用
+      updateVisibility();
+
+      // 套用 A4 滿版匯出專用 CSS
+      document.body.classList.add("export-active-mode");
+      if (isMono) {
+        document.body.classList.add("export-mono-mode");
+      } else {
+        document.body.classList.add("export-color-mode");
+      }
 
       setTimeout(() => {
         html2canvas(targetElement, {
-          scale: isMono ? 2.5 : 2.0, // 高解析度輸出
+          scale: 2.0,                  // 2倍清晰度輸出
           backgroundColor: "#ffffff",
           useCORS: true,
           logging: false,
           scrollY: 0,
           scrollX: 0,
-          windowWidth: 1450
+          width: targetElement.offsetWidth,   // 精確抓取目標寬度，徹底根除右側被切掉問題
+          height: targetElement.offsetHeight, // 精確抓取目標高度，無多餘留白
+          windowWidth: 1600
         }).then(canvas => {
           const imageURL = canvas.toDataURL("image/png");
           const downloadLink = document.createElement("a");
           const dateStr = new Date().toISOString().slice(0, 10);
-          const typeName = isMono ? "黑白高對比列印版" : "彩色版";
+          const typeName = isMono ? "A4滿版黑白列印版" : "A4滿版彩色版";
           downloadLink.href = imageURL;
           downloadLink.download = `中國醫藥大學_教務處辦公室配置圖_${typeName}_${dateStr}.png`;
           document.body.appendChild(downloadLink);
           downloadLink.click();
           document.body.removeChild(downloadLink);
 
-          document.body.classList.remove(exportClass);
+          // 復原畫面狀態
+          document.body.classList.remove("export-active-mode", "export-mono-mode", "export-color-mode");
           activeBtn.innerHTML = originalText;
           btnColor.disabled = false;
           btnMono.disabled = false;
         }).catch(err => {
-          document.body.classList.remove(exportClass);
+          document.body.classList.remove("export-active-mode", "export-mono-mode", "export-color-mode");
           alert("截圖匯出失敗，請稍候重試。");
           console.error(err);
           activeBtn.innerHTML = originalText;
@@ -1297,7 +1324,7 @@
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_v_dual");
+        localStorage.removeItem("cmu_office_layout_v_perfect_a4");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
         saveData("已還原預設配置");
