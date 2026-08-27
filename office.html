@@ -662,9 +662,10 @@
             <input type="text" id="searchInput" placeholder="🔍 搜尋同仁、分機、業務..." oninput="handleSearch()">
           </div>
           <button class="btn btn-outline" onclick="resetToDefault()">🔄 還原預設</button>
-          <!-- 雙匯出按鈕：A4滿版彩色 / A4滿版黑白 -->
-          <button class="btn btn-color" onclick="exportOfficeImage('color')" id="btnExportColor">🎨 匯出 A4 滿版彩色圖</button>
-          <button class="btn btn-mono" onclick="exportOfficeImage('mono')" id="btnExportMono">🖨️ 匯出 A4 滿版黑白圖</button>
+          <!-- 匯出按鈕組合：彩色 PNG / 黑白 PNG / SVG 向量檔 -->
+          <button class="btn btn-color" onclick="exportOfficeImage('color')" id="btnExportColor">🎨 匯出 A4 彩色圖</button>
+          <button class="btn btn-mono" onclick="exportOfficeImage('mono')" id="btnExportMono">🖨️ 匯出 A4 黑白圖</button>
+          <button class="btn" style="background:#4338ca; color:#fff;" onclick="exportOfficeSVG()" id="btnExportSvg">📐 匯出 A4 向量 SVG</button>
         </div>
       </div>
 
@@ -1275,6 +1276,185 @@
           renderMap();
         }
       }
+    }
+
+    
+    // === 📐【匯出純向量 SVG 檔 (向量無失真、支援 Illustrator/Word/列印編輯)】===
+    function exportOfficeSVG() {
+      const showDept = document.getElementById("chkDept").checked;
+      const showName = document.getElementById("chkName").checked;
+      const showExt = document.getElementById("chkExt").checked;
+      const showDesc = document.getElementById("chkDesc").checked;
+
+      // 標準 A4 橫向尺寸 297 x 210 mm -> 轉換為 1485 x 1050 像素畫布
+      const svgWidth = 1485;
+      const svgHeight = 1050;
+      const padding = 20;
+
+      // 建立 SVG 根標籤
+      let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgWidth} ${svgHeight}" width="${svgWidth}" height="${svgHeight}">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .map-border { fill: #ffffff; stroke: #0f172a; stroke-width: 2.5; }
+      .counter-bg { fill: #0f172a; }
+      .counter-text { fill: #ffffff; font-family: sans-serif; font-size: 16px; font-weight: bold; letter-spacing: 6px; text-anchor: middle; }
+      .room-bg { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.5; stroke-dasharray: 4,4; }
+      .card-rect { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; rx: 6px; ry: 6px; }
+      .card-empty { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; stroke-dasharray: 4,4; rx: 6px; ry: 6px; }
+      .card-name { fill: #0f172a; font-family: sans-serif; font-size: ${showDesc ? '15px' : '19px'}; font-weight: bold; }
+      .card-title { fill: #64748b; font-family: sans-serif; font-size: ${showDesc ? '11px' : '12px'}; font-weight: bold; text-anchor: end; }
+      .card-ext { fill: #334155; font-family: sans-serif; font-size: ${showDesc ? '12px' : '14px'}; font-weight: bold; }
+      .card-desc { fill: #334155; font-family: sans-serif; font-size: 11px; line-height: 1.35; }
+      .badge-text { font-family: sans-serif; font-size: 11px; font-weight: bold; }
+    </style>
+  </defs>
+  <!-- 背景與外框 -->
+  <rect class="bg" width="${svgWidth}" height="${svgHeight}"/>
+  <rect class="map-border" x="${padding}" y="${padding}" width="${svgWidth - padding * 2}" height="${svgHeight - padding * 2}" rx="8"/>
+  
+  <!-- 櫃台區域 -->
+  <rect class="counter-bg" x="${svgWidth - padding - 560}" y="${padding}" width="560" height="38" rx="4"/>
+  <text class="counter-text" x="${svgWidth - padding - 280}" y="${padding + 25}">【 櫃 台 】</text>
+`;
+
+      const mapX = padding + 15;
+      const mapY = padding + 50;
+      const mapW = svgWidth - padding * 2 - 30;
+      const mapH = svgHeight - padding * 2 - 65;
+
+      const cols = 10;
+      const colGap = 10;
+      const rowGap = 12;
+      const cardW = (mapW - colGap * (cols - 1)) / cols; // ~140px
+
+      // 4 排高度比例
+      const rows = 4;
+      const cardH = (mapH - rowGap * (rows - 1)) / rows; // ~210px
+
+      // 組別色彩設定
+      const deptColors = {
+        "註冊課務組": { top: "#1d4ed8", bg: "#eff6ff", text: "#1d4ed8" },
+        "招生組": { top: "#b91c1c", bg: "#fef2f2", text: "#b91c1c" },
+        "教學組": { top: "#15803d", bg: "#f0fdf4", text: "#15803d" },
+        "研教組": { top: "#6d28d9", bg: "#faf5ff", text: "#6d28d9" },
+        "校本部": { top: "#b45309", bg: "#fef3c7", text: "#b45309", cardBg: "#fffbeb" },
+        "教務處": { top: "#b45309", bg: "#fef3c7", text: "#b45309", cardBg: "#fffbeb" },
+        "其他": { top: "#475569", bg: "#f8fafc", text: "#475569" }
+      };
+
+      // 1. 左上角大房間 (6 欄 x 2 列)
+      const bigRoomW = cardW * 6 + colGap * 5;
+      const bigRoomH = cardH * 2 + rowGap;
+      svg += `  <rect class="room-bg" x="${mapX}" y="${mapY}" width="${bigRoomW}" height="${bigRoomH}"/>
+`;
+
+      // 2. 渲染各座位卡片
+      currentLayout.forEach(seat => {
+        let r, c;
+        if (seat.key.startsWith("r1_")) r = 0;
+        else if (seat.key.startsWith("r2_")) r = 1;
+        else if (seat.key.startsWith("r3_")) r = 2;
+        else if (seat.key.startsWith("r4_")) r = 3;
+
+        const colMatch = seat.key.match(/c(\d+)/);
+        c = colMatch ? parseInt(colMatch[1]) - 1 : 0;
+
+        const span = seat.span || 1;
+        const x = mapX + c * (cardW + colGap);
+        const y = mapY + r * (cardH + rowGap);
+        const w = cardW * span + colGap * (span - 1);
+        const h = cardH;
+
+        if (seat.type === "empty" || !seat.name) {
+          svg += `  <rect class="card-empty" x="${x}" y="${y}" width="${w}" height="${h}"/>
+`;
+          return;
+        }
+
+        const colorCfg = deptColors[seat.dept] || deptColors["其他"];
+        const cardBg = colorCfg.cardBg || "#ffffff";
+
+        // 卡片主體
+        svg += `  <g id="seat-${seat.key}">
+`;
+        svg += `    <rect class="card-rect" x="${x}" y="${y}" width="${w}" height="${h}" fill="${cardBg}"/>
+`;
+        // 頂部彩色邊框線
+        svg += `    <path d="M ${x} ${y+5} Q ${x} ${y} ${x+5} ${y} L ${x+w-5} ${y} Q ${x+w} ${y} ${x+w} ${y+5} L ${x+w} ${y+5} L ${x} ${y+5} Z" fill="${colorCfg.top}"/>
+`;
+
+        let curY = y + 18;
+
+        // 組別標籤
+        if (showDept && seat.dept) {
+          const badgeText = seat.dept;
+          const badgeW = badgeText.length * 13 + 12;
+          svg += `    <rect x="${x + 8}" y="${curY}" width="${badgeW}" height="18" rx="3" fill="${colorCfg.bg}"/>
+`;
+          svg += `    <text class="badge-text" x="${x + 14}" y="${curY + 13}" fill="${colorCfg.text}">${badgeText}</text>
+`;
+          curY += 24;
+        }
+
+        // 姓名與職稱
+        if (showName) {
+          svg += `    <text class="card-name" x="${x + 8}" y="${curY + 14}">${seat.name || ''}</text>
+`;
+          if (seat.title) {
+            svg += `    <text class="card-title" x="${x + w - 8}" y="${curY + 14}">${seat.title}</text>
+`;
+          }
+          curY += 22;
+        }
+
+        // 分機
+        if (showExt && seat.ext) {
+          svg += `    <text class="card-ext" x="${x + 8}" y="${curY + 12}">📞 #${seat.ext}</text>
+`;
+          curY += 18;
+        }
+
+        // 業務職掌
+        if (showDesc && seat.brief) {
+          const descX = x + 8;
+          const descW = w - 16;
+          const descH = h - (curY - y) - 8;
+          
+          svg += `    <rect x="${descX}" y="${curY}" width="${descW}" height="${descH}" rx="3" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+`;
+          svg += `    <line x1="${descX}" y1="${curY}" x2="${descX}" y2="${curY + descH}" stroke="${colorCfg.top}" stroke-width="2.5"/>
+`;
+
+          // 文字換行拆解
+          const text = seat.brief;
+          const charsPerLine = Math.floor(descW / 12);
+          let textY = curY + 14;
+          for (let i = 0; i < text.length; i += charsPerLine) {
+            if (textY > curY + descH - 4) break;
+            const line = text.substring(i, i + charsPerLine);
+            svg += `    <text class="card-desc" x="${descX + 6}" y="${textY}">${line}</text>
+`;
+            textY += 15;
+          }
+        }
+
+        svg += `  </g>
+`;
+      });
+
+      svg += `</svg>`;
+
+      // 產生 SVG 下載
+      const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+      const downloadLink = document.createElement("a");
+      const dateStr = new Date().toISOString().slice(0, 10);
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = `中國醫藥大學_教務處辦公室配置圖_A4向量版_${dateStr}.svg`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      URL.revokeObjectURL(downloadLink.href);
     }
 
     // === 🔥【嚴格 A4 (297:210) 比例、字體不折行、色彩 100% 一致之滿版匯出】🔥 ===
