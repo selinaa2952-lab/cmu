@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（全彩實心色塊旗艦版）</title>
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（頭像照片與櫃台美化版）</title>
   <!-- 引入 html2canvas 支援一鍵截圖匯出 PNG 圖片 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -12,14 +12,14 @@
       --card-text: #1e293b;
       --border-radius: 10px;
 
-      /* 依照設計圖之精確全版色塊色系 */
+      /* 色塊定義 */
       --bg-reg: #90c6ec;      /* 註冊課務組 - 天藍色 */
       --text-reg: #1e6fa8;
       
       --bg-adm: #ffbfbf;      /* 招生組 - 粉珊瑚色 */
       --text-adm: #d94f4f;
 
-      --bg-tch: #c7df63;      /* 教學組 - 蘋果綠/亮檸檬綠 */
+      --bg-tch: #c7df63;      /* 教學組 - 蘋果綠 */
       --text-tch: #688214;
 
       --bg-grd: #d0c4ff;      /* 研教組 - 薰衣草粉紫色 */
@@ -49,7 +49,7 @@
     }
 
     .container {
-      max-width: 1560px;
+      max-width: 1580px;
       margin: 0 auto;
     }
 
@@ -138,13 +138,6 @@
     .btn-color:hover {
       background: #15803d;
     }
-    .btn-mono {
-      background: #0f172a;
-      color: white;
-    }
-    .btn-mono:hover {
-      background: #334155;
-    }
 
     .controls-row {
       display: flex;
@@ -178,7 +171,6 @@
       accent-color: #0284c7;
     }
 
-    /* 頂部圖例 (與新設計完全一致之柔美實心色塊) */
     .legend-group {
       display: flex;
       flex-wrap: wrap;
@@ -232,21 +224,22 @@
       margin-bottom: 8px;
     }
 
+    /* 🔥 1. 修正櫃台底圖色塊為深邃純黑底色 + 反白字 🔥 */
     .counter-bar {
       display: inline-block;
       width: 40%;
-      background: #ffffff;
-      color: #0f172a;
+      background: #0f172a !important;   /* 深黑底色 */
+      color: #ffffff !important;        /* 純白字體 */
       text-align: center;
-      padding: 6px 0;
+      padding: 8px 0;
       font-weight: 800;
       letter-spacing: 8px;
       font-size: 1.05rem;
       border-radius: 6px 6px 0 0;
-      box-shadow: 0 -1px 3px rgba(0,0,0,0.04);
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.08);
     }
 
-    /* 10 欄 CSS Grid (緊湊優雅) */
+    /* 10 欄 CSS Grid */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
@@ -255,7 +248,7 @@
       width: 100%;
     }
 
-    /* 專屬大房間格局 (跨 3 欄 x 跨 2 列) */
+    /* 專屬大房間格局 */
     .room-seal {
       grid-column: 1 / span 3;
       grid-row: 1 / span 2;
@@ -294,10 +287,10 @@
       grid-column: span 2;
     }
 
-    /* 座位卡片基礎設定 (全新實心色塊極簡圓角風格) */
+    /* 座位卡片基礎設定 */
     .seat-card {
       border-radius: var(--border-radius);
-      padding: 10px 9px 8px 9px;
+      padding: 9px 8px 8px 8px;
       min-height: 96px;
       display: flex;
       flex-direction: column;
@@ -375,7 +368,7 @@
       color: #0284c7;
     }
 
-    /* 🔥【各組別全卡片實心色塊底色定義】🔥 */
+    /* 各組色塊底色 */
     .seat-card.dept-reg { background-color: var(--bg-reg); }
     .seat-card.dept-adm { background-color: var(--bg-adm); }
     .seat-card.dept-tch { background-color: var(--bg-tch); }
@@ -384,7 +377,7 @@
     .seat-card.dept-cmu { background-color: var(--bg-cmu); }
     .seat-card.dept-other { background-color: var(--bg-other); }
 
-    /* 🔥【白底小膠囊組別標籤 (White Pill Badge + Color Text)】🔥 */
+    /* 白底膠囊標籤 */
     .card-badge {
       font-size: 0.72rem;
       font-weight: 800;
@@ -400,7 +393,6 @@
       letter-spacing: 0.3px;
     }
 
-    /* 膠囊標籤文字顏色與組別呼應 */
     .dept-reg .card-badge { color: var(--text-reg) !important; }
     .dept-adm .card-badge { color: var(--text-adm) !important; }
     .dept-tch .card-badge { color: var(--text-tch) !important; }
@@ -409,15 +401,37 @@
     .dept-cmu .card-badge { color: var(--text-cmu) !important; }
     .dept-other .card-badge { color: var(--text-other) !important; }
 
-    /* 姓名與職稱排版 */
-    .card-name-row {
+    /* 🔥 2. 人員頭像 + 姓名佈局設計 🔥 */
+    .card-main-content {
       display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 4px;
+      align-items: center;
+      gap: 6px;
+      margin: 3px 0 1px 0;
       width: 100%;
+    }
+
+    .card-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+      background: #ffffff;
+    }
+
+    .card-avatar-empty {
+      display: none;
+    }
+
+    .card-info-col {
+      flex-grow: 1;
       overflow: hidden;
-      margin-top: 1px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
     }
 
     .card-name {
@@ -427,32 +441,32 @@
       white-space: nowrap !important;
       word-break: keep-all !important;
       overflow: hidden;
-      flex-shrink: 0;
+      line-height: 1.2;
       letter-spacing: 0.5px;
     }
 
+    /* 職稱往下排列 */
     .card-title {
-      font-size: 0.74rem;
+      font-size: 0.75rem;
       color: #334155;
       white-space: nowrap !important;
       word-break: keep-all !important;
       font-weight: 700;
-      flex-shrink: 1;
       overflow: hidden;
-      text-align: right;
+      line-height: 1.2;
+      opacity: 0.9;
     }
 
-    /* 分機號碼 */
     .card-ext {
       font-size: 0.95rem;
       font-weight: 800;
-      color: #1e293b;
-      margin-top: 2px;
+      color: #0f172a;
       white-space: nowrap;
       letter-spacing: 0.5px;
+      line-height: 1.2;
+      margin-top: 1px;
     }
 
-    /* 業務職掌區塊 (可選) */
     .card-desc {
       font-size: 0.7rem;
       color: #1e293b;
@@ -477,9 +491,7 @@
       opacity: 0.2;
     }
 
-    /* ============================================================
-       🌐【A4 與 官網 700px 滿版零裁切專用匯出設定】
-       ============================================================ */
+    /* 匯出模式樣式 */
     .export-active-mode {
       background: #ffffff !important;
       padding: 0 !important;
@@ -576,7 +588,27 @@
       transition: border-color 0.2s;
     }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #0284c7; }
-    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+
+    /* 頭像預覽上傳區 */
+    .avatar-preview-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f8fafc;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px dashed #cbd5e1;
+    }
+    .avatar-preview-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      background: #e2e8f0;
+    }
 
     /* 浮動即時同步狀態提示 (Toast) */
     .sync-toast {
@@ -613,24 +645,25 @@
           <div class="search-box">
             <input type="text" id="searchInput" placeholder="🔍 搜尋同仁、分機..." oninput="handleSearch()">
           </div>
+          <button class="btn btn-outline" onclick="openGhModal()" title="設定 GitHub images/ 自動上傳">🐙 GitHub 設定</button>
           <button class="btn btn-outline" onclick="resetToDefault()">🔄 還原預設</button>
-          <!-- 專用匯出按鈕組合 -->
           <button class="btn btn-web" onclick="exportOfficeImage('web700')" id="btnExportWeb">🌐 匯出官網 700px 專用圖</button>
           <button class="btn btn-color" onclick="exportOfficeImage('color')" id="btnExportColor">🎨 匯出 A4 彩色圖</button>
         </div>
       </div>
 
       <div class="controls-row">
-        <!-- 顯示勾選框 -->
+        <!-- 顯示勾選框 (加入頭像開關) -->
         <div class="checkbox-group">
           <span style="font-weight:800; color:#0f172a; margin-right:4px;">顯示選項：</span>
+          <label class="checkbox-label"><input type="checkbox" id="chkAvatar" checked onchange="updateVisibility()"> 頭像照片</label>
           <label class="checkbox-label"><input type="checkbox" id="chkDept" checked onchange="updateVisibility()"> 組別</label>
           <label class="checkbox-label"><input type="checkbox" id="chkName" checked onchange="updateVisibility()"> 姓名/職稱</label>
           <label class="checkbox-label"><input type="checkbox" id="chkExt" checked onchange="updateVisibility()"> 分機</label>
           <label class="checkbox-label"><input type="checkbox" id="chkDesc" onchange="updateVisibility()"> 業務職掌</label>
         </div>
 
-        <!-- 頂部圖例 (與設計圖完全一致之全彩標籤) -->
+        <!-- 頂部圖例 -->
         <div class="legend-group">
           <span class="legend-tag" style="background-color:var(--bg-reg); color:var(--text-reg);">註冊課務組</span>
           <span class="legend-tag" style="background-color:var(--bg-adm); color:var(--text-adm);">招生組</span>
@@ -644,7 +677,7 @@
 
     <!-- 提示操作說明 -->
     <div class="instruction-bar">
-      <span>🎨 <strong>全新色塊風格上線：</strong> 依據最新設計全面升級<strong>全版柔和實心色塊 ＋ 白底膠囊組別標籤</strong>！已包含<strong>「印卷室」與「招生組試務室」</strong>專屬格局。</span>
+      <span>🎨 <strong>功能升級：</strong> 櫃台底圖色塊已恢復為<strong>深邃純黑底色</strong>！支援<strong>「上傳或填寫同仁大頭照」</strong>，點擊 ✏️ 即可新增照片並隨時勾選顯示！</span>
     </div>
 
     <!-- 辦公室地圖區域 (截圖匯出目標) -->
@@ -667,11 +700,11 @@
     <span id="toastMsg">正在同步更新至 Google 試算表...</span>
   </div>
 
-  <!-- 1. 編輯 / 新增同仁資料彈跳視窗 -->
+  <!-- 1. 編輯 / 新增同仁資料彈跳視窗 (包含照片上傳功能) -->
   <div class="modal-overlay" id="editModal" onclick="closeEditModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <h2 style="font-size:1.25rem; font-weight:800;" id="editModalTitle">✏️ 編輯人員與職掌資料</h2>
+        <h2 style="font-size:1.25rem; font-weight:800;" id="editModalTitle">✏️ 編輯人員、照片與職掌資料</h2>
         <button class="modal-close-btn" onclick="closeEditModal()">&times;</button>
       </div>
       <div class="modal-body">
@@ -679,6 +712,17 @@
           <input type="hidden" id="editSeatKey">
           
           <div class="form-grid">
+            <div class="form-group full-width">
+              <label>同仁大頭照 (可上傳照片或貼上圖片網址)</label>
+              <div class="avatar-preview-box">
+                <img id="avatarPreviewImg" class="avatar-preview-img" src="" alt="預覽" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>'">
+                <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">
+                  <input type="file" id="editAvatarFile" accept="image/*" onchange="handleAvatarFile(event)" style="font-size: 0.82rem;">
+                  <input type="text" id="editAvatarUrl" placeholder="或貼上照片圖片網址 (https://...)" oninput="handleAvatarUrl(this.value)">
+                </div>
+              </div>
+            </div>
+
             <div class="form-group">
               <label>所屬組別</label>
               <select id="editDept" required>
@@ -731,116 +775,116 @@
   </form>
 
   <script>
-    // 預設辦公室結構資料 (完整對應設計圖：分機 1125 顧國棟、1166 陳佳彣、印卷室、試務室)
+    // 預設辦公室結構資料
     const defaultOfficeLayout = [
       // Row 1 (Col 7~10)
       {
         key: "r1_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳巧璇", title: "約聘人員", ext: "1177",
-        brief: "公衛學院各系教務、學分學程與TAICA、學分抵免、成績單與列印機、雙主修輔系、學生證製發"
+        avatar: "", brief: "公衛學院各系教務、學分學程與TAICA、學分抵免、成績單與列印機、雙主修輔系、學生證製發"
       },
       {
         key: "r1_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳盈君", title: "專案助理", ext: "1128",
-        brief: "物治/運醫系教務、暑修排課、中亞聯大/校課程會議、課程教室排課、學生選課、M6教務窗口"
+        avatar: "", brief: "物治/運醫系教務、暑修排課、中亞聯大/校課程會議、課程教室排課、學生選課、M6教務窗口"
       },
       {
         key: "r1_c9", span: 1, dept: "雙語教學中心", deptClass: "dept-other", name: "賴晏翎", title: "計畫人員", ext: "1129",
-        brief: "雙語教學資源整合、EMI課程推動與全校雙語教學各項行政支援"
+        avatar: "", brief: "雙語教學資源整合、EMI課程推動與全校雙語教學各項行政支援"
       },
       {
         key: "r1_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "張瑀涵", title: "專任助理", ext: "1152",
-        brief: "國內高中招生宣傳、高中生參訪活動規劃執行、大學招生專業化發展試辦計畫"
+        avatar: "", brief: "國內高中招生宣傳、高中生參訪活動規劃執行、大學招生專業化發展試辦計畫"
       },
 
       // Row 2 (Col 7~10)
       {
         key: "r2_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "王毓萍", title: "技佐", ext: "1180",
-        brief: "營養/生科/藥妝系教務、預警弱勢課輔窗口、國考報名統計、考選部學歷查驗、畢審系統、工讀生"
+        avatar: "", brief: "營養/生科/藥妝系教務、預警弱勢課輔窗口、國考報名統計、考選部學歷查驗、畢審系統、工讀生"
       },
       {
         key: "r2_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "黃凱璟", title: "約聘人員", ext: "1127",
-        brief: "藥學系教務、總量報部、註課組公文窗口、新生/舊生/轉學註冊與學號編製、學籍人數統計"
+        avatar: "", brief: "藥學系教務、總量報部、註課組公文窗口、新生/舊生/轉學註冊與學號編製、學籍人數統計"
       },
       {
         key: "r2_c9", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "顧國棟", title: "技士", ext: "1125",
-        brief: "深耕計畫與獎補款、學則法規統整修訂、教務系統設定、見實習業務、財產盤點"
+        avatar: "", brief: "深耕計畫與獎補款、學則法規統整修訂、教務系統設定、見實習業務、財產盤點"
       },
       {
         key: "r2_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "余芷葳", title: "約聘人員", ext: "1151",
-        brief: "碩博士班甄試與考試入學招生、新住民入學甄試、經費核銷、高中端招生宣傳"
+        avatar: "", brief: "碩博士班甄試與考試入學招生、新住民入學甄試、經費核銷、高中端招生宣傳"
       },
 
       // Row 3 (Col 1, 2, 3-4(教務長), 5-6(空格), 7, 8, 9, 10)
       {
         key: "r3_c1", span: 1, dept: "教學組", deptClass: "dept-tch", name: "林怡君", title: "組員", ext: "1188",
-        brief: "教師請假調課查堂、教學組經費與財產管理、卓越大樓PBL教室管理借用、考試業務協助"
+        avatar: "", brief: "教師請假調課查堂、教學組經費與財產管理、卓越大樓PBL教室管理借用、考試業務協助"
       },
       {
         key: "r3_c2", span: 1, dept: "董事會", deptClass: "dept-other", name: "董事會", title: "辦公室", ext: "-",
-        brief: "董事會行政事務與跨單位會議公文連繫"
+        avatar: "", brief: "董事會行政事務與跨單位會議公文連繫"
       },
       {
         key: "r3_c3_span2", span: 2, dept: "教務處", deptClass: "dept-dir", name: "余永倫", title: "教務長", ext: "7933",
-        brief: "綜理全校教務推動、教學創新、招生策略與學術發展規劃，督導全處教務業務執行"
+        avatar: "", brief: "綜理全校教務推動、教學創新、招生策略與學術發展規劃，督導全處教務業務執行"
       },
       {
         key: "r3_c5_span2", span: 2, type: "empty"
       },
       {
         key: "r3_c7", span: 1, dept: "研教組", deptClass: "dept-grd", name: "蕭俊傑", title: "專任助理", ext: "1163",
-        brief: "公衛學院碩博教務、現代生醫講座、TA教學助理行政管理、菁英博士遴選與獎勵、入學獎勵金"
+        avatar: "", brief: "公衛學院碩博教務、現代生醫講座、TA教學助理行政管理、菁英博士遴選與獎勵、入學獎勵金"
       },
       {
         key: "r3_c8", span: 1, dept: "教學組", deptClass: "dept-tch", name: "趙婉萍", title: "組員", ext: "1130",
-        brief: "教師授課時數控管與鐘點費計算、教師資料數據分析、系所與校務評鑑、教學資料填報"
+        avatar: "", brief: "教師授課時數控管與鐘點費計算、教師資料數據分析、系所與校務評鑑、教學資料填報"
       },
       {
         key: "r3_c9", span: 1, dept: "教學組", deptClass: "dept-tch", name: "譚羽汝", title: "組員", ext: "1123",
-        brief: "教學評估與課程評量、優良教材與教學獎勵、教育部教學實踐研究計畫、業界教師、夏季學院"
+        avatar: "", brief: "教學評估與課程評量、優良教材與教學獎勵、教育部教學實踐研究計畫、業界教師、夏季學院"
       },
       {
         key: "r3_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "楊鋌鈺", title: "書記", ext: "1150",
-        brief: "大學繁星/申請/分發、後中招生、寒暑轉(私醫聯招)、四技二專、離島公費生與身障運優甄試"
+        avatar: "", brief: "大學繁星/申請/分發、後中招生、寒暑轉(私醫聯招)、四技二專、離島公費生與身障運優甄試"
       },
 
       // Row 4 (Col 1~10)
       {
         key: "r4_c1", span: 1, dept: "教學組", deptClass: "dept-tch", name: "羅逸珊", title: "教學設計師", ext: "1186",
-        brief: "數位教材製作諮詢、推動健康照護/生科/牙醫學院校內數位教材製作"
+        avatar: "", brief: "數位教材製作諮詢、推動健康照護/生科/牙醫學院校內數位教材製作"
       },
       {
         key: "r4_c2", span: 1, dept: "教學組", deptClass: "dept-tch", name: "謝琬琳", title: "教學設計師", ext: "1187",
-        brief: "遠距課程會議、磨課師(CMU MOOCs)平台管理、人科/藥學院/醫工數位教材推動"
+        avatar: "", brief: "遠距課程會議、磨課師(CMU MOOCs)平台管理、人科/藥學院/醫工數位教材推動"
       },
       {
         key: "r4_c3", span: 1, dept: "招生組", deptClass: "dept-adm", name: "劉曉芳", title: "專任助理", ext: "1156",
-        brief: "中醫大招生王 FB/IG/YT 社群與影音管理、未來學生專區維護、招生文宣視覺設計與影音剪輯"
+        avatar: "", brief: "中醫大招生王 FB/IG/YT 社群與影音管理、未來學生專區維護、招生文宣視覺設計與影音剪輯"
       },
       {
         key: "r4_c4", span: 1, type: "empty"
       },
       {
         key: "r4_c5", span: 1, dept: "研教組", deptClass: "dept-grd", name: "童雯琳", title: "約聘人員", ext: "1160",
-        brief: "中醫/照護/牙醫/人科/醫工碩博教務、研究生助學金、研究倫理/工安行政、學基庫公文窗口"
+        avatar: "", brief: "中醫/照護/牙醫/人科/醫工碩博教務、研究生助學金、研究倫理/工安行政、學基庫公文窗口"
       },
       {
         key: "r4_c6", span: 1, dept: "研教組", deptClass: "dept-grd", name: "李琳庭", title: "專任助理", ext: "1161",
-        brief: "醫學/藥學/產博/國際學程碩博教務、培英計畫、預修生與產博獎助、資安窗口、英文網頁"
+        avatar: "", brief: "醫學/藥學/產博/國際學程碩博教務、培英計畫、預修生與產博獎助、資安窗口、英文網頁"
       },
       {
         key: "r4_c7", span: 1, dept: "研教組", deptClass: "dept-grd", name: "陳佳彣", title: "書記", ext: "1166",
-        brief: "研究生規章制度、逕博/預修甄選、畢業資格審核、優秀博士生獎助學金(拔萃/礪金)、校庫填報"
+        avatar: "", brief: "研究生規章制度、逕博/預修甄選、畢業資格審核、優秀博士生獎助學金(拔萃/礪金)、校庫填報"
       },
       {
         key: "r4_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "朱育秀", title: "組長", ext: "1133",
-        brief: "統籌註冊課務組業務、學則法規、教務系統設定、高中端聯盟"
+        avatar: "", brief: "統籌註冊課務組業務、學則法規、教務系統設定、高中端聯盟"
       },
       {
         key: "r4_c9", span: 1, dept: "教學組", deptClass: "dept-tch", name: "王慧如", title: "組長", ext: "1126",
-        brief: "綜理、規劃與督導全校教學組各項業務之推動與創新推廣"
+        avatar: "", brief: "綜理、規劃與督導全校教學組各項業務之推動與創新推廣"
       },
       {
         key: "r4_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "鄒瑞煌", title: "組長", ext: "7935",
-        brief: "綜理全校各項招生試務規劃與控管、招生法規制定修訂、招生統計報表研析與制度規劃"
+        avatar: "", brief: "綜理全校各項招生試務規劃與控管、招生法規制定修訂、招生統計報表研析與制度規劃"
       }
     ];
 
@@ -861,7 +905,7 @@
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_v_styled_final");
+      const saved = localStorage.getItem("cmu_office_layout_v_avatar");
       if (saved) {
         try {
           currentLayout = JSON.parse(saved);
@@ -877,7 +921,7 @@
     }
 
     function saveData(actionDescription) {
-      localStorage.setItem("cmu_office_layout_v_styled_final", JSON.stringify(currentLayout));
+      localStorage.setItem("cmu_office_layout_v_avatar", JSON.stringify(currentLayout));
       syncToGoogleSheetAuto(actionDescription);
     }
 
@@ -972,13 +1016,14 @@
                     name: name,
                     title: title,
                     ext: ext,
-                    brief: brief
+                    brief: brief,
+                    avatar: currentLayout[idx].avatar || ""
                   };
                 }
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_v_styled_final", JSON.stringify(currentLayout));
+            localStorage.setItem("cmu_office_layout_v_avatar", JSON.stringify(currentLayout));
             renderMap();
             showToast("🟢", `已成功載入 Google 試算表最新配置 (${updated} 席位)`);
           }
@@ -992,13 +1037,13 @@
       const grid = document.getElementById("gridMap");
       grid.innerHTML = "";
 
-      // 1. 印卷室 (跨 3 欄 x 跨 2 列)
+      // 1. 印卷室
       const roomSeal = document.createElement("div");
       roomSeal.className = "room-seal";
       roomSeal.innerText = "印卷室";
       grid.appendChild(roomSeal);
 
-      // 2. 招生組試務室 (跨 3 欄 x 跨 2 列)
+      // 2. 招生組試務室
       const roomExam = document.createElement("div");
       roomExam.className = "room-exam";
       roomExam.innerHTML = "<div>招生組</div><div>試務室</div>";
@@ -1027,6 +1072,11 @@
           card.className = `seat-card ${seat.deptClass || getDeptClass(seat.dept)} ${spanClass}`;
           card.id = `seat-${seat.key}`;
 
+          // 頭像 HTML
+          const avatarSrc = seat.avatar || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
+          const avatarHtml = `<img class="card-avatar item-avatar" src="${avatarSrc}" alt="${seat.name}">`;
+
+          const titleHtml = seat.title ? `<div class="card-title item-title">${seat.title}</div>` : '';
           card.innerHTML = `
             <div class="card-actions-hover">
               <button class="mini-btn" title="編輯資料" onclick="event.stopPropagation(); openEditModal('${seat.key}', false)">✏️</button>
@@ -1034,12 +1084,15 @@
             </div>
             <div>
               <span class="card-badge item-dept">${seat.dept || '未設定'}</span>
-              <div class="card-name-row item-name">
-                <span class="card-name">${seat.name}</span>
-                <span class="card-title">${seat.title || ''}</span>
+              <div class="card-main-content">
+                ${avatarHtml}
+                <div class="card-info-col">
+                  <div class="card-name item-name">${seat.name}</div>
+                  ${titleHtml}
+                  <div class="card-ext item-ext">${seat.ext && seat.ext !== '-' ? seat.ext : ''}</div>
+                </div>
               </div>
             </div>
-            <div class="card-ext item-ext">${seat.ext && seat.ext !== '-' ? seat.ext : ''}</div>
             <div class="card-desc item-desc">${seat.brief || ''}</div>
           `;
           card.onclick = () => openEditModal(seat.key, false);
@@ -1102,14 +1155,18 @@
       draggedKey = null;
     }
 
+    // === 顯示開關 ===
     function updateVisibility() {
+      const showAvatar = document.getElementById("chkAvatar").checked;
       const showDept = document.getElementById("chkDept").checked;
       const showName = document.getElementById("chkName").checked;
       const showExt = document.getElementById("chkExt").checked;
       const showDesc = document.getElementById("chkDesc").checked;
 
+      document.querySelectorAll(".item-avatar").forEach(el => el.style.display = showAvatar ? "block" : "none");
       document.querySelectorAll(".item-dept").forEach(el => el.style.display = showDept ? "inline-block" : "none");
-      document.querySelectorAll(".item-name").forEach(el => el.style.display = showName ? "flex" : "none");
+      document.querySelectorAll(".item-name").forEach(el => el.style.display = showName ? "block" : "none");
+      document.querySelectorAll(".item-title").forEach(el => el.style.display = showName ? "block" : "none");
       document.querySelectorAll(".item-ext").forEach(el => el.style.display = showExt ? "block" : "none");
       document.querySelectorAll(".item-desc").forEach(el => el.style.display = showDesc ? "block" : "none");
     }
@@ -1147,9 +1204,10 @@
       });
     }
 
+    // === 編輯 Modal ===
     function openEditModal(key, isNew) {
       document.getElementById("editSeatKey").value = key;
-      document.getElementById("editModalTitle").innerText = isNew ? "➕ 新增人員席位" : "✏️ 編輯人員與職掌資料";
+      document.getElementById("editModalTitle").innerText = isNew ? "➕ 新增人員席位" : "✏️ 編輯人員、照片與職掌資料";
       
       const seat = currentLayout.find(s => s.key === key) || {};
 
@@ -1158,12 +1216,103 @@
       document.getElementById("editTitle").value = seat.title || "";
       document.getElementById("editExt").value = seat.ext || "";
       document.getElementById("editBrief").value = seat.brief || "";
+      
+      const avatarVal = seat.avatar || "";
+      document.getElementById("editAvatarUrl").value = avatarVal;
+      document.getElementById("avatarPreviewImg").src = avatarVal || "";
+      document.getElementById("editAvatarFile").value = "";
 
       document.getElementById("editModal").classList.add("active");
     }
 
     function closeEditModal() {
       document.getElementById("editModal").classList.remove("active");
+    }
+
+
+    // === 🐙 GitHub API 自動上傳圖片到 images/ 資料夾 ===
+    async function uploadToGithub(file, seatKey) {
+      const ghToken = localStorage.getItem("cmu_gh_token");
+      const ghRepo = localStorage.getItem("cmu_gh_repo"); // format: owner/repo
+      const ghBranch = localStorage.getItem("cmu_gh_branch") || "main";
+
+      if (!ghToken || !ghRepo) {
+        // 若未設定 GitHub Token，則降級為本地 Base64 內嵌儲存
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      showToast("⏳", "正在上傳照片至 GitHub images/ 資料夾...");
+
+      // 取得副檔名並建立標準化檔名 (如 images/avatar_r1_c7.png 或時間戳)
+      const ext = file.name.split('.').pop().toLowerCase() || "png";
+      const filename = `images/avatar_${seatKey}_${Date.now()}.${ext}`;
+      const apiUrl = `https://api.github.com/repos/${ghRepo}/contents/${filename}`;
+
+      // 讀取檔案為 Base64
+      const base64Content = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const res = reader.result.split(',')[1];
+          resolve(res);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      const body = {
+        message: `Upload avatar for ${seatKey}`,
+        content: base64Content,
+        branch: ghBranch
+      };
+
+      const response = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+          "Authorization": `token ${ghToken}`,
+          "Content-Type": "application/json",
+          "Accept": "application/vnd.github.v3+json"
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.message || "GitHub 上傳失敗");
+      }
+
+      // 上傳成功，回傳 GitHub raw 圖片直連網址
+      const rawUrl = `https://raw.githubusercontent.com/${ghRepo}/${ghBranch}/${filename}`;
+      showToast("✅", "照片已成功儲存至 GitHub images/！");
+      return rawUrl;
+    }
+
+    async function handleAvatarFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const seatKey = document.getElementById("editSeatKey").value || "temp";
+      try {
+        const uploadedUrl = await uploadToGithub(file, seatKey);
+        document.getElementById("editAvatarUrl").value = uploadedUrl;
+        document.getElementById("avatarPreviewImg").src = uploadedUrl;
+      } catch (err) {
+        alert("GitHub 上傳失敗：" + err.message + "\n已自動改用本地暫存。");
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById("editAvatarUrl").value = e.target.result;
+          document.getElementById("avatarPreviewImg").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+
+    function handleAvatarUrl(url) {
+      document.getElementById("avatarPreviewImg").src = url.trim() || "";
     }
 
     function submitEditForm() {
@@ -1187,10 +1336,11 @@
           name: name,
           title: document.getElementById("editTitle").value.trim(),
           ext: document.getElementById("editExt").value.trim(),
-          brief: document.getElementById("editBrief").value.trim()
+          brief: document.getElementById("editBrief").value.trim(),
+          avatar: document.getElementById("editAvatarUrl").value.trim()
         };
 
-        saveData(`【${name}】資料已更新`);
+        saveData(`【${name}】資料與頭像已更新`);
         renderMap();
         closeEditModal();
       }
@@ -1233,7 +1383,7 @@
       }
     }
 
-    // === 🔥【全功能匯出核心：保證 10 欄 100% 完整捕捉、右側不切邊】🔥 ===
+    // === 匯出圖片核心 ===
     function exportOfficeImage(mode) {
       const btnWeb = document.getElementById("btnExportWeb");
       const btnColor = document.getElementById("btnExportColor");
@@ -1246,7 +1396,6 @@
 
       const targetElement = document.getElementById("captureArea");
       
-      // 如果是「官網 700px 專用」，強制不顯示業務職掌以最大化文字
       if (mode === 'web700') {
         document.getElementById("chkDesc").checked = false;
       }
@@ -1259,7 +1408,7 @@
         const exactHeight = targetElement.scrollHeight || targetElement.offsetHeight;
 
         html2canvas(targetElement, {
-          scale: 2.0,                  // 2倍超高解析度
+          scale: 2.0,                  // 2倍清晰度
           backgroundColor: "#ffffff",
           useCORS: true,
           logging: false,
@@ -1267,13 +1416,13 @@
           scrollX: 0,
           width: exactWidth,
           height: exactHeight,
-          windowWidth: exactWidth + 50 // 保證虛擬視窗寬度足夠包裹全部 10 欄
+          windowWidth: exactWidth + 50
         }).then(canvas => {
           const imageURL = canvas.toDataURL("image/png");
           const downloadLink = document.createElement("a");
           const dateStr = new Date().toISOString().slice(0, 10);
           
-          let typeName = (mode === 'color') ? "A4全彩設計版" : "官網700px專用大字版";
+          let typeName = (mode === 'color') ? "A4全彩版" : "官網700px專用圖";
 
           downloadLink.href = imageURL;
           downloadLink.download = `中國醫藥大學_教務處辦公室配置圖_${typeName}_${dateStr}.png`;
@@ -1281,7 +1430,6 @@
           downloadLink.click();
           document.body.removeChild(downloadLink);
 
-          // 復原畫面狀態
           document.body.classList.remove("export-active-mode");
           activeBtn.innerHTML = originalText;
           btnWeb.disabled = false;
@@ -1299,7 +1447,7 @@
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_v_styled_final");
+        localStorage.removeItem("cmu_office_layout_v_avatar");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
         saveData("已還原預設配置");
@@ -1312,7 +1460,66 @@
       }
     });
 
+    
+    function openGhModal() {
+      document.getElementById("ghRepoInput").value = localStorage.getItem("cmu_gh_repo") || "";
+      document.getElementById("ghBranchInput").value = localStorage.getItem("cmu_gh_branch") || "main";
+      document.getElementById("ghTokenInput").value = localStorage.getItem("cmu_gh_token") || "";
+      document.getElementById("ghModal").classList.add("active");
+    }
+
+    function closeGhModal(e) {
+      document.getElementById("ghModal").classList.remove("active");
+    }
+
+    function saveGhSettings() {
+      const repo = document.getElementById("ghRepoInput").value.trim();
+      const branch = document.getElementById("ghBranchInput").value.trim() || "main";
+      const token = document.getElementById("ghTokenInput").value.trim();
+
+      localStorage.setItem("cmu_gh_repo", repo);
+      localStorage.setItem("cmu_gh_branch", branch);
+      localStorage.setItem("cmu_gh_token", token);
+
+      closeGhModal();
+      alert("🎉 GitHub 連線設定已儲存！之後上傳的頭像將自動寫入 " + repo + " 的 images/ 資料夾。");
+    }
+
     window.onload = initData;
   </script>
+
+  <!-- 3. GitHub 連線設定 Modal -->
+  <div class="modal-overlay" id="ghModal" onclick="closeGhModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h2 style="font-size:1.25rem; font-weight:800;">🐙 GitHub 雲端圖床連線設定</h2>
+        <button class="modal-close-btn" onclick="closeGhModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.88rem; color:#475569; margin-bottom:12px;">
+          設定完成後，使用者在網頁上傳的頭像照片將會<strong>自動 Commit 寫入 GitHub 儲存庫的 <code>images/</code> 資料夾</strong>！
+        </p>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label>GitHub 儲存庫名稱 (擁有者/倉庫名)</label>
+            <input type="text" id="ghRepoInput" placeholder="例如：cmu-academic/office-layout">
+          </div>
+          <div class="form-group">
+            <label>分支名稱 (Branch)</label>
+            <input type="text" id="ghBranchInput" placeholder="預設：main">
+          </div>
+          <div class="form-group full-width">
+            <label>GitHub Personal Access Token (需勾選 repo 權限)</label>
+            <input type="password" id="ghTokenInput" placeholder="ghp_xxxxxxxxxxxxxx">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeGhModal()">取消</button>
+        <button type="button" class="btn btn-web" onclick="saveGhSettings()">💾 儲存連線設定</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
