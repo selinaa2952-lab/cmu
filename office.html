@@ -428,6 +428,18 @@
       filter: grayscale(80%);
     }
 
+    
+    /* A4 滿版匯出專用設定 (無多餘外圍白邊、精準 A4 比例) */
+    .exporting-color #captureArea,
+    .exporting-mono #captureArea {
+      padding: 6px !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      width: 1400px !important;
+      max-width: 1400px !important;
+    }
+
     /* ============================================================
        【模式 A：彩色匯出時的暫時樣式】
        ============================================================ */
@@ -1250,12 +1262,13 @@
 
       setTimeout(() => {
         html2canvas(targetElement, {
-          scale: isMono ? 2.5 : 2.0, // 黑白列印版以 2.5 倍極高解析度保證銳利
+          scale: isMono ? 2.5 : 2.0, // 高解析度輸出
           backgroundColor: "#ffffff",
           useCORS: true,
           logging: false,
           scrollY: 0,
-          scrollX: 0
+          scrollX: 0,
+          windowWidth: 1450
         }).then(canvas => {
           const imageURL = canvas.toDataURL("image/png");
           const downloadLink = document.createElement("a");
