@@ -85,10 +85,11 @@
 
     .seat-span-2 { grid-column: span 2; }
 
-    .seat-card {
-      border-radius: var(--border-radius); padding: 9px 8px 8px 8px; min-height: 96px;
-      display: flex; flex-direction: column; justify-content: space-between; position: relative;
-      user-select: none; cursor: grab; transition: transform 0.15s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  .seat-card {
+      border-radius: var(--border-radius); padding: 10px 8px 8px 8px; min-height: 145px;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      position: relative; user-select: none; cursor: grab; transition: transform 0.15s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04); text-align: center;
     }
     .seat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.12); z-index: 5; }
 
@@ -113,8 +114,9 @@
     .seat-card.dept-other { background-color: var(--bg-other); }
 
     .card-badge {
-      font-size: 0.72rem; font-weight: 800; padding: 1.5px 7px; border-radius: 20px; margin-bottom: 4px;
-      display: inline-block; width: fit-content; line-height: 1.25; white-space: nowrap; background-color: #ffffff !important;
+      font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 20px;
+      margin-bottom: 6px; display: inline-block; width: fit-content; line-height: 1.25;
+      white-space: nowrap; background-color: #ffffff !important;
     }
 
     .dept-reg .card-badge { color: var(--text-reg) !important; }
@@ -127,30 +129,35 @@
 
     .card-main-content { display: flex; align-items: center; gap: 8px; margin: 3px 0 1px 0; width: 100%; }
 
+    /* 🔥 頭像放大 (58px) 且置中 */
     .card-avatar {
-      width: 44px; height: 44px; border-radius: 50%; object-fit: cover;
-      border: 1.5px solid #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.15); flex-shrink: 0; background: #ffffff;
+      width: 58px; height: 58px; border-radius: 50%; object-fit: cover;
+      border: 2px solid #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+      margin: 2px auto 6px auto; background: #ffffff; display: block;
     }
 
-    .card-info-col { flex-grow: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
-
+    /* 🔥 垂直向下排列的文字區域 */
+    .card-info-col {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px; width: 100%;
+    }
     .card-name {
-      font-size: 1.15rem; font-weight: 900; color: #0f172a; white-space: nowrap !important;
-      word-break: keep-all !important; line-height: 1.2;
+      font-size: 1.15rem; font-weight: 900; color: #0f172a;
+      white-space: nowrap !important; word-break: keep-all !important; line-height: 1.2;
     }
 
     .card-title {
-      font-size: 0.75rem; color: #334155; white-space: nowrap !important;
+      font-size: 0.76rem; color: #334155; white-space: nowrap !important;
       word-break: keep-all !important; font-weight: 700; line-height: 1.2; opacity: 0.9;
     }
 
     .card-ext {
-      font-size: 0.95rem; font-weight: 800; color: #0f172a; white-space: nowrap; line-height: 1.2; margin-top: 1px;
+      font-size: 0.95rem; font-weight: 800; color: #0f172a; white-space: nowrap; line-height: 1.2; margin-top: 2px;
     }
 
     .card-desc {
-      font-size: 0.7rem; color: #1e293b; line-height: 1.35; background: rgba(255, 255, 255, 0.7);
-      padding: 4px 6px; border-radius: 4px; margin-top: 4px;
+      font-size: 0.7rem; color: #1e293b; line-height: 1.35; background: rgba(255, 255, 255, 0.75);
+      padding: 4px 6px; border-radius: 4px; margin-top: 6px; width: 100%; text-align: left;
     }
 
     .export-active-mode { background: #ffffff !important; padding: 0 !important; }
@@ -502,7 +509,7 @@
           card.className = `seat-card ${seat.deptClass || getDeptClass(seat.dept)} ${spanClass}`;
           card.id = `seat-${seat.key}`;
 
-          const defaultAvatarSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
+          const defaultAvatarSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
           const avatarSrc = (seat.avatar && seat.avatar.trim()) ? seat.avatar.trim() : defaultAvatarSvg;
           const avatarHtml = `<img class="card-avatar item-avatar" src="${avatarSrc}" onerror="this.src='${defaultAvatarSvg}'" alt="${seat.name}">`;
           const titleHtml = seat.title ? `<div class="card-title item-title">${seat.title}</div>` : '';
@@ -512,16 +519,12 @@
               <button class="mini-btn" title="編輯資料" onclick="event.stopPropagation(); openEditModal('${seat.key}', false)">✏️</button>
               <button class="mini-btn del-btn" title="清空席位" onclick="event.stopPropagation(); quickDelete('${seat.key}')">🗑️</button>
             </div>
-            <div>
-              <span class="card-badge item-dept">${seat.dept || '未設定'}</span>
-              <div class="card-main-content">
-                ${avatarHtml}
-                <div class="card-info-col">
-                  <div class="card-name item-name">${seat.name}</div>
-                  ${titleHtml}
-                  <div class="card-ext item-ext">${seat.ext && seat.ext !== '-' ? seat.ext : ''}</div>
-                </div>
-              </div>
+            <span class="card-badge item-dept">${seat.dept || '未設定'}</span>
+            ${avatarHtml}
+            <div class="card-info-col">
+              <div class="card-name item-name">${seat.name}</div>
+              ${titleHtml}
+              <div class="card-ext item-ext">${seat.ext && seat.ext !== '-' ? seat.ext : ''}</div>
             </div>
             <div class="card-desc item-desc">${seat.brief || ''}</div>
           `;
