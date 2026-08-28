@@ -37,20 +37,16 @@
     h1 { font-size: 1.45rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px; }
     .top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
-    .search-box input {
-      padding: 8px 14px; width: 220px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none;
-    }
-
     .btn {
-      padding: 8px 14px; border-radius: 7px; font-size: 0.86rem; font-weight: 700; cursor: pointer; border: 1px solid transparent;
+      padding: 8px 16px; border-radius: 7px; font-size: 0.88rem; font-weight: 700; cursor: pointer; border: 1px solid transparent;
       display: inline-flex; align-items: center; gap: 5px;
     }
+    .btn-color { background: #16a34a; color: white; }
+    .btn-color:hover { background: #15803d; }
     .btn-outline { background: white; border-color: #cbd5e1; color: #334155; }
     .btn-outline:hover { background: #f1f5f9; }
     .btn-web { background: #0284c7; color: white; }
     .btn-web:hover { background: #0369a1; }
-    .btn-color { background: #16a34a; color: white; }
-    .btn-color:hover { background: #15803d; }
 
     .controls-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; }
     .checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
@@ -85,8 +81,8 @@
 
     .seat-span-2 { grid-column: span 2; }
 
-  .seat-card {
-      border-radius: var(--border-radius); padding: 10px 8px 8px 8px; min-height: 145px;
+    .seat-card {
+      border-radius: var(--border-radius); padding: 10px 8px 8px 8px; min-height: 155px;
       display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
       position: relative; user-select: none; cursor: grab; transition: transform 0.15s ease;
       box-shadow: 0 1px 2px rgba(0,0,0,0.04); text-align: center;
@@ -127,20 +123,18 @@
     .dept-cmu .card-badge { color: var(--text-cmu) !important; }
     .dept-other .card-badge { color: var(--text-other) !important; }
 
-    .card-main-content { display: flex; align-items: center; gap: 8px; margin: 3px 0 1px 0; width: 100%; }
-
-    /* 🔥 頭像放大 (75px) 且置中 */
+    /* 🔥 75px 高畫質大頭照置中 */
     .card-avatar {
-      width:75px; height: 75px; border-radius: 50%; object-fit: cover;
+      width: 75px; height: 75px; border-radius: 50%; object-fit: cover;
       border: 2px solid #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-      margin: 2px auto 6px auto; background: #ffffff; display: block;
+      margin: 2px auto 6px auto; background: #ffffff; display: block; flex-shrink: 0;
     }
 
-    /* 🔥 垂直向下排列的文字區域 */
     .card-info-col {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 2px; width: 100%;
     }
+
     .card-name {
       font-size: 1.15rem; font-weight: 900; color: #0f172a;
       white-space: nowrap !important; word-break: keep-all !important; line-height: 1.2;
@@ -156,7 +150,7 @@
     }
 
     .card-desc {
-      font-size: 0.7rem; color: #1e293b; line-height: 1.35; background: rgba(255, 255, 255);
+      font-size: 0.7rem; color: #1e293b; line-height: 1.35; background: rgba(255, 255, 255, 0.75);
       padding: 4px 6px; border-radius: 4px; margin-top: 6px; width: 100%; text-align: left;
     }
 
@@ -187,7 +181,7 @@
       padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none;
     }
     .avatar-preview-box { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; }
-    .avatar-preview-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
+    .avatar-preview-img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
 
     .sync-toast {
       position: fixed; bottom: 24px; right: 24px; background: #0f172a; color: #f8fafc;
@@ -205,12 +199,7 @@
       <div class="title-area">
         <h1>🏫 中國醫藥大學 教務處水湳校區辦公室配置圖</h1>
         <div class="top-actions">
-          <div class="search-box">
-            <input type="text" id="searchInput" placeholder="🔍 搜尋同仁、分機..." oninput="handleSearch()">
-          </div>
-          <button class="btn btn-outline" onclick="resetToDefault()">🔄 還原預設</button>
-          <button class="btn btn-web" onclick="exportOfficeImage('web700')" id="btnExportWeb">🌐 匯出官網 700px 專用圖</button>
-          <button class="btn btn-color" onclick="exportOfficeImage('color')" id="btnExportColor">🎨 匯出 A4 彩色圖</button>
+          <button class="btn btn-color" onclick="exportOfficeImage()" id="btnExportColor">🎨 匯出 A4 彩色圖</button>
         </div>
       </div>
 
@@ -263,9 +252,9 @@
           
           <div class="form-grid">
             <div class="form-group full-width">
-              <label>同仁大頭照（上傳後自動同步至試算表與 GitHub <code>images/</code>）</label>
+              <label>同仁大頭照（上傳後自動存入「共用圖片」資料夾並同步試算表）</label>
               <div class="avatar-preview-box">
-                <img id="avatarPreviewImg" class="avatar-preview-img" src="" alt="預覽" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'%2394a3b8\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'">
+                <img id="avatarPreviewImg" class="avatar-preview-img" src="" alt="預覽" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'64\' height=\'64\' viewBox=\'0 0 24 24\' fill=\'%2394a3b8\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'">
                 <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">
                   <input type="file" id="editAvatarFile" accept="image/*" onchange="handleAvatarFile(event)" style="font-size: 0.82rem;">
                   <input type="text" id="editAvatarUrl" placeholder="照片網址或 Base64 資料" oninput="handleAvatarUrl(this.value)">
@@ -319,9 +308,6 @@
   </div>
 
   <script>
-    const GH_OWNER = "selinaa2952-lab";
-    const GH_REPO = "cmu";
-    const GH_BRANCH = "main";
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
 
     const defaultOfficeLayout = [
@@ -356,6 +342,7 @@
     let currentLayout = [];
     let draggedKey = null;
     let pendingUploadData = null;
+    let isEditing = false;
 
     function getDeptClass(dept) {
       if (!dept) return "dept-other";
@@ -368,18 +355,17 @@
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_final_v6");
-      if (saved) {
-        try { currentLayout = JSON.parse(saved); } catch (e) { currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout)); }
-      } else {
-        currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
-      }
+      currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
       renderMap();
       fetchLatestFromGoogleSheet();
+      
+      // 多人線上協作：每 10 秒自動同步試算表最新狀態
+      setInterval(() => {
+        if (!isEditing) fetchLatestFromGoogleSheet();
+      }, 10000);
     }
 
     function saveData(actionDescription) {
-      localStorage.setItem("cmu_office_layout_final_v6", JSON.stringify(currentLayout));
       syncToGoogleSheetAuto(actionDescription);
     }
 
@@ -402,14 +388,14 @@
       syncDebounceTimer = setTimeout(() => { sendPayloadToGAS(actionDescription); }, 300);
     }
 
-    // === 🔥 採用 fetch(no-cors) 直通 Google Apps Script，保證 100% 抵達 ===
     function sendPayloadToGAS(actionDescription) {
-      showToast("⏳", "正在同步至 Google 試算表與 GitHub...");
+      showToast("⏳", "正在同步至 Google 雲端硬碟與試算表...");
 
       const payloadObj = {
         layout: currentLayout
       };
       if (pendingUploadData) {
+        payloadObj.targetSeatKey = pendingUploadData.seatKey;
         payloadObj.avatarFileName = pendingUploadData.fileName;
         payloadObj.avatarBase64 = pendingUploadData.base64;
       }
@@ -421,14 +407,14 @@
         body: JSON.stringify(payloadObj)
       }).then(() => {
         pendingUploadData = null;
-        showToast("✅", (actionDescription || "資料已變更") + "，已成功同步至試算表與 GitHub！");
+        showToast("✅", (actionDescription || "資料已變更") + "，已成功同步！");
       }).catch(err => {
         console.warn("GAS Sync Error:", err);
       });
     }
 
     function fetchLatestFromGoogleSheet() {
-      fetch(GAS_URL)
+      fetch(GAS_URL + "?t=" + Date.now())
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data) && data.length > 1) {
@@ -465,9 +451,7 @@
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_final_v6", JSON.stringify(currentLayout));
             renderMap();
-            showToast("🟢", `已成功載入最新配置 (${updated} 席位)`);
           }
         })
         .catch(err => console.warn("GAS GET Error:", err));
@@ -509,7 +493,7 @@
           card.className = `seat-card ${seat.deptClass || getDeptClass(seat.dept)} ${spanClass}`;
           card.id = `seat-${seat.key}`;
 
-          const defaultAvatarSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
+          const defaultAvatarSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='75' height='75' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
           const avatarSrc = (seat.avatar && seat.avatar.trim()) ? seat.avatar.trim() : defaultAvatarSvg;
           const avatarHtml = `<img class="card-avatar item-avatar" src="${avatarSrc}" onerror="this.src='${defaultAvatarSvg}'" alt="${seat.name}">`;
           const titleHtml = seat.title ? `<div class="card-title item-title">${seat.title}</div>` : '';
@@ -575,22 +559,8 @@
       document.querySelectorAll(".item-desc").forEach(el => el.style.display = showDesc ? "block" : "none");
     }
 
-    function handleSearch() {
-      const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
-      currentLayout.forEach((seat) => {
-        const card = document.getElementById(`seat-${seat.key}`);
-        if (!card) return;
-        if (!keyword) { card.classList.remove("search-match", "search-dimmed"); return; }
-        if (seat.type === "empty" || !seat.name) { card.classList.add("search-dimmed"); return; }
-        const match = (seat.name && seat.name.toLowerCase().includes(keyword)) ||
-                      (seat.ext && seat.ext.toLowerCase().includes(keyword)) ||
-                      (seat.dept && seat.dept.toLowerCase().includes(keyword));
-        if (match) { card.classList.add("search-match"); card.classList.remove("search-dimmed"); }
-        else { card.classList.remove("search-match"); card.classList.add("search-dimmed"); }
-      });
-    }
-
     function openEditModal(key, isNew) {
+      isEditing = true;
       document.getElementById("editSeatKey").value = key;
       document.getElementById("editModalTitle").innerText = isNew ? "➕ 新增人員席位" : "✏️ 編輯人員、照片與職掌資料";
       const seat = currentLayout.find(s => s.key === key) || {};
@@ -607,9 +577,12 @@
       document.getElementById("editModal").classList.add("active");
     }
 
-    function closeEditModal() { document.getElementById("editModal").classList.remove("active"); }
+    function closeEditModal() {
+      isEditing = false;
+      document.getElementById("editModal").classList.remove("active");
+    }
 
-  // === 🔥 高畫質大頭照優化 (400x400 高清解析度 + 95% 品質) ===
+    // === 🔥 高畫質大頭照優化 (400x400 高清解析度 + 95% 品質) ===
     function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -622,27 +595,21 @@
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement("canvas");
-          
-          // 🔥 1. 將尺寸提升至 400x400 (對應 75px 顯示能達到超高清 Retina 畫質)
           const size = 400;
           canvas.width = size;
           canvas.height = size;
           const ctx = canvas.getContext("2d");
 
-          // 開啟高畫質平滑縮放演算法
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = "high";
 
-          // 保持正方形置中裁切
           const minDim = Math.min(img.width, img.height);
           const startX = (img.width - minDim) / 2;
           const startY = (img.height - minDim) / 2;
           ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, size, size);
 
-          // 🔥 2. 將畫質提升至 0.95 (95% 高畫質，細節不失真)
           const optimizedBase64 = canvas.toDataURL("image/jpeg", 0.95);
 
-          // 彈窗立即預覽高畫質新照片
           document.getElementById("avatarPreviewImg").src = optimizedBase64;
           document.getElementById("editAvatarUrl").value = optimizedBase64;
 
@@ -659,32 +626,6 @@
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
-    }
-
-    // === 🔥 2. 送出至 GAS，自動寫入「共用圖片」資料夾與試算表 ===
-    function sendPayloadToGAS(actionDescription) {
-      showToast("⏳", "正在同步至 Google 雲端硬碟與試算表...");
-
-      const payloadObj = {
-        layout: currentLayout
-      };
-      if (pendingUploadData) {
-        payloadObj.targetSeatKey = pendingUploadData.seatKey;
-        payloadObj.avatarFileName = pendingUploadData.fileName;
-        payloadObj.avatarBase64 = pendingUploadData.base64;
-      }
-
-      fetch(GAS_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(payloadObj)
-      }).then(() => {
-        pendingUploadData = null;
-        showToast("✅", (actionDescription || "資料已變更") + "，已成功同步！");
-      }).catch(err => {
-        console.warn("GAS Sync Error:", err);
-      });
     }
 
     function handleAvatarUrl(url) {
@@ -749,16 +690,13 @@
       }
     }
 
-    function exportOfficeImage(mode) {
-      const btnWeb = document.getElementById("btnExportWeb");
+    function exportOfficeImage() {
       const btnColor = document.getElementById("btnExportColor");
-      let activeBtn = (mode === 'color') ? btnColor : btnWeb;
-      const originalText = activeBtn.innerHTML;
-      activeBtn.innerHTML = "⏳ 生成圖片中...";
-      btnWeb.disabled = true; btnColor.disabled = true;
+      const originalText = btnColor.innerHTML;
+      btnColor.innerHTML = "⏳ 生成圖片中...";
+      btnColor.disabled = true;
 
       const targetElement = document.getElementById("captureArea");
-      if (mode === 'web700') document.getElementById("chkDesc").checked = false;
       updateVisibility();
       document.body.classList.add("export-active-mode");
 
@@ -778,32 +716,22 @@
           const imageURL = canvas.toDataURL("image/png");
           const downloadLink = document.createElement("a");
           const dateStr = new Date().toISOString().slice(0, 10);
-          let typeName = (mode === 'color') ? "A4全彩版" : "官網700px專用圖";
           downloadLink.href = imageURL;
-          downloadLink.download = `中國醫藥大學_教務處辦公室配置圖_${typeName}_${dateStr}.png`;
+          downloadLink.download = `中國醫藥大學_教務處辦公室配置圖_A4全彩版_${dateStr}.png`;
           document.body.appendChild(downloadLink);
           downloadLink.click();
           document.body.removeChild(downloadLink);
 
           document.body.classList.remove("export-active-mode");
-          activeBtn.innerHTML = originalText;
-          btnWeb.disabled = false; btnColor.disabled = false;
+          btnColor.innerHTML = originalText;
+          btnColor.disabled = false;
         }).catch(err => {
           document.body.classList.remove("export-active-mode");
           alert("截圖匯出失敗，請稍候重試。");
-          activeBtn.innerHTML = originalText;
-          btnWeb.disabled = false; btnColor.disabled = false;
+          btnColor.innerHTML = originalText;
+          btnColor.disabled = false;
         });
       }, 150);
-    }
-
-    function resetToDefault() {
-      if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_final_v6");
-        currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
-        renderMap();
-        saveData("已還原預設配置");
-      }
     }
 
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeEditModal(); });
