@@ -123,7 +123,7 @@
     .dept-cmu .card-badge { color: var(--text-cmu) !important; }
     .dept-other .card-badge { color: var(--text-other) !important; }
 
-    /* 🔥 75px 高畫質大頭照置中 */
+    /* 75px 高畫質大頭照置中 */
     .card-avatar {
       width: 75px; height: 75px; border-radius: 50%; object-fit: cover;
       border: 2px solid #ffffff; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
@@ -181,7 +181,7 @@
       padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none;
     }
     .avatar-preview-box { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; }
-    .avatar-preview-img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
+    .avatar-preview-img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; background: #e2e8f0; flex-shrink: 0; }
 
     .sync-toast {
       position: fixed; bottom: 24px; right: 24px; background: #0f172a; color: #f8fafc;
@@ -254,10 +254,14 @@
             <div class="form-group full-width">
               <label>同仁大頭照（上傳後自動存入「共用圖片」資料夾並同步試算表）</label>
               <div class="avatar-preview-box">
-                <img id="avatarPreviewImg" class="avatar-preview-img" src="" alt="預覽" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'64\' height=\'64\' viewBox=\'0 0 24 24\' fill=\'%2394a3b8\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'">
+                <img id="avatarPreviewImg" class="avatar-preview-img" src="" alt="預覽">
                 <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">
-                  <input type="file" id="editAvatarFile" accept="image/*" onchange="handleAvatarFile(event)" style="font-size: 0.82rem;">
-                  <input type="text" id="editAvatarUrl" placeholder="照片網址或 Base64 資料" oninput="handleAvatarUrl(this.value)">
+                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <input type="file" id="editAvatarFile" accept="image/*" onchange="handleAvatarFile(event)" style="font-size: 0.82rem; flex-grow: 1;">
+                    <!-- 🔥 移除目前頭像按鈕 -->
+                    <button type="button" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.78rem; color: #dc2626; border-color: #fca5a5;" onclick="clearAvatar()">❌ 移除目前頭像</button>
+                  </div>
+                  <input type="text" id="editAvatarUrl" placeholder="照片網址或留空使用預設圖" oninput="handleAvatarUrl(this.value)">
                 </div>
               </div>
             </div>
@@ -309,6 +313,7 @@
 
   <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
+    const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='75' height='75' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
 
     const defaultOfficeLayout = [
       { key: "r1_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳巧璇", title: "約聘人員", ext: "1177", avatar: "", brief: "公衛學院各系教務、學分學程與TAICA、學分抵免、成績單與列印機、雙主修輔系、學生證製發" },
@@ -431,7 +436,7 @@
                 const title = row[3] || "";
                 const ext = row[4] !== undefined && row[4] !== null ? String(row[4]) : "";
                 const brief = row[5] || "";
-                const avatar = row[6] || currentLayout[idx].avatar || "";
+                const avatar = row[6] || "";
 
                 if (name === "" || name === "空位" || name === "空") {
                   currentLayout[idx] = { key: key, span: currentLayout[idx].span || 1, type: "empty" };
@@ -493,9 +498,8 @@
           card.className = `seat-card ${seat.deptClass || getDeptClass(seat.dept)} ${spanClass}`;
           card.id = `seat-${seat.key}`;
 
-          const defaultAvatarSvg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='75' height='75' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
-          const avatarSrc = (seat.avatar && seat.avatar.trim()) ? seat.avatar.trim() : defaultAvatarSvg;
-          const avatarHtml = `<img class="card-avatar item-avatar" src="${avatarSrc}" onerror="this.src='${defaultAvatarSvg}'" alt="${seat.name}">`;
+          const avatarSrc = (seat.avatar && seat.avatar.trim()) ? seat.avatar.trim() : DEFAULT_AVATAR_SVG;
+          const avatarHtml = `<img class="card-avatar item-avatar" src="${avatarSrc}" onerror="this.src='${DEFAULT_AVATAR_SVG}'" alt="${seat.name}">`;
           const titleHtml = seat.title ? `<div class="card-title item-title">${seat.title}</div>` : '';
 
           card.innerHTML = `
@@ -572,8 +576,9 @@
 
       const avatarVal = seat.avatar || "";
       document.getElementById("editAvatarUrl").value = avatarVal;
-      document.getElementById("avatarPreviewImg").src = avatarVal || "";
+      document.getElementById("avatarPreviewImg").src = avatarVal ? avatarVal : DEFAULT_AVATAR_SVG;
       document.getElementById("editAvatarFile").value = "";
+      pendingUploadData = null;
       document.getElementById("editModal").classList.add("active");
     }
 
@@ -582,7 +587,16 @@
       document.getElementById("editModal").classList.remove("active");
     }
 
-   // === 🔥 250x250 超高清大頭照（針對 75px 提供 3.3 倍 Retina 細節） ===
+    // === 🔥 核心：移除頭像功能 ===
+    function clearAvatar() {
+      document.getElementById("editAvatarUrl").value = "";
+      document.getElementById("editAvatarFile").value = "";
+      document.getElementById("avatarPreviewImg").src = DEFAULT_AVATAR_SVG;
+      pendingUploadData = null;
+      showToast("ℹ️", "已移除大頭照，儲存後將恢復為預設圖案。");
+    }
+
+    // === 🔥 250x250 超高清大頭照 ===
     function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -595,7 +609,7 @@
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement("canvas");
-          const size = 250; // 250x250 提供完美的 Retina 高畫質，同時體積超輕量
+          const size = 250;
           canvas.width = size;
           canvas.height = size;
           const ctx = canvas.getContext("2d");
@@ -608,7 +622,6 @@
           const startY = (img.height - minDim) / 2;
           ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, size, size);
 
-          // 產出輕量高清 Base64 (約 15KB)
           const optimizedBase64 = canvas.toDataURL("image/jpeg", 0.85);
 
           document.getElementById("avatarPreviewImg").src = optimizedBase64;
@@ -630,7 +643,7 @@
     }
 
     function handleAvatarUrl(url) {
-      document.getElementById("avatarPreviewImg").src = url.trim() || "";
+      document.getElementById("avatarPreviewImg").src = url.trim() ? url.trim() : DEFAULT_AVATAR_SVG;
     }
 
     function submitEditForm() {
