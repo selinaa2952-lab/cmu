@@ -606,7 +606,7 @@
 
     function closeEditModal() { document.getElementById("editModal").classList.remove("active"); }
 
-   // === 🔥 1. 上傳檔案自動縮圖並綁定席位代碼 ===
+   // === 🔥 1. 上傳選檔自動等比微縮為大頭照 (150x150) 並綁定席位 ===
     function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -631,26 +631,27 @@
 
           const optimizedBase64 = canvas.toDataURL("image/jpeg", 0.85);
 
-          // 彈窗立即預覽
+          // 彈窗立即預覽新照片
           document.getElementById("avatarPreviewImg").src = optimizedBase64;
           document.getElementById("editAvatarUrl").value = optimizedBase64;
 
           const fileName = (extNum && extNum !== '-') ? `${extNum}.jpg` : `avatar_${seatKey}.jpg`;
           
+          // 準備傳送給 GAS 的圖片與席位資訊
           pendingUploadData = {
             seatKey: seatKey,
             fileName: fileName,
             base64: optimizedBase64.split(',')[1]
           };
 
-          showToast("ℹ️", `照片已就緒 (${fileName})，點擊儲存將直接存入 Google 雲端！`);
+          showToast("ℹ️", `照片已就緒 (${fileName})，點擊儲存將直接存入 Google「共用圖片」！`);
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    // === 🔥 2. 送出至 GAS，自動寫入 Google Drive 與 試算表 ===
+    // === 🔥 2. 送出至 GAS，自動寫入「共用圖片」資料夾與試算表 ===
     function sendPayloadToGAS(actionDescription) {
       showToast("⏳", "正在同步至 Google 雲端硬碟與試算表...");
 
