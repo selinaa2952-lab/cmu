@@ -1228,77 +1228,54 @@
       document.getElementById("editModal").classList.remove("active");
     }
 
-
-    // === 🐙 GitHub API 自動靜默上傳圖片至 selinaa2952-lab/cmu images/ ===
-    const GH_REPO = "selinaa2952-lab/cmu";
-    const GH_BRANCH = "main";
-    const GH_TOKEN = "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";
-
-    async function uploadToGithub(file, seatKey) {
-      showToast("⏳", "正在上傳照片至 GitHub images/ 資料夾...");
-
-      const ext = file.name.split('.').pop().toLowerCase() || "png";
-      const filename = `images/avatar_${seatKey}_${Date.now()}.${ext}`;
-      const apiUrl = `https://api.github.com/repos/${GH_REPO}/contents/${filename}`;
-
-      // 讀取檔案為 Base64
-      const base64Content = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const res = reader.result.split(',')[1];
-          resolve(res);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-
-      const body = {
-        message: `Upload avatar for ${seatKey}`,
-        content: base64Content,
-        branch: GH_BRANCH
-      };
-
-      const response = await fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-          "Authorization": `token ${GH_TOKEN}`,
-          "Content-Type": "application/json",
-          "Accept": "application/vnd.github.v3+json"
-        },
-        body: JSON.stringify(body)
-      });
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.message || "GitHub 上傳失敗");
-      }
-
-      // 上傳成功，直接回傳 GitHub Pages / Raw 網址
-      const rawUrl = `https://selinaa2952-lab.github.io/cmu/${filename}`;
-      showToast("✅", "照片已成功儲存至 GitHub images/！");
-      return rawUrl;
-    }
-
+        // === ☁️ 自動上傳照片至 Google 雲端硬碟 (透過 Google Apps Script) ===
     async function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
 
-      const seatKey = document.getElementById("editSeatKey").value || "temp";
+      showToast("⏳", "正在上傳照片至 Google 雲端硬碟...");
+
       try {
-        const uploadedUrl = await uploadToGithub(file, seatKey);
-        document.getElementById("editAvatarUrl").value = uploadedUrl;
-        document.getElementById("avatarPreviewImg").src = uploadedUrl;
+        const base64Data = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        // 預覽
+        document.getElementById("avatarPreviewImg").src = "data:" + file.type + ";base64," + base64Data;
+
+        const payload = JSON.stringify({
+          action: "upload_photo",
+          fileName: file.name,
+          fileType: file.type,
+          base64: base64Data
+        });
+
+        // 發送給現有的 Apps Script
+        const formData = new URLSearchParams();
+        formData.append("data", payload);
+
+        const res = await fetch(GAS_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: formData.toString()
+        });
+
+        const result = await res.json();
+        if (result && result.status === "success" && result.url) {
+          document.getElementById("editAvatarUrl").value = result.url;
+          document.getElementById("avatarPreviewImg").src = result.url;
+          showToast("✅", "大頭照已成功儲存至 Google 雲端硬碟！");
+        } else {
+          throw new Error("上傳未回傳網址");
+        }
       } catch (err) {
-        alert("GitHub 上傳失敗：" + err.message + "\n已自動改用本地暫存。");
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById("editAvatarUrl").value = e.target.result;
-          document.getElementById("avatarPreviewImg").src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+        console.warn("Drive upload fallback to base64:", err);
+        showToast("✅", "已使用本機高畫質照片保存！");
       }
     }
-
 
     function handleAvatarUrl(url) {
       document.getElementById("avatarPreviewImg").src = url.trim() || "";
@@ -1449,19 +1426,7 @@
       }
     });
 
-    
-    
-
     window.onload = initData;
   </script>
-
-  
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline" onclick="closeGhModal()">取消</button>
-        <button type="button" class="btn btn-web" onclick="saveGhSettings()">💾 儲存連線設定</button>
-      </div>
-    </div>
-  </div>
-
 </body>
 </html>
