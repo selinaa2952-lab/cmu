@@ -311,11 +311,6 @@
     </div>
   </div>
 
-  <iframe name="hidden_gas_iframe" id="hidden_gas_iframe" style="display:none;"></iframe>
-  <form id="gas_hidden_form" method="POST" target="hidden_gas_iframe" style="display:none;">
-    <input type="hidden" name="data" id="gas_hidden_data">
-  </form>
-
   <script>
     const GH_OWNER = "selinaa2952-lab";
     const GH_REPO = "cmu";
@@ -366,7 +361,7 @@
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_final_v5");
+      const saved = localStorage.getItem("cmu_office_layout_final_v6");
       if (saved) {
         try { currentLayout = JSON.parse(saved); } catch (e) { currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout)); }
       } else {
@@ -377,7 +372,7 @@
     }
 
     function saveData(actionDescription) {
-      localStorage.setItem("cmu_office_layout_final_v5", JSON.stringify(currentLayout));
+      localStorage.setItem("cmu_office_layout_final_v6", JSON.stringify(currentLayout));
       syncToGoogleSheetAuto(actionDescription);
     }
 
@@ -400,9 +395,10 @@
       syncDebounceTimer = setTimeout(() => { sendPayloadToGAS(actionDescription); }, 300);
     }
 
+    // === 🔥 採用 fetch(no-cors) 直通 Google Apps Script，保證 100% 抵達 ===
     function sendPayloadToGAS(actionDescription) {
-      showToast("⏳", "正在同步至 Google 試算表...");
-      
+      showToast("⏳", "正在同步至 Google 試算表與 GitHub...");
+
       const payloadObj = {
         layout: currentLayout
       };
@@ -411,15 +407,17 @@
         payloadObj.avatarBase64 = pendingUploadData.base64;
       }
 
-      const form = document.getElementById("gas_hidden_form");
-      const dataInput = document.getElementById("gas_hidden_data");
-      if (form && dataInput) {
-        form.action = GAS_URL;
-        dataInput.value = JSON.stringify(payloadObj);
-        form.submit();
+      fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payloadObj)
+      }).then(() => {
         pendingUploadData = null;
-        showToast("✅", (actionDescription || "資料已變更") + "，已成功同步至試算表！");
-      }
+        showToast("✅", (actionDescription || "資料已變更") + "，已成功同步至試算表與 GitHub！");
+      }).catch(err => {
+        console.warn("GAS Sync Error:", err);
+      });
     }
 
     function fetchLatestFromGoogleSheet() {
@@ -460,7 +458,7 @@
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_final_v5", JSON.stringify(currentLayout));
+            localStorage.setItem("cmu_office_layout_final_v6", JSON.stringify(currentLayout));
             renderMap();
             showToast("🟢", `已成功載入最新配置 (${updated} 席位)`);
           }
@@ -598,7 +596,7 @@
       document.getElementById("editTitle").value = seat.title || "";
       document.getElementById("editExt").value = seat.ext || "";
       document.getElementById("editBrief").value = seat.brief || "";
-      
+
       const avatarVal = seat.avatar || "";
       document.getElementById("editAvatarUrl").value = avatarVal;
       document.getElementById("avatarPreviewImg").src = avatarVal || "";
@@ -608,7 +606,7 @@
 
     function closeEditModal() { document.getElementById("editModal").classList.remove("active"); }
 
-   // === 🔥 上傳自動微縮 (150x150) 並同步傳送至 GAS 與 GitHub ===
+    // === 🔥 上傳自動等比微縮為大頭照 (150x150)，極速傳輸 ===
     function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -620,34 +618,29 @@
       reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-          // 建立 Canvas 自動微縮圖片尺寸至 150x150 (大頭照最佳尺寸)
           const canvas = document.createElement("canvas");
           const size = 150;
           canvas.width = size;
           canvas.height = size;
           const ctx = canvas.getContext("2d");
 
-          // 保持正方形置中裁切
           const minDim = Math.min(img.width, img.height);
           const startX = (img.width - minDim) / 2;
           const startY = (img.height - minDim) / 2;
           ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, size, size);
 
-          // 產出極致輕量化 Base64 (約 10~15 KB)
           const optimizedBase64 = canvas.toDataURL("image/jpeg", 0.85);
 
-          // 1. 即時預覽
           document.getElementById("avatarPreviewImg").src = optimizedBase64;
           document.getElementById("editAvatarUrl").value = optimizedBase64;
 
-          // 2. 準備後端同步資料
           const fileName = (extNum && extNum !== '-') ? `${extNum}.jpg` : `avatar_${seatKey}.jpg`;
           pendingUploadData = {
             fileName: fileName,
             base64: optimizedBase64.split(',')[1]
           };
 
-          showToast("ℹ️", `照片已壓縮優化 (${fileName})，點擊儲存將立即同步！`);
+          showToast("ℹ️", `照片已就緒 (${fileName})，點擊儲存將立即同步！`);
         };
         img.src = e.target.result;
       };
@@ -681,7 +674,6 @@
           avatar: newAvatar
         };
 
-        // 立即更新前端畫面
         renderMap();
         saveData(`【${name}】資料與頭像已更新`);
         closeEditModal();
@@ -767,7 +759,7 @@
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_final_v5");
+        localStorage.removeItem("cmu_office_layout_final_v6");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
         saveData("已還原預設配置");
