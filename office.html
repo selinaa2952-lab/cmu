@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（頭像照片修復版）</title>
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（免403直通雲端版）</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
@@ -409,12 +409,12 @@
           
           <div class="form-grid">
             <div class="form-group full-width">
-              <label>同仁大頭照 (可直接選擇照片檔案上傳)</label>
+              <label>同仁大頭照 (選擇照片檔案自動存入 Google 雲端)</label>
               <div class="avatar-preview-box">
                 <img id="avatarPreviewImg" class="avatar-preview-img" src="" alt="預覽" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'%2394a3b8\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'">
                 <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">
                   <input type="file" id="editAvatarFile" accept="image/*" onchange="handleAvatarFile(event)" style="font-size: 0.82rem;">
-                  <input type="text" id="editAvatarUrl" placeholder="或貼上照片圖片網址 (https://...)" oninput="handleAvatarUrl(this.value)">
+                  <input type="text" id="editAvatarUrl" placeholder="或貼上照片圖片網址" oninput="handleAvatarUrl(this.value)">
                 </div>
               </div>
             </div>
@@ -464,6 +464,7 @@
     </div>
   </div>
 
+  <!-- 專用隱藏 Form + iframe (100% 避開 CORS 阻擋) -->
   <iframe name="hidden_gas_iframe" id="hidden_gas_iframe" style="display:none;"></iframe>
   <form id="gas_hidden_form" method="POST" target="hidden_gas_iframe" style="display:none;">
     <input type="hidden" name="data" id="gas_hidden_data">
@@ -515,7 +516,7 @@
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_v_avatar_stable");
+      const saved = localStorage.getItem("cmu_office_layout_v_avatar_final");
       if (saved) {
         try { currentLayout = JSON.parse(saved); } catch (e) { currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout)); }
       } else {
@@ -526,7 +527,7 @@
     }
 
     function saveData(actionDescription) {
-      localStorage.setItem("cmu_office_layout_v_avatar_stable", JSON.stringify(currentLayout));
+      localStorage.setItem("cmu_office_layout_v_avatar_final", JSON.stringify(currentLayout));
       syncToGoogleSheetAuto(actionDescription);
     }
 
@@ -546,7 +547,7 @@
     let syncDebounceTimer = null;
     function syncToGoogleSheetAuto(actionDescription) {
       if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
-      syncDebounceTimer = setTimeout(() => { sendPayloadToGAS(actionDescription); }, 400);
+      syncDebounceTimer = setTimeout(() => { sendPayloadToGAS(actionDescription); }, 300);
     }
 
     function sendPayloadToGAS(actionDescription) {
@@ -559,23 +560,7 @@
         form.action = GAS_URL;
         dataInput.value = payload;
         form.submit();
-      }
-
-      try {
-        const formData = new URLSearchParams();
-        formData.append("data", payload);
-        fetch(GAS_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: formData.toString()
-        }).then(() => {
-          showToast("✅", (actionDescription || "資料已變更") + "，已成功同步至試算表！");
-        }).catch(() => {
-          showToast("✅", "已送出更新至試算表！");
-        });
-      } catch (e) {
-        showToast("✅", "已透過表單寫入試算表！");
+        showToast("✅", (actionDescription || "資料已變更") + "，已成功同步至試算表！");
       }
     }
 
@@ -617,7 +602,7 @@
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_v_avatar_stable", JSON.stringify(currentLayout));
+            localStorage.setItem("cmu_office_layout_v_avatar_final", JSON.stringify(currentLayout));
             renderMap();
             showToast("🟢", `已成功載入最新配置 (${updated} 席位)`);
           }
@@ -706,8 +691,8 @@
         if (srcIdx !== -1 && tgtIdx !== -1) {
           const srcSeat = { ...currentLayout[srcIdx] };
           const tgtSeat = { ...currentLayout[tgtIdx] };
-          currentLayout[srcIdx] = { ...tgtSeat, key: srcSeat.key, span: srcSeat.span };
-          currentLayout[tgtIdx] = { ...srcSeat, key: tgtSeat.key, span: tgtSeat.span };
+          currentLayout[srcIdx] = { ...tgtSeat, key: srcKey, span: srcSeat.span };
+          currentLayout[tgtIdx] = { ...srcSeat, key: tgtKey, span: tgtSeat.span };
           saveData(`【${srcSeat.name||'空位'}】與【${tgtSeat.name||'空位'}】位置已交換`);
           renderMap();
         }
@@ -764,41 +749,51 @@
 
     function closeEditModal() { document.getElementById("editModal").classList.remove("active"); }
 
-    // 🔥 核心修復：選擇檔案時立即 Base64 填入網址欄，並在背景上傳 Google 雲端
+    // 🔥 核心直連：圖片壓縮後透過 Form 表單通道直發 Google Apps Script (免受 CORS 阻擋)
     function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
 
+      showToast("⏳", "正在準備上傳照片至 Google 雲端硬碟...");
+
       const reader = new FileReader();
       reader.onload = function(e) {
-        const base64Url = e.target.result;
-        // 1. 立即把 Base64 寫進欄位，保證按下儲存 100% 成功有照片！
-        document.getElementById("editAvatarUrl").value = base64Url;
-        document.getElementById("avatarPreviewImg").src = base64Url;
+        // 先在前端建立一個小尺寸 Canvas 壓縮圖片至 50KB 內
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 300;
+          let w = img.width, h = img.height;
+          if (w > h && w > maxDim) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+          else if (h > maxDim) { w = Math.round(w * (maxDim / h)); h = maxDim; }
 
-        // 2. 背景發送給 Google Apps Script 存入 Google 雲端硬碟
-        try {
-          const rawBase64 = base64Url.split(',')[1];
-          const payload = JSON.stringify({
+          const canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.85);
+          document.getElementById("editAvatarUrl").value = compressedBase64;
+          document.getElementById("avatarPreviewImg").src = compressedBase64;
+
+          // 透過 Form 提交上傳指令至 Apps Script 寫入「共用圖片」資料夾
+          const rawBase64 = compressedBase64.split(',')[1];
+          const uploadPayload = JSON.stringify({
             action: "upload_photo",
-            fileName: file.name,
-            fileType: file.type,
+            fileName: (document.getElementById("editName").value || "avatar") + ".jpg",
+            fileType: "image/jpeg",
             base64: rawBase64
           });
-          const formData = new URLSearchParams();
-          formData.append("data", payload);
 
-          fetch(GAS_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: formData.toString()
-          }).then(res => res.json()).then(result => {
-            if (result && result.status === "success" && result.url) {
-              // 成功取得 Google 雲端網址，替換成雲端網址
-              document.getElementById("editAvatarUrl").value = result.url;
-            }
-          }).catch(() => {});
-        } catch (err) {}
+          const form = document.getElementById("gas_hidden_form");
+          const dataInput = document.getElementById("gas_hidden_data");
+          if (form && dataInput) {
+            form.action = GAS_URL;
+            dataInput.value = uploadPayload;
+            form.submit();
+            showToast("✅", "已成功發送照片至 Google 雲端硬碟！");
+          }
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -910,7 +905,7 @@
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_v_avatar_stable");
+        localStorage.removeItem("cmu_office_layout_v_avatar_final");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
         saveData("已還原預設配置");
