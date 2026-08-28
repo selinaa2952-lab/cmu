@@ -608,7 +608,7 @@
 
     function closeEditModal() { document.getElementById("editModal").classList.remove("active"); }
 
-    // === 🔥 核心：上傳選檔，立即預覽並準備好雙向同步 ===
+   // === 🔥 上傳自動微縮 (150x150) 並同步傳送至 GAS 與 GitHub ===
     function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -618,22 +618,38 @@
 
       const reader = new FileReader();
       reader.onload = function(e) {
-        const localBase64 = e.target.result;
-        // 彈窗立即預覽新照片
-        document.getElementById("avatarPreviewImg").src = localBase64;
-        document.getElementById("editAvatarUrl").value = localBase64;
+        const img = new Image();
+        img.onload = function() {
+          // 建立 Canvas 自動微縮圖片尺寸至 150x150 (大頭照最佳尺寸)
+          const canvas = document.createElement("canvas");
+          const size = 150;
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext("2d");
 
-        const fileExt = file.name.split('.').pop().toLowerCase() || "jpg";
-        const fileName = (extNum && extNum !== '-') ? `${extNum}.${fileExt}` : `avatar_${seatKey}.${fileExt}`;
-        const rawBase64 = localBase64.split(',')[1];
+          // 保持正方形置中裁切
+          const minDim = Math.min(img.width, img.height);
+          const startX = (img.width - minDim) / 2;
+          const startY = (img.height - minDim) / 2;
+          ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, size, size);
 
-        // 記錄待上傳 GitHub 的檔案資料
-        pendingUploadData = {
-          fileName: fileName,
-          base64: rawBase64
+          // 產出極致輕量化 Base64 (約 10~15 KB)
+          const optimizedBase64 = canvas.toDataURL("image/jpeg", 0.85);
+
+          // 1. 即時預覽
+          document.getElementById("avatarPreviewImg").src = optimizedBase64;
+          document.getElementById("editAvatarUrl").value = optimizedBase64;
+
+          // 2. 準備後端同步資料
+          const fileName = (extNum && extNum !== '-') ? `${extNum}.jpg` : `avatar_${seatKey}.jpg`;
+          pendingUploadData = {
+            fileName: fileName,
+            base64: optimizedBase64.split(',')[1]
+          };
+
+          showToast("ℹ️", `照片已壓縮優化 (${fileName})，點擊儲存將立即同步！`);
         };
-
-        showToast("ℹ️", `照片已就緒 (${fileName})，點擊儲存將立即同步！`);
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
