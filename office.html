@@ -582,7 +582,7 @@
       document.getElementById("editModal").classList.remove("active");
     }
 
-    // === 🔥 高畫質大頭照優化 (400x400 高清解析度 + 95% 品質) ===
+   // === 🔥 250x250 超高清大頭照（針對 75px 提供 3.3 倍 Retina 細節） ===
     function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -595,7 +595,7 @@
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement("canvas");
-          const size = 400;
+          const size = 250; // 250x250 提供完美的 Retina 高畫質，同時體積超輕量
           canvas.width = size;
           canvas.height = size;
           const ctx = canvas.getContext("2d");
@@ -608,7 +608,8 @@
           const startY = (img.height - minDim) / 2;
           ctx.drawImage(img, startX, startY, minDim, minDim, 0, 0, size, size);
 
-          const optimizedBase64 = canvas.toDataURL("image/jpeg", 0.95);
+          // 產出輕量高清 Base64 (約 15KB)
+          const optimizedBase64 = canvas.toDataURL("image/jpeg", 0.85);
 
           document.getElementById("avatarPreviewImg").src = optimizedBase64;
           document.getElementById("editAvatarUrl").value = optimizedBase64;
@@ -621,7 +622,7 @@
             base64: optimizedBase64.split(',')[1]
           };
 
-          showToast("ℹ️", `高畫質照片已就緒 (${fileName})，點擊儲存將立即同步！`);
+          showToast("ℹ️", `照片已就緒 (${fileName})，點擊儲存將立即同步！`);
         };
         img.src = e.target.result;
       };
