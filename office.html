@@ -606,7 +606,7 @@
 
     function closeEditModal() { document.getElementById("editModal").classList.remove("active"); }
 
-    // === 🔥 上傳自動等比微縮為大頭照 (150x150)，極速傳輸 ===
+   // === 🔥 1. 上傳檔案自動縮圖並綁定席位代碼 ===
     function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -631,20 +631,49 @@
 
           const optimizedBase64 = canvas.toDataURL("image/jpeg", 0.85);
 
+          // 彈窗立即預覽
           document.getElementById("avatarPreviewImg").src = optimizedBase64;
           document.getElementById("editAvatarUrl").value = optimizedBase64;
 
           const fileName = (extNum && extNum !== '-') ? `${extNum}.jpg` : `avatar_${seatKey}.jpg`;
+          
           pendingUploadData = {
+            seatKey: seatKey,
             fileName: fileName,
             base64: optimizedBase64.split(',')[1]
           };
 
-          showToast("ℹ️", `照片已就緒 (${fileName})，點擊儲存將立即同步！`);
+          showToast("ℹ️", `照片已就緒 (${fileName})，點擊儲存將直接存入 Google 雲端！`);
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
+    }
+
+    // === 🔥 2. 送出至 GAS，自動寫入 Google Drive 與 試算表 ===
+    function sendPayloadToGAS(actionDescription) {
+      showToast("⏳", "正在同步至 Google 雲端硬碟與試算表...");
+
+      const payloadObj = {
+        layout: currentLayout
+      };
+      if (pendingUploadData) {
+        payloadObj.targetSeatKey = pendingUploadData.seatKey;
+        payloadObj.avatarFileName = pendingUploadData.fileName;
+        payloadObj.avatarBase64 = pendingUploadData.base64;
+      }
+
+      fetch(GAS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payloadObj)
+      }).then(() => {
+        pendingUploadData = null;
+        showToast("✅", (actionDescription || "資料已變更") + "，已成功同步！");
+      }).catch(err => {
+        console.warn("GAS Sync Error:", err);
+      });
     }
 
     function handleAvatarUrl(url) {
