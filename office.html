@@ -645,7 +645,6 @@
           <div class="search-box">
             <input type="text" id="searchInput" placeholder="🔍 搜尋同仁、分機..." oninput="handleSearch()">
           </div>
-          <button class="btn btn-outline" onclick="openGhModal()" title="設定 GitHub images/ 自動上傳">🐙 GitHub 設定</button>
           <button class="btn btn-outline" onclick="resetToDefault()">🔄 還原預設</button>
           <button class="btn btn-web" onclick="exportOfficeImage('web700')" id="btnExportWeb">🌐 匯出官網 700px 專用圖</button>
           <button class="btn btn-color" onclick="exportOfficeImage('color')" id="btnExportColor">🎨 匯出 A4 彩色圖</button>
@@ -1230,27 +1229,17 @@
     }
 
 
-    // === 🐙 GitHub API 自動上傳圖片到 images/ 資料夾 ===
+    // === 🐙 GitHub API 自動靜默上傳圖片至 selinaa2952-lab/cmu images/ ===
+    const GH_REPO = "selinaa2952-lab/cmu";
+    const GH_BRANCH = "main";
+    const GH_TOKEN = "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";
+
     async function uploadToGithub(file, seatKey) {
-      const ghToken = localStorage.getItem("cmu_gh_token");
-      const ghRepo = localStorage.getItem("cmu_gh_repo"); // format: owner/repo
-      const ghBranch = localStorage.getItem("cmu_gh_branch") || "main";
-
-      if (!ghToken || !ghRepo) {
-        // 若未設定 GitHub Token，則降級為本地 Base64 內嵌儲存
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (e) => resolve(e.target.result);
-          reader.readAsDataURL(file);
-        });
-      }
-
       showToast("⏳", "正在上傳照片至 GitHub images/ 資料夾...");
 
-      // 取得副檔名並建立標準化檔名 (如 images/avatar_r1_c7.png 或時間戳)
       const ext = file.name.split('.').pop().toLowerCase() || "png";
       const filename = `images/avatar_${seatKey}_${Date.now()}.${ext}`;
-      const apiUrl = `https://api.github.com/repos/${ghRepo}/contents/${filename}`;
+      const apiUrl = `https://api.github.com/repos/${GH_REPO}/contents/${filename}`;
 
       // 讀取檔案為 Base64
       const base64Content = await new Promise((resolve, reject) => {
@@ -1266,13 +1255,13 @@
       const body = {
         message: `Upload avatar for ${seatKey}`,
         content: base64Content,
-        branch: ghBranch
+        branch: GH_BRANCH
       };
 
       const response = await fetch(apiUrl, {
         method: "PUT",
         headers: {
-          "Authorization": `token ${ghToken}`,
+          "Authorization": `token ${GH_TOKEN}`,
           "Content-Type": "application/json",
           "Accept": "application/vnd.github.v3+json"
         },
@@ -1284,8 +1273,8 @@
         throw new Error(errData.message || "GitHub 上傳失敗");
       }
 
-      // 上傳成功，回傳 GitHub raw 圖片直連網址
-      const rawUrl = `https://raw.githubusercontent.com/${ghRepo}/${ghBranch}/${filename}`;
+      // 上傳成功，直接回傳 GitHub Pages / Raw 網址
+      const rawUrl = `https://selinaa2952-lab.github.io/cmu/${filename}`;
       showToast("✅", "照片已成功儲存至 GitHub images/！");
       return rawUrl;
     }
@@ -1461,59 +1450,12 @@
     });
 
     
-    function openGhModal() {
-      document.getElementById("ghRepoInput").value = localStorage.getItem("cmu_gh_repo") || "";
-      document.getElementById("ghBranchInput").value = localStorage.getItem("cmu_gh_branch") || "main";
-      document.getElementById("ghTokenInput").value = localStorage.getItem("cmu_gh_token") || "";
-      document.getElementById("ghModal").classList.add("active");
-    }
-
-    function closeGhModal(e) {
-      document.getElementById("ghModal").classList.remove("active");
-    }
-
-    function saveGhSettings() {
-      const repo = document.getElementById("ghRepoInput").value.trim();
-      const branch = document.getElementById("ghBranchInput").value.trim() || "main";
-      const token = document.getElementById("ghTokenInput").value.trim();
-
-      localStorage.setItem("cmu_gh_repo", repo);
-      localStorage.setItem("cmu_gh_branch", branch);
-      localStorage.setItem("cmu_gh_token", token);
-
-      closeGhModal();
-      alert("🎉 GitHub 連線設定已儲存！之後上傳的頭像將自動寫入 " + repo + " 的 images/ 資料夾。");
-    }
+    
 
     window.onload = initData;
   </script>
 
-  <!-- 3. GitHub 連線設定 Modal -->
-  <div class="modal-overlay" id="ghModal" onclick="closeGhModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h2 style="font-size:1.25rem; font-weight:800;">🐙 GitHub 雲端圖床連線設定</h2>
-        <button class="modal-close-btn" onclick="closeGhModal()">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="font-size:0.88rem; color:#475569; margin-bottom:12px;">
-          設定完成後，使用者在網頁上傳的頭像照片將會<strong>自動 Commit 寫入 GitHub 儲存庫的 <code>images/</code> 資料夾</strong>！
-        </p>
-        <div class="form-grid">
-          <div class="form-group full-width">
-            <label>GitHub 儲存庫名稱 (擁有者/倉庫名)</label>
-            <input type="text" id="ghRepoInput" placeholder="例如：cmu-academic/office-layout">
-          </div>
-          <div class="form-group">
-            <label>分支名稱 (Branch)</label>
-            <input type="text" id="ghBranchInput" placeholder="預設：main">
-          </div>
-          <div class="form-group full-width">
-            <label>GitHub Personal Access Token (需勾選 repo 權限)</label>
-            <input type="password" id="ghTokenInput" placeholder="ghp_xxxxxxxxxxxxxx">
-          </div>
-        </div>
-      </div>
+  
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" onclick="closeGhModal()">取消</button>
         <button type="button" class="btn btn-web" onclick="saveGhSettings()">💾 儲存連線設定</button>
