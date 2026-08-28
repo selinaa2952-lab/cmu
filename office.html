@@ -404,6 +404,9 @@
         payloadObj.avatarFileName = pendingUploadData.fileName;
         payloadObj.avatarBase64 = pendingUploadData.base64;
       }
+      if (deleteAvatarFileNamePending) {
+        payloadObj.deleteAvatarFileName = deleteAvatarFileNamePending;
+      }
 
       fetch(GAS_URL, {
         method: "POST",
@@ -412,6 +415,7 @@
         body: JSON.stringify(payloadObj)
       }).then(() => {
         pendingUploadData = null;
+        deleteAvatarFileNamePending = null;
         showToast("✅", (actionDescription || "資料已變更") + "，已成功同步！");
       }).catch(err => {
         console.warn("GAS Sync Error:", err);
@@ -587,12 +591,20 @@
       document.getElementById("editModal").classList.remove("active");
     }
 
-    // === 🔥 核心：移除頭像功能 ===
+    let deleteAvatarFileNamePending = null;
+
+    // === 🔥 核心：徹底移除頭像，標記刪除雲端圖檔 ===
     function clearAvatar() {
+      const extNum = document.getElementById("editExt").value.trim();
+      const seatKey = document.getElementById("editSeatKey").value || "temp";
+      
       document.getElementById("editAvatarUrl").value = "";
       document.getElementById("editAvatarFile").value = "";
       document.getElementById("avatarPreviewImg").src = DEFAULT_AVATAR_SVG;
       pendingUploadData = null;
+
+      // 記錄待刪除的雲端圖檔名稱
+      deleteAvatarFileNamePending = (extNum && extNum !== '-') ? `${extNum}.jpg` : `avatar_${seatKey}.jpg`;
       showToast("ℹ️", "已移除大頭照，儲存後將恢復為預設圖案。");
     }
 
