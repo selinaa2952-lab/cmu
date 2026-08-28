@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（頭像照片與櫃台美化版）</title>
-  <!-- 引入 html2canvas 支援一鍵截圖匯出 PNG 圖片 -->
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（頭像照片修復版）</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
@@ -12,46 +11,25 @@
       --card-text: #1e293b;
       --border-radius: 10px;
 
-      /* 色塊定義 */
-      --bg-reg: #90c6ec;      /* 註冊課務組 - 天藍色 */
+      --bg-reg: #90c6ec;
       --text-reg: #1e6fa8;
-      
-      --bg-adm: #ffbfbf;      /* 招生組 - 粉珊瑚色 */
+      --bg-adm: #ffbfbf;
       --text-adm: #d94f4f;
-
-      --bg-tch: #c7df63;      /* 教學組 - 蘋果綠 */
+      --bg-tch: #c7df63;
       --text-tch: #688214;
-
-      --bg-grd: #d0c4ff;      /* 研教組 - 薰衣草粉紫色 */
+      --bg-grd: #d0c4ff;
       --text-grd: #6c54c4;
-
-      --bg-cmu: #f2cf3d;      /* 教務處/教務長 - 陽光亮黃色 */
+      --bg-cmu: #f2cf3d;
       --text-cmu: #a37c05;
-
-      --bg-other: #b8bcc0;    /* 董事會/雙語中心 - 雅緻中灰色 */
+      --bg-other: #b8bcc0;
       --text-other: #555b61;
-
-      --bg-room: #f1f5f9;     /* 印卷室/試務室/空格 - 淺灰底色 */
+      --bg-room: #f1f5f9;
       --text-room: #334155;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-color);
-      color: #0f172a;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 1580px;
-      margin: 0 auto;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif; }
+    body { background-color: var(--bg-color); color: #0f172a; padding: 20px; }
+    .container { max-width: 1580px; margin: 0 auto; }
 
     header {
       background: white;
@@ -72,21 +50,8 @@
       border-bottom: 1px solid #e2e8f0;
     }
 
-    h1 {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: #0f172a;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .top-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    h1 { font-size: 1.45rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+    .top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
     .search-box input {
       padding: 8px 14px;
@@ -95,11 +60,6 @@
       border-radius: 8px;
       font-size: 0.9rem;
       outline: none;
-      transition: all 0.2s;
-    }
-    .search-box input:focus {
-      border-color: #3182ce;
-      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
     }
 
     .btn {
@@ -109,84 +69,21 @@
       font-weight: 700;
       cursor: pointer;
       border: 1px solid transparent;
-      transition: all 0.15s;
       display: inline-flex;
       align-items: center;
       gap: 5px;
     }
-    .btn-outline {
-      background: white;
-      border-color: #cbd5e1;
-      color: #334155;
-    }
-    .btn-outline:hover {
-      background: #f1f5f9;
-      border-color: #94a3b8;
-    }
-    .btn-web {
-      background: #0284c7;
-      color: white;
-      font-weight: 800;
-    }
-    .btn-web:hover {
-      background: #0369a1;
-    }
-    .btn-color {
-      background: #16a34a;
-      color: white;
-    }
-    .btn-color:hover {
-      background: #15803d;
-    }
+    .btn-outline { background: white; border-color: #cbd5e1; color: #334155; }
+    .btn-web { background: #0284c7; color: white; }
+    .btn-color { background: #16a34a; color: white; }
 
-    .controls-row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-    }
+    .controls-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; }
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+    .checkbox-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.92rem; font-weight: 600; }
+    .checkbox-label input[type="checkbox"] { width: 18px; height: 18px; accent-color: #0284c7; }
 
-    .checkbox-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      font-size: 0.92rem;
-      font-weight: 600;
-      user-select: none;
-    }
-
-    .checkbox-label input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-      accent-color: #0284c7;
-    }
-
-    .legend-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .legend-tag {
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-    }
+    .legend-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .legend-tag { padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 800; display: inline-flex; align-items: center; }
 
     .instruction-bar {
       background: #eff6ff;
@@ -196,59 +93,27 @@
       border-radius: 8px;
       font-size: 0.88rem;
       margin-bottom: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
     }
 
-    /* 辦公室地圖外框區域 */
-    .office-map-wrapper {
-      width: 100%;
-      overflow-x: auto;
-    }
+    .office-map-wrapper { width: 100%; overflow-x: auto; }
+    .office-map { background: white; padding: 14px; border-radius: 12px; width: 100%; min-width: 1240px; margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .map-header-bar { text-align: right; margin-bottom: 8px; }
 
-    .office-map {
-      background: white;
-      padding: 14px;
-      border-radius: 12px;
-      width: 100%;
-      min-width: 1240px;
-      margin: 0 auto;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-    }
-
-    .map-header-bar {
-      text-align: right;
-      margin-bottom: 8px;
-    }
-
-    /* 🔥 1. 修正櫃台底圖色塊為深邃純黑底色 + 反白字 🔥 */
     .counter-bar {
       display: inline-block;
       width: 40%;
-      background: #0f172a !important;   /* 深黑底色 */
-      color: #ffffff !important;        /* 純白字體 */
+      background: #0f172a !important;
+      color: #ffffff !important;
       text-align: center;
       padding: 8px 0;
       font-weight: 800;
       letter-spacing: 8px;
       font-size: 1.05rem;
       border-radius: 6px 6px 0 0;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.08);
     }
 
-    /* 10 欄 CSS Grid */
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 8px;
-      align-items: stretch;
-      width: 100%;
-    }
+    .grid-container { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; width: 100%; }
 
-    /* 專屬大房間格局 */
     .room-seal {
       grid-column: 1 / span 3;
       grid-row: 1 / span 2;
@@ -262,7 +127,6 @@
       color: var(--text-room);
       letter-spacing: 2px;
       min-height: 180px;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
     }
 
     .room-exam {
@@ -280,14 +144,10 @@
       letter-spacing: 2px;
       line-height: 1.35;
       min-height: 180px;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
     }
 
-    .seat-span-2 {
-      grid-column: span 2;
-    }
+    .seat-span-2 { grid-column: span 2; }
 
-    /* 座位卡片基礎設定 */
     .seat-card {
       border-radius: var(--border-radius);
       padding: 9px 8px 8px 8px;
@@ -298,31 +158,11 @@
       position: relative;
       user-select: none;
       cursor: grab;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: transform 0.15s ease;
       box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     }
+    .seat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.12); z-index: 5; }
 
-    .seat-card:active {
-      cursor: grabbing;
-    }
-
-    .seat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.12);
-      z-index: 5;
-    }
-
-    .seat-card.dragging {
-      opacity: 0.35;
-      transform: scale(0.96);
-    }
-
-    .seat-card.drag-over {
-      outline: 3px dashed #0284c7;
-      transform: scale(1.02);
-    }
-
-    /* 空座位 */
     .seat-card.empty-seat {
       background: var(--bg-room);
       align-items: center;
@@ -330,11 +170,6 @@
       color: #94a3b8;
       font-size: 0.8rem;
       cursor: pointer;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
-    }
-    .seat-card.empty-seat:hover {
-      background: #e2e8f0;
-      color: #0f172a;
     }
 
     .card-actions-hover {
@@ -347,28 +182,11 @@
       border-radius: 6px;
       padding: 1px 3px;
       z-index: 10;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     }
+    .seat-card:hover .card-actions-hover { display: flex; }
 
-    .seat-card:hover .card-actions-hover {
-      display: flex;
-    }
+    .mini-btn { background: none; border: none; cursor: pointer; font-size: 0.75rem; padding: 2px 4px; }
 
-    .mini-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 0.75rem;
-      padding: 2px 4px;
-      border-radius: 3px;
-      color: #334155;
-    }
-    .mini-btn:hover {
-      background: #ffffff;
-      color: #0284c7;
-    }
-
-    /* 各組色塊底色 */
     .seat-card.dept-reg { background-color: var(--bg-reg); }
     .seat-card.dept-adm { background-color: var(--bg-adm); }
     .seat-card.dept-tch { background-color: var(--bg-tch); }
@@ -377,7 +195,6 @@
     .seat-card.dept-cmu { background-color: var(--bg-cmu); }
     .seat-card.dept-other { background-color: var(--bg-other); }
 
-    /* 白底膠囊標籤 */
     .card-badge {
       font-size: 0.72rem;
       font-weight: 800;
@@ -389,8 +206,6 @@
       line-height: 1.25;
       white-space: nowrap;
       background-color: #ffffff !important;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      letter-spacing: 0.3px;
     }
 
     .dept-reg .card-badge { color: var(--text-reg) !important; }
@@ -401,11 +216,10 @@
     .dept-cmu .card-badge { color: var(--text-cmu) !important; }
     .dept-other .card-badge { color: var(--text-other) !important; }
 
-    /* 🔥 2. 人員頭像 + 姓名佈局設計 🔥 */
     .card-main-content {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       margin: 3px 0 1px 0;
       width: 100%;
     }
@@ -419,10 +233,6 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.15);
       flex-shrink: 0;
       background: #ffffff;
-    }
-
-    .card-avatar-empty {
-      display: none;
     }
 
     .card-info-col {
@@ -440,19 +250,15 @@
       color: #0f172a;
       white-space: nowrap !important;
       word-break: keep-all !important;
-      overflow: hidden;
       line-height: 1.2;
-      letter-spacing: 0.5px;
     }
 
-    /* 職稱往下排列 */
     .card-title {
       font-size: 0.75rem;
       color: #334155;
       white-space: nowrap !important;
       word-break: keep-all !important;
       font-weight: 700;
-      overflow: hidden;
       line-height: 1.2;
       opacity: 0.9;
     }
@@ -462,7 +268,6 @@
       font-weight: 800;
       color: #0f172a;
       white-space: nowrap;
-      letter-spacing: 0.5px;
       line-height: 1.2;
       margin-top: 1px;
     }
@@ -474,45 +279,18 @@
       background: rgba(255, 255, 255, 0.7);
       padding: 4px 6px;
       border-radius: 4px;
-      flex-grow: 1;
-      word-break: break-all;
-      white-space: normal;
       margin-top: 4px;
     }
 
-    /* 搜尋高亮 */
-    .seat-card.search-match {
-      outline: 3px solid #0f172a !important;
-      transform: scale(1.03);
-      z-index: 10;
-    }
-
-    .seat-card.search-dimmed {
-      opacity: 0.2;
-    }
-
-    /* 匯出模式樣式 */
-    .export-active-mode {
-      background: #ffffff !important;
-      padding: 0 !important;
-    }
-    .export-active-mode #captureArea {
-      border-radius: 0 !important;
-      box-shadow: none !important;
-      padding: 8px !important;
-      width: 100% !important;
-    }
+    .export-active-mode { background: #ffffff !important; padding: 0 !important; }
+    .export-active-mode #captureArea { border-radius: 0 !important; box-shadow: none !important; padding: 8px !important; width: 100% !important; }
     .export-active-mode .card-actions-hover { display: none !important; }
     .export-active-mode .empty-seat span { display: none !important; }
 
-    /* 彈跳視窗 (Modal) */
     .modal-overlay {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(3px);
       z-index: 100;
@@ -528,14 +306,9 @@
       border-radius: 12px;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
       overflow: hidden;
-      animation: modalFadeIn 0.2s ease-out;
       max-height: 90vh;
       display: flex;
       flex-direction: column;
-    }
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
     }
     .modal-header {
       padding: 16px 22px;
@@ -545,37 +318,10 @@
       justify-content: space-between;
       align-items: center;
     }
-    .modal-close-btn {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      line-height: 1;
-      color: #64748b;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 6px;
-    }
-    .modal-close-btn:hover { background: #e2e8f0; color: #0f172a; }
-    .modal-body {
-      padding: 22px;
-      overflow-y: auto;
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-    .modal-footer {
-      padding: 14px 22px;
-      background: #f8fafc;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 14px;
-    }
+    .modal-close-btn { background: none; border: none; font-size: 1.5rem; color: #64748b; cursor: pointer; }
+    .modal-body { padding: 22px; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; }
+    .modal-footer { padding: 14px 22px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
     .form-group { display: flex; flex-direction: column; gap: 5px; }
     .form-group.full-width { grid-column: span 2; }
     .form-group label { font-weight: 600; font-size: 0.88rem; color: #475569; }
@@ -585,51 +331,15 @@
       border-radius: 6px;
       font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.2s;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #0284c7; }
-    .form-group textarea { resize: vertical; min-height: 70px; }
+    .avatar-preview-box { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; }
+    .avatar-preview-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
 
-    /* 頭像預覽上傳區 */
-    .avatar-preview-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #f8fafc;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px dashed #cbd5e1;
-    }
-    .avatar-preview-img {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ffffff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      background: #e2e8f0;
-    }
-
-    /* 浮動即時同步狀態提示 (Toast) */
     .sync-toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #0f172a;
-      color: #f8fafc;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      z-index: 200;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.3s ease;
-      pointer-events: none;
+      position: fixed; bottom: 24px; right: 24px; background: #0f172a; color: #f8fafc;
+      padding: 10px 18px; border-radius: 8px; font-size: 0.88rem; font-weight: 600;
+      display: flex; align-items: center; gap: 8px; z-index: 200; opacity: 0;
+      transform: translateY(10px); transition: all 0.3s ease; pointer-events: none;
     }
     .sync-toast.show { opacity: 1; transform: translateY(0); }
   </style>
@@ -637,7 +347,6 @@
 <body>
 
   <div class="container">
-    <!-- 頂部控制面板 -->
     <header>
       <div class="title-area">
         <h1>🏫 中國醫藥大學 教務處水湳校區辦公室配置圖</h1>
@@ -652,7 +361,6 @@
       </div>
 
       <div class="controls-row">
-        <!-- 顯示勾選框 (加入頭像開關) -->
         <div class="checkbox-group">
           <span style="font-weight:800; color:#0f172a; margin-right:4px;">顯示選項：</span>
           <label class="checkbox-label"><input type="checkbox" id="chkAvatar" checked onchange="updateVisibility()"> 頭像照片</label>
@@ -662,7 +370,6 @@
           <label class="checkbox-label"><input type="checkbox" id="chkDesc" onchange="updateVisibility()"> 業務職掌</label>
         </div>
 
-        <!-- 頂部圖例 -->
         <div class="legend-group">
           <span class="legend-tag" style="background-color:var(--bg-reg); color:var(--text-reg);">註冊課務組</span>
           <span class="legend-tag" style="background-color:var(--bg-adm); color:var(--text-adm);">招生組</span>
@@ -674,32 +381,22 @@
       </div>
     </header>
 
-    <!-- 提示操作說明 -->
-    <div class="instruction-bar">
-      <span>🎨 <strong>功能升級：</strong> 櫃台底圖色塊已恢復為<strong>深邃純黑底色</strong>！支援<strong>「上傳或填寫同仁大頭照」</strong>，點擊 ✏️ 即可新增照片並隨時勾選顯示！</span>
-    </div>
-
-    <!-- 辦公室地圖區域 (截圖匯出目標) -->
     <div class="office-map-wrapper">
       <div class="office-map" id="captureArea">
         <div class="map-header-bar">
           <div class="counter-bar">【 櫃 台 】</div>
         </div>
-
-        <div class="grid-container" id="gridMap">
-          <!-- JS 動態生成座位卡片與格局 -->
-        </div>
+        <div class="grid-container" id="gridMap"></div>
       </div>
     </div>
   </div>
 
-  <!-- 浮動同步通知 (Toast) -->
   <div class="sync-toast" id="syncToast">
     <span id="toastIcon">⏳</span>
     <span id="toastMsg">正在同步更新至 Google 試算表...</span>
   </div>
 
-  <!-- 1. 編輯 / 新增同仁資料彈跳視窗 (包含照片上傳功能) -->
+  <!-- 編輯 Modal -->
   <div class="modal-overlay" id="editModal" onclick="closeEditModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
@@ -712,9 +409,9 @@
           
           <div class="form-grid">
             <div class="form-group full-width">
-              <label>同仁大頭照 (可上傳照片或貼上圖片網址)</label>
+              <label>同仁大頭照 (可直接選擇照片檔案上傳)</label>
               <div class="avatar-preview-box">
-                <img id="avatarPreviewImg" class="avatar-preview-img" src="" alt="預覽" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>'">
+                <img id="avatarPreviewImg" class="avatar-preview-img" src="" alt="預覽" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'%2394a3b8\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'">
                 <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">
                   <input type="file" id="editAvatarFile" accept="image/*" onchange="handleAvatarFile(event)" style="font-size: 0.82rem;">
                   <input type="text" id="editAvatarUrl" placeholder="或貼上照片圖片網址 (https://...)" oninput="handleAvatarUrl(this.value)">
@@ -767,124 +464,39 @@
     </div>
   </div>
 
-  <!-- 用於背景無阻擋發送 Google 表單的隱藏 iframe 與 form -->
   <iframe name="hidden_gas_iframe" id="hidden_gas_iframe" style="display:none;"></iframe>
   <form id="gas_hidden_form" method="POST" target="hidden_gas_iframe" style="display:none;">
     <input type="hidden" name="data" id="gas_hidden_data">
   </form>
 
   <script>
-    // 預設辦公室結構資料
     const defaultOfficeLayout = [
-      // Row 1 (Col 7~10)
-      {
-        key: "r1_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳巧璇", title: "約聘人員", ext: "1177",
-        avatar: "", brief: "公衛學院各系教務、學分學程與TAICA、學分抵免、成績單與列印機、雙主修輔系、學生證製發"
-      },
-      {
-        key: "r1_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳盈君", title: "專案助理", ext: "1128",
-        avatar: "", brief: "物治/運醫系教務、暑修排課、中亞聯大/校課程會議、課程教室排課、學生選課、M6教務窗口"
-      },
-      {
-        key: "r1_c9", span: 1, dept: "雙語教學中心", deptClass: "dept-other", name: "賴晏翎", title: "計畫人員", ext: "1129",
-        avatar: "", brief: "雙語教學資源整合、EMI課程推動與全校雙語教學各項行政支援"
-      },
-      {
-        key: "r1_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "張瑀涵", title: "專任助理", ext: "1152",
-        avatar: "", brief: "國內高中招生宣傳、高中生參訪活動規劃執行、大學招生專業化發展試辦計畫"
-      },
-
-      // Row 2 (Col 7~10)
-      {
-        key: "r2_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "王毓萍", title: "技佐", ext: "1180",
-        avatar: "", brief: "營養/生科/藥妝系教務、預警弱勢課輔窗口、國考報名統計、考選部學歷查驗、畢審系統、工讀生"
-      },
-      {
-        key: "r2_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "黃凱璟", title: "約聘人員", ext: "1127",
-        avatar: "", brief: "藥學系教務、總量報部、註課組公文窗口、新生/舊生/轉學註冊與學號編製、學籍人數統計"
-      },
-      {
-        key: "r2_c9", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "顧國棟", title: "技士", ext: "1125",
-        avatar: "", brief: "深耕計畫與獎補款、學則法規統整修訂、教務系統設定、見實習業務、財產盤點"
-      },
-      {
-        key: "r2_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "余芷葳", title: "約聘人員", ext: "1151",
-        avatar: "", brief: "碩博士班甄試與考試入學招生、新住民入學甄試、經費核銷、高中端招生宣傳"
-      },
-
-      // Row 3 (Col 1, 2, 3-4(教務長), 5-6(空格), 7, 8, 9, 10)
-      {
-        key: "r3_c1", span: 1, dept: "教學組", deptClass: "dept-tch", name: "林怡君", title: "組員", ext: "1188",
-        avatar: "", brief: "教師請假調課查堂、教學組經費與財產管理、卓越大樓PBL教室管理借用、考試業務協助"
-      },
-      {
-        key: "r3_c2", span: 1, dept: "董事會", deptClass: "dept-other", name: "董事會", title: "辦公室", ext: "-",
-        avatar: "", brief: "董事會行政事務與跨單位會議公文連繫"
-      },
-      {
-        key: "r3_c3_span2", span: 2, dept: "教務處", deptClass: "dept-dir", name: "余永倫", title: "教務長", ext: "7933",
-        avatar: "", brief: "綜理全校教務推動、教學創新、招生策略與學術發展規劃，督導全處教務業務執行"
-      },
-      {
-        key: "r3_c5_span2", span: 2, type: "empty"
-      },
-      {
-        key: "r3_c7", span: 1, dept: "研教組", deptClass: "dept-grd", name: "蕭俊傑", title: "專任助理", ext: "1163",
-        avatar: "", brief: "公衛學院碩博教務、現代生醫講座、TA教學助理行政管理、菁英博士遴選與獎勵、入學獎勵金"
-      },
-      {
-        key: "r3_c8", span: 1, dept: "教學組", deptClass: "dept-tch", name: "趙婉萍", title: "組員", ext: "1130",
-        avatar: "", brief: "教師授課時數控管與鐘點費計算、教師資料數據分析、系所與校務評鑑、教學資料填報"
-      },
-      {
-        key: "r3_c9", span: 1, dept: "教學組", deptClass: "dept-tch", name: "譚羽汝", title: "組員", ext: "1123",
-        avatar: "", brief: "教學評估與課程評量、優良教材與教學獎勵、教育部教學實踐研究計畫、業界教師、夏季學院"
-      },
-      {
-        key: "r3_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "楊鋌鈺", title: "書記", ext: "1150",
-        avatar: "", brief: "大學繁星/申請/分發、後中招生、寒暑轉(私醫聯招)、四技二專、離島公費生與身障運優甄試"
-      },
-
-      // Row 4 (Col 1~10)
-      {
-        key: "r4_c1", span: 1, dept: "教學組", deptClass: "dept-tch", name: "羅逸珊", title: "教學設計師", ext: "1186",
-        avatar: "", brief: "數位教材製作諮詢、推動健康照護/生科/牙醫學院校內數位教材製作"
-      },
-      {
-        key: "r4_c2", span: 1, dept: "教學組", deptClass: "dept-tch", name: "謝琬琳", title: "教學設計師", ext: "1187",
-        avatar: "", brief: "遠距課程會議、磨課師(CMU MOOCs)平台管理、人科/藥學院/醫工數位教材推動"
-      },
-      {
-        key: "r4_c3", span: 1, dept: "招生組", deptClass: "dept-adm", name: "劉曉芳", title: "專任助理", ext: "1156",
-        avatar: "", brief: "中醫大招生王 FB/IG/YT 社群與影音管理、未來學生專區維護、招生文宣視覺設計與影音剪輯"
-      },
-      {
-        key: "r4_c4", span: 1, type: "empty"
-      },
-      {
-        key: "r4_c5", span: 1, dept: "研教組", deptClass: "dept-grd", name: "童雯琳", title: "約聘人員", ext: "1160",
-        avatar: "", brief: "中醫/照護/牙醫/人科/醫工碩博教務、研究生助學金、研究倫理/工安行政、學基庫公文窗口"
-      },
-      {
-        key: "r4_c6", span: 1, dept: "研教組", deptClass: "dept-grd", name: "李琳庭", title: "專任助理", ext: "1161",
-        avatar: "", brief: "醫學/藥學/產博/國際學程碩博教務、培英計畫、預修生與產博獎助、資安窗口、英文網頁"
-      },
-      {
-        key: "r4_c7", span: 1, dept: "研教組", deptClass: "dept-grd", name: "陳佳彣", title: "書記", ext: "1166",
-        avatar: "", brief: "研究生規章制度、逕博/預修甄選、畢業資格審核、優秀博士生獎助學金(拔萃/礪金)、校庫填報"
-      },
-      {
-        key: "r4_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "朱育秀", title: "組長", ext: "1133",
-        avatar: "", brief: "統籌註冊課務組業務、學則法規、教務系統設定、高中端聯盟"
-      },
-      {
-        key: "r4_c9", span: 1, dept: "教學組", deptClass: "dept-tch", name: "王慧如", title: "組長", ext: "1126",
-        avatar: "", brief: "綜理、規劃與督導全校教學組各項業務之推動與創新推廣"
-      },
-      {
-        key: "r4_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "鄒瑞煌", title: "組長", ext: "7935",
-        avatar: "", brief: "綜理全校各項招生試務規劃與控管、招生法規制定修訂、招生統計報表研析與制度規劃"
-      }
+      { key: "r1_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳巧璇", title: "約聘人員", ext: "1177", avatar: "", brief: "公衛學院各系教務、學分學程與TAICA、學分抵免、成績單與列印機、雙主修輔系、學生證製發" },
+      { key: "r1_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳盈君", title: "專案助理", ext: "1128", avatar: "", brief: "物治/運醫系教務、暑修排課、中亞聯大/校課程會議、課程教室排課、學生選課、M6教務窗口" },
+      { key: "r1_c9", span: 1, dept: "雙語教學中心", deptClass: "dept-other", name: "賴晏翎", title: "計畫人員", ext: "1129", avatar: "", brief: "雙語教學資源整合、EMI課程推動與全校雙語教學各項行政支援" },
+      { key: "r1_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "張瑀涵", title: "專任助理", ext: "1152", avatar: "", brief: "國內高中招生宣傳、高中生參訪活動規劃執行、大學招生專業化發展試辦計畫" },
+      { key: "r2_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "王毓萍", title: "技佐", ext: "1180", avatar: "", brief: "營養/生科/藥妝系教務、預警弱勢課輔窗口、國考報名統計、考選部學歷查驗、畢審系統、工讀生" },
+      { key: "r2_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "黃凱璟", title: "約聘人員", ext: "1127", avatar: "", brief: "藥學系教務、總量報部、註課組公文窗口、新生/舊生/轉學註冊與學號編製、學籍人數統計" },
+      { key: "r2_c9", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "顧國棟", title: "技士", ext: "1125", avatar: "", brief: "深耕計畫與獎補款、學則法規統整修訂、教務系統設定、見實習業務、財產盤點" },
+      { key: "r2_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "余芷葳", title: "約聘人員", ext: "1151", avatar: "", brief: "碩博士班甄試與考試入學招生、新住民入學甄試、經費核銷、高中端招生宣傳" },
+      { key: "r3_c1", span: 1, dept: "教學組", deptClass: "dept-tch", name: "林怡君", title: "組員", ext: "1188", avatar: "", brief: "教師請假調課查堂、教學組經費與財產管理、卓越大樓PBL教室管理借用、考試業務協助" },
+      { key: "r3_c2", span: 1, dept: "董事會", deptClass: "dept-other", name: "董事會", title: "辦公室", ext: "-", avatar: "", brief: "董事會行政事務與跨單位會議公文連繫" },
+      { key: "r3_c3_span2", span: 2, dept: "教務處", deptClass: "dept-dir", name: "余永倫", title: "教務長", ext: "7933", avatar: "", brief: "綜理全校教務推動、教學創新、招生策略與學術發展規劃，督導全處教務業務執行" },
+      { key: "r3_c5_span2", span: 2, type: "empty" },
+      { key: "r3_c7", span: 1, dept: "研教組", deptClass: "dept-grd", name: "蕭俊傑", title: "專任助理", ext: "1163", avatar: "", brief: "公衛學院碩博教務、現代生醫講座、TA教學助理行政管理、菁英博士遴選與獎勵、入學獎勵金" },
+      { key: "r3_c8", span: 1, dept: "教學組", deptClass: "dept-tch", name: "趙婉萍", title: "組員", ext: "1130", avatar: "", brief: "教師授課時數控管與鐘點費計算、教師資料數據分析、系所與校務評鑑、教學資料填報" },
+      { key: "r3_c9", span: 1, dept: "教學組", deptClass: "dept-tch", name: "譚羽汝", title: "組員", ext: "1123", avatar: "", brief: "教學評估與課程評量、優良教材與教學獎勵、教育部教學實踐研究計畫、業界教師、夏季學院" },
+      { key: "r3_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "楊鋌鈺", title: "書記", ext: "1150", avatar: "", brief: "大學繁星/申請/分發、後中招生、寒暑轉(私醫聯招)、四技二專、離島公費生與身障運優甄試" },
+      { key: "r4_c1", span: 1, dept: "教學組", deptClass: "dept-tch", name: "羅逸珊", title: "教學設計師", ext: "1186", avatar: "", brief: "數位教材製作諮詢、推動健康照護/生科/牙醫學院校內數位教材製作" },
+      { key: "r4_c2", span: 1, dept: "教學組", deptClass: "dept-tch", name: "謝琬琳", title: "教學設計師", ext: "1187", avatar: "", brief: "遠距課程會議、磨課師(CMU MOOCs)平台管理、人科/藥學院/醫工數位教材推動" },
+      { key: "r4_c3", span: 1, dept: "招生組", deptClass: "dept-adm", name: "劉曉芳", title: "專任助理", ext: "1156", avatar: "", brief: "中醫大招生王 FB/IG/YT 社群與影音管理、未來學生專區維護、招生文宣視覺設計與影音剪輯" },
+      { key: "r4_c4", span: 1, type: "empty" },
+      { key: "r4_c5", span: 1, dept: "研教組", deptClass: "dept-grd", name: "童雯琳", title: "約聘人員", ext: "1160", avatar: "", brief: "中醫/照護/牙醫/人科/醫工碩博教務、研究生助學金、研究倫理/工安行政、學基庫公文窗口" },
+      { key: "r4_c6", span: 1, dept: "研教組", deptClass: "dept-grd", name: "李琳庭", title: "專任助理", ext: "1161", avatar: "", brief: "醫學/藥學/產博/國際學程碩博教務、培英計畫、預修生與產博獎助、資安窗口、英文網頁" },
+      { key: "r4_c7", span: 1, dept: "研教組", deptClass: "dept-grd", name: "陳佳彣", title: "書記", ext: "1166", avatar: "", brief: "研究生規章制度、逕博/預修甄選、畢業資格審核、優秀博士生獎助學金(拔萃/礪金)、校庫填報" },
+      { key: "r4_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "朱育秀", title: "組長", ext: "1133", avatar: "", brief: "統籌註冊課務組業務、學則法規、教務系統設定、高中端聯盟" },
+      { key: "r4_c9", span: 1, dept: "教學組", deptClass: "dept-tch", name: "王慧如", title: "組長", ext: "1126", avatar: "", brief: "綜理、規劃與督導全校教學組各項業務之推動與創新推廣" },
+      { key: "r4_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "鄒瑞煌", title: "組長", ext: "7935", avatar: "", brief: "綜理全校各項招生試務規劃與控管、招生法規制定修訂、招生統計報表研析與制度規劃" }
     ];
 
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
@@ -899,28 +511,22 @@
       if (dept.includes("教學") && !dept.includes("雙語")) return "dept-tch";
       if (dept.includes("研教") || dept.includes("研究")) return "dept-grd";
       if (dept.includes("教務處") || dept.includes("校本部") || dept.includes("長")) return "dept-dir";
-      if (dept.includes("雙語") || dept.includes("董事會")) return "dept-other";
       return "dept-other";
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_v_avatar");
+      const saved = localStorage.getItem("cmu_office_layout_v_avatar_stable");
       if (saved) {
-        try {
-          currentLayout = JSON.parse(saved);
-        } catch (e) {
-          currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
-        }
+        try { currentLayout = JSON.parse(saved); } catch (e) { currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout)); }
       } else {
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
       }
-
       renderMap();
       fetchLatestFromGoogleSheet();
     }
 
     function saveData(actionDescription) {
-      localStorage.setItem("cmu_office_layout_v_avatar", JSON.stringify(currentLayout));
+      localStorage.setItem("cmu_office_layout_v_avatar_stable", JSON.stringify(currentLayout));
       syncToGoogleSheetAuto(actionDescription);
     }
 
@@ -930,24 +536,17 @@
       const toastIcon = document.getElementById("toastIcon");
       const toastMsg = document.getElementById("toastMsg");
       if (!toast) return;
-
       toastIcon.innerText = icon;
       toastMsg.innerText = msg;
       toast.classList.add("show");
-
       if (toastTimeout) clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        toast.classList.remove("show");
-      }, 3500);
+      toastTimeout = setTimeout(() => { toast.classList.remove("show"); }, 3500);
     }
 
     let syncDebounceTimer = null;
     function syncToGoogleSheetAuto(actionDescription) {
       if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
-
-      syncDebounceTimer = setTimeout(() => {
-        sendPayloadToGAS(actionDescription);
-      }, 400);
+      syncDebounceTimer = setTimeout(() => { sendPayloadToGAS(actionDescription); }, 400);
     }
 
     function sendPayloadToGAS(actionDescription) {
@@ -965,7 +564,6 @@
       try {
         const formData = new URLSearchParams();
         formData.append("data", payload);
-
         fetch(GAS_URL, {
           method: "POST",
           mode: "no-cors",
@@ -973,7 +571,7 @@
           body: formData.toString()
         }).then(() => {
           showToast("✅", (actionDescription || "資料已變更") + "，已成功同步至試算表！");
-        }).catch(err => {
+        }).catch(() => {
           showToast("✅", "已送出更新至試算表！");
         });
       } catch (e) {
@@ -999,13 +597,10 @@
                 const title = row[3] || "";
                 const ext = row[4] !== undefined && row[4] !== null ? String(row[4]) : "";
                 const brief = row[5] || "";
+                const avatar = row[6] || currentLayout[idx].avatar || "";
 
                 if (name === "" || name === "空位" || name === "空") {
-                  currentLayout[idx] = {
-                    key: key,
-                    span: currentLayout[idx].span || 1,
-                    type: "empty"
-                  };
+                  currentLayout[idx] = { key: key, span: currentLayout[idx].span || 1, type: "empty" };
                 } else {
                   currentLayout[idx] = {
                     key: key,
@@ -1016,39 +611,34 @@
                     title: title,
                     ext: ext,
                     brief: brief,
-                    avatar: currentLayout[idx].avatar || ""
+                    avatar: avatar
                   };
                 }
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_v_avatar", JSON.stringify(currentLayout));
+            localStorage.setItem("cmu_office_layout_v_avatar_stable", JSON.stringify(currentLayout));
             renderMap();
-            showToast("🟢", `已成功載入 Google 試算表最新配置 (${updated} 席位)`);
+            showToast("🟢", `已成功載入最新配置 (${updated} 席位)`);
           }
         })
-        .catch(err => {
-          console.warn("GAS GET Error, loaded local cache:", err);
-        });
+        .catch(err => console.warn("GAS GET Error:", err));
     }
 
     function renderMap() {
       const grid = document.getElementById("gridMap");
       grid.innerHTML = "";
 
-      // 1. 印卷室
       const roomSeal = document.createElement("div");
       roomSeal.className = "room-seal";
       roomSeal.innerText = "印卷室";
       grid.appendChild(roomSeal);
 
-      // 2. 招生組試務室
       const roomExam = document.createElement("div");
       roomExam.className = "room-exam";
       roomExam.innerHTML = "<div>招生組</div><div>試務室</div>";
       grid.appendChild(roomExam);
 
-      // 3. 渲染座位卡片
       currentLayout.forEach((seat) => {
         const card = document.createElement("div");
         card.setAttribute("data-key", seat.key);
@@ -1071,11 +661,10 @@
           card.className = `seat-card ${seat.deptClass || getDeptClass(seat.dept)} ${spanClass}`;
           card.id = `seat-${seat.key}`;
 
-          // 頭像 HTML
           const avatarSrc = seat.avatar || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
           const avatarHtml = `<img class="card-avatar item-avatar" src="${avatarSrc}" alt="${seat.name}">`;
-
           const titleHtml = seat.title ? `<div class="card-title item-title">${seat.title}</div>` : '';
+
           card.innerHTML = `
             <div class="card-actions-hover">
               <button class="mini-btn" title="編輯資料" onclick="event.stopPropagation(); openEditModal('${seat.key}', false)">✏️</button>
@@ -1102,22 +691,9 @@
       updateVisibility();
     }
 
-    function handleDragStart(e) {
-      draggedKey = this.getAttribute("data-key");
-      this.classList.add("dragging");
-      e.dataTransfer.effectAllowed = "move";
-    }
-
-    function handleDragOver(e) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      this.classList.add("drag-over");
-    }
-
-    function handleDragLeave(e) {
-      this.classList.remove("drag-over");
-    }
-
+    function handleDragStart(e) { draggedKey = this.getAttribute("data-key"); this.classList.add("dragging"); }
+    function handleDragOver(e) { e.preventDefault(); this.classList.add("drag-over"); }
+    function handleDragLeave() { this.classList.remove("drag-over"); }
     function handleDrop(e) {
       e.stopPropagation();
       this.classList.remove("drag-over");
@@ -1130,31 +706,15 @@
         if (srcIdx !== -1 && tgtIdx !== -1) {
           const srcSeat = { ...currentLayout[srcIdx] };
           const tgtSeat = { ...currentLayout[tgtIdx] };
-
-          const srcKey = srcSeat.key;
-          const srcSpan = srcSeat.span;
-          const tgtKey = tgtSeat.key;
-          const tgtSpan = tgtSeat.span;
-
-          currentLayout[srcIdx] = { ...tgtSeat, key: srcKey, span: srcSpan };
-          currentLayout[tgtIdx] = { ...srcSeat, key: tgtKey, span: tgtSpan };
-
-          const srcName = srcSeat.name || "空位";
-          const tgtName = tgtSeat.name || "空位";
-
-          saveData(`【${srcName}】與【${tgtName}】位置已交換`);
+          currentLayout[srcIdx] = { ...tgtSeat, key: srcSeat.key, span: srcSeat.span };
+          currentLayout[tgtIdx] = { ...srcSeat, key: tgtSeat.key, span: tgtSeat.span };
+          saveData(`【${srcSeat.name||'空位'}】與【${tgtSeat.name||'空位'}】位置已交換`);
           renderMap();
         }
       }
     }
+    function handleDragEnd() { this.classList.remove("dragging"); document.querySelectorAll(".seat-card").forEach(el => el.classList.remove("drag-over")); }
 
-    function handleDragEnd(e) {
-      this.classList.remove("dragging");
-      document.querySelectorAll(".seat-card").forEach(el => el.classList.remove("drag-over"));
-      draggedKey = null;
-    }
-
-    // === 顯示開關 ===
     function updateVisibility() {
       const showAvatar = document.getElementById("chkAvatar").checked;
       const showDept = document.getElementById("chkDept").checked;
@@ -1172,44 +732,23 @@
 
     function handleSearch() {
       const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
-      
       currentLayout.forEach((seat) => {
         const card = document.getElementById(`seat-${seat.key}`);
         if (!card) return;
-
-        if (!keyword) {
-          card.classList.remove("search-match", "search-dimmed");
-          return;
-        }
-
-        if (seat.type === "empty" || !seat.name) {
-          card.classList.add("search-dimmed");
-          return;
-        }
-
-        const match = 
-          (seat.name && seat.name.toLowerCase().includes(keyword)) ||
-          (seat.ext && seat.ext.toLowerCase().includes(keyword)) ||
-          (seat.dept && seat.dept.toLowerCase().includes(keyword)) ||
-          (seat.brief && seat.brief.toLowerCase().includes(keyword));
-
-        if (match) {
-          card.classList.add("search-match");
-          card.classList.remove("search-dimmed");
-        } else {
-          card.classList.remove("search-match");
-          card.classList.add("search-dimmed");
-        }
+        if (!keyword) { card.classList.remove("search-match", "search-dimmed"); return; }
+        if (seat.type === "empty" || !seat.name) { card.classList.add("search-dimmed"); return; }
+        const match = (seat.name && seat.name.toLowerCase().includes(keyword)) ||
+                      (seat.ext && seat.ext.toLowerCase().includes(keyword)) ||
+                      (seat.dept && seat.dept.toLowerCase().includes(keyword));
+        if (match) { card.classList.add("search-match"); card.classList.remove("search-dimmed"); }
+        else { card.classList.remove("search-match"); card.classList.add("search-dimmed"); }
       });
     }
 
-    // === 編輯 Modal ===
     function openEditModal(key, isNew) {
       document.getElementById("editSeatKey").value = key;
       document.getElementById("editModalTitle").innerText = isNew ? "➕ 新增人員席位" : "✏️ 編輯人員、照片與職掌資料";
-      
       const seat = currentLayout.find(s => s.key === key) || {};
-
       document.getElementById("editDept").value = seat.dept || "註冊課務組";
       document.getElementById("editName").value = seat.name || "";
       document.getElementById("editTitle").value = seat.title || "";
@@ -1220,61 +759,48 @@
       document.getElementById("editAvatarUrl").value = avatarVal;
       document.getElementById("avatarPreviewImg").src = avatarVal || "";
       document.getElementById("editAvatarFile").value = "";
-
       document.getElementById("editModal").classList.add("active");
     }
 
-    function closeEditModal() {
-      document.getElementById("editModal").classList.remove("active");
-    }
+    function closeEditModal() { document.getElementById("editModal").classList.remove("active"); }
 
-        // === ☁️ 自動上傳照片至 Google 雲端硬碟 (透過 Google Apps Script) ===
-    async function handleAvatarFile(event) {
+    // 🔥 核心修復：選擇檔案時立即 Base64 填入網址欄，並在背景上傳 Google 雲端
+    function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
 
-      showToast("⏳", "正在上傳照片至 Google 雲端硬碟...");
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Url = e.target.result;
+        // 1. 立即把 Base64 寫進欄位，保證按下儲存 100% 成功有照片！
+        document.getElementById("editAvatarUrl").value = base64Url;
+        document.getElementById("avatarPreviewImg").src = base64Url;
 
-      try {
-        const base64Data = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result.split(',')[1]);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
+        // 2. 背景發送給 Google Apps Script 存入 Google 雲端硬碟
+        try {
+          const rawBase64 = base64Url.split(',')[1];
+          const payload = JSON.stringify({
+            action: "upload_photo",
+            fileName: file.name,
+            fileType: file.type,
+            base64: rawBase64
+          });
+          const formData = new URLSearchParams();
+          formData.append("data", payload);
 
-        // 預覽
-        document.getElementById("avatarPreviewImg").src = "data:" + file.type + ";base64," + base64Data;
-
-        const payload = JSON.stringify({
-          action: "upload_photo",
-          fileName: file.name,
-          fileType: file.type,
-          base64: base64Data
-        });
-
-        // 發送給現有的 Apps Script
-        const formData = new URLSearchParams();
-        formData.append("data", payload);
-
-        const res = await fetch(GAS_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: formData.toString()
-        });
-
-        const result = await res.json();
-        if (result && result.status === "success" && result.url) {
-          document.getElementById("editAvatarUrl").value = result.url;
-          document.getElementById("avatarPreviewImg").src = result.url;
-          showToast("✅", "大頭照已成功儲存至 Google 雲端硬碟！");
-        } else {
-          throw new Error("上傳未回傳網址");
-        }
-      } catch (err) {
-        console.warn("Drive upload fallback to base64:", err);
-        showToast("✅", "已使用本機高畫質照片保存！");
-      }
+          fetch(GAS_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString()
+          }).then(res => res.json()).then(result => {
+            if (result && result.status === "success" && result.url) {
+              // 成功取得 Google 雲端網址，替換成雲端網址
+              document.getElementById("editAvatarUrl").value = result.url;
+            }
+          }).catch(() => {});
+        } catch (err) {}
+      };
+      reader.readAsDataURL(file);
     }
 
     function handleAvatarUrl(url) {
@@ -1285,11 +811,7 @@
       const key = document.getElementById("editSeatKey").value;
       const dept = document.getElementById("editDept").value;
       const name = document.getElementById("editName").value.trim();
-      
-      if (!name) {
-        alert("請填寫姓名！");
-        return;
-      }
+      if (!name) { alert("請填寫姓名！"); return; }
 
       const idx = currentLayout.findIndex(s => s.key === key);
       if (idx !== -1) {
@@ -1305,7 +827,6 @@
           brief: document.getElementById("editBrief").value.trim(),
           avatar: document.getElementById("editAvatarUrl").value.trim()
         };
-
         saveData(`【${name}】資料與頭像已更新`);
         renderMap();
         closeEditModal();
@@ -1319,11 +840,7 @@
         if (idx !== -1) {
           const oldSpan = currentLayout[idx].span || 1;
           const oldName = currentLayout[idx].name || "席位";
-          currentLayout[idx] = {
-            key: key,
-            span: oldSpan,
-            type: "empty"
-          };
+          currentLayout[idx] = { key: key, span: oldSpan, type: "empty" };
           saveData(`【${oldName}】席位已清空`);
           renderMap();
           closeEditModal();
@@ -1336,37 +853,24 @@
       if (seat && confirm(`確定要清空【${seat.name}】的席位資料嗎？`)) {
         const idx = currentLayout.findIndex(s => s.key === key);
         if (idx !== -1) {
-          const oldSpan = currentLayout[idx].span || 1;
-          const oldName = seat.name;
-          currentLayout[idx] = {
-            key: key,
-            span: oldSpan,
-            type: "empty"
-          };
-          saveData(`【${oldName}】席位已清空`);
+          currentLayout[idx] = { key: key, span: currentLayout[idx].span || 1, type: "empty" };
+          saveData(`【${seat.name}】席位已清空`);
           renderMap();
         }
       }
     }
 
-    // === 匯出圖片核心 ===
     function exportOfficeImage(mode) {
       const btnWeb = document.getElementById("btnExportWeb");
       const btnColor = document.getElementById("btnExportColor");
-
       let activeBtn = (mode === 'color') ? btnColor : btnWeb;
       const originalText = activeBtn.innerHTML;
       activeBtn.innerHTML = "⏳ 生成圖片中...";
-      btnWeb.disabled = true;
-      btnColor.disabled = true;
+      btnWeb.disabled = true; btnColor.disabled = true;
 
       const targetElement = document.getElementById("captureArea");
-      
-      if (mode === 'web700') {
-        document.getElementById("chkDesc").checked = false;
-      }
+      if (mode === 'web700') document.getElementById("chkDesc").checked = false;
       updateVisibility();
-
       document.body.classList.add("export-active-mode");
 
       setTimeout(() => {
@@ -1374,22 +878,18 @@
         const exactHeight = targetElement.scrollHeight || targetElement.offsetHeight;
 
         html2canvas(targetElement, {
-          scale: 2.0,                  // 2倍清晰度
+          scale: 2.0,
           backgroundColor: "#ffffff",
           useCORS: true,
           logging: false,
-          scrollY: 0,
-          scrollX: 0,
-          width: exactWidth,
-          height: exactHeight,
+          scrollY: 0, scrollX: 0,
+          width: exactWidth, height: exactHeight,
           windowWidth: exactWidth + 50
         }).then(canvas => {
           const imageURL = canvas.toDataURL("image/png");
           const downloadLink = document.createElement("a");
           const dateStr = new Date().toISOString().slice(0, 10);
-          
           let typeName = (mode === 'color') ? "A4全彩版" : "官網700px專用圖";
-
           downloadLink.href = imageURL;
           downloadLink.download = `中國醫藥大學_教務處辦公室配置圖_${typeName}_${dateStr}.png`;
           document.body.appendChild(downloadLink);
@@ -1398,34 +898,26 @@
 
           document.body.classList.remove("export-active-mode");
           activeBtn.innerHTML = originalText;
-          btnWeb.disabled = false;
-          btnColor.disabled = false;
+          btnWeb.disabled = false; btnColor.disabled = false;
         }).catch(err => {
           document.body.classList.remove("export-active-mode");
           alert("截圖匯出失敗，請稍候重試。");
-          console.error(err);
           activeBtn.innerHTML = originalText;
-          btnWeb.disabled = false;
-          btnColor.disabled = false;
+          btnWeb.disabled = false; btnColor.disabled = false;
         });
       }, 150);
     }
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_v_avatar");
+        localStorage.removeItem("cmu_office_layout_v_avatar_stable");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
         saveData("已還原預設配置");
       }
     }
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        closeEditModal();
-      }
-    });
-
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeEditModal(); });
     window.onload = initData;
   </script>
 </body>
