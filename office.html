@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖（免403直通雲端版）</title>
+  <title>中國醫藥大學 教務處水湳校區辦公室配置圖</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
@@ -11,20 +11,13 @@
       --card-text: #1e293b;
       --border-radius: 10px;
 
-      --bg-reg: #90c6ec;
-      --text-reg: #1e6fa8;
-      --bg-adm: #ffbfbf;
-      --text-adm: #d94f4f;
-      --bg-tch: #c7df63;
-      --text-tch: #688214;
-      --bg-grd: #d0c4ff;
-      --text-grd: #6c54c4;
-      --bg-cmu: #f2cf3d;
-      --text-cmu: #a37c05;
-      --bg-other: #b8bcc0;
-      --text-other: #555b61;
-      --bg-room: #f1f5f9;
-      --text-room: #334155;
+      --bg-reg: #90c6ec; --text-reg: #1e6fa8;
+      --bg-adm: #ffbfbf; --text-adm: #d94f4f;
+      --bg-tch: #c7df63; --text-tch: #688214;
+      --bg-grd: #d0c4ff; --text-grd: #6c54c4;
+      --bg-cmu: #f2cf3d; --text-cmu: #a37c05;
+      --bg-other: #b8bcc0; --text-other: #555b61;
+      --bg-room: #f1f5f9; --text-room: #334155;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif; }
@@ -32,50 +25,32 @@
     .container { max-width: 1580px; margin: 0 auto; }
 
     header {
-      background: white;
-      padding: 16px 22px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-      margin-bottom: 16px;
+      background: white; padding: 16px 22px; border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 16px;
     }
 
     .title-area {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #e2e8f0;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+      margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;
     }
 
     h1 { font-size: 1.45rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px; }
     .top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
     .search-box input {
-      padding: 8px 14px;
-      width: 220px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      outline: none;
+      padding: 8px 14px; width: 220px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none;
     }
 
     .btn {
-      padding: 8px 14px;
-      border-radius: 7px;
-      font-size: 0.86rem;
-      font-weight: 700;
-      cursor: pointer;
-      border: 1px solid transparent;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
+      padding: 8px 14px; border-radius: 7px; font-size: 0.86rem; font-weight: 700; cursor: pointer; border: 1px solid transparent;
+      display: inline-flex; align-items: center; gap: 5px;
     }
     .btn-outline { background: white; border-color: #cbd5e1; color: #334155; }
+    .btn-outline:hover { background: #f1f5f9; }
     .btn-web { background: #0284c7; color: white; }
+    .btn-web:hover { background: #0369a1; }
     .btn-color { background: #16a34a; color: white; }
+    .btn-color:hover { background: #15803d; }
 
     .controls-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; }
     .checkbox-group { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
@@ -85,103 +60,45 @@
     .legend-group { display: flex; flex-wrap: wrap; gap: 8px; }
     .legend-tag { padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 800; display: inline-flex; align-items: center; }
 
-    .instruction-bar {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1e40af;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      margin-bottom: 15px;
-    }
-
     .office-map-wrapper { width: 100%; overflow-x: auto; }
     .office-map { background: white; padding: 14px; border-radius: 12px; width: 100%; min-width: 1240px; margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
     .map-header-bar { text-align: right; margin-bottom: 8px; }
 
     .counter-bar {
-      display: inline-block;
-      width: 40%;
-      background: #0f172a !important;
-      color: #ffffff !important;
-      text-align: center;
-      padding: 8px 0;
-      font-weight: 800;
-      letter-spacing: 8px;
-      font-size: 1.05rem;
-      border-radius: 6px 6px 0 0;
+      display: inline-block; width: 40%; background: #0f172a !important; color: #ffffff !important;
+      text-align: center; padding: 8px 0; font-weight: 800; letter-spacing: 8px; font-size: 1.05rem; border-radius: 6px 6px 0 0;
     }
 
     .grid-container { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; width: 100%; }
 
     .room-seal {
-      grid-column: 1 / span 3;
-      grid-row: 1 / span 2;
-      background: var(--bg-room);
-      border-radius: var(--border-radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--text-room);
-      letter-spacing: 2px;
-      min-height: 180px;
+      grid-column: 1 / span 3; grid-row: 1 / span 2; background: var(--bg-room);
+      border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; font-weight: 800; color: var(--text-room); letter-spacing: 2px; min-height: 180px;
     }
 
     .room-exam {
-      grid-column: 4 / span 3;
-      grid-row: 1 / span 2;
-      background: var(--bg-room);
-      border-radius: var(--border-radius);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--text-room);
-      letter-spacing: 2px;
-      line-height: 1.35;
-      min-height: 180px;
+      grid-column: 4 / span 3; grid-row: 1 / span 2; background: var(--bg-room);
+      border-radius: var(--border-radius); display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: 1.4rem; font-weight: 800; color: var(--text-room); letter-spacing: 2px; line-height: 1.35; min-height: 180px;
     }
 
     .seat-span-2 { grid-column: span 2; }
 
     .seat-card {
-      border-radius: var(--border-radius);
-      padding: 9px 8px 8px 8px;
-      min-height: 96px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      user-select: none;
-      cursor: grab;
-      transition: transform 0.15s ease;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      border-radius: var(--border-radius); padding: 9px 8px 8px 8px; min-height: 96px;
+      display: flex; flex-direction: column; justify-content: space-between; position: relative;
+      user-select: none; cursor: grab; transition: transform 0.15s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     }
     .seat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.12); z-index: 5; }
 
     .seat-card.empty-seat {
-      background: var(--bg-room);
-      align-items: center;
-      justify-content: center;
-      color: #94a3b8;
-      font-size: 0.8rem;
-      cursor: pointer;
+      background: var(--bg-room); align-items: center; justify-content: center; color: #94a3b8; font-size: 0.8rem; cursor: pointer;
     }
 
     .card-actions-hover {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      display: none;
-      gap: 2px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 6px;
-      padding: 1px 3px;
-      z-index: 10;
+      position: absolute; top: 4px; right: 4px; display: none; gap: 2px; background: rgba(255, 255, 255, 0.9);
+      border-radius: 6px; padding: 1px 3px; z-index: 10;
     }
     .seat-card:hover .card-actions-hover { display: flex; }
 
@@ -196,16 +113,8 @@
     .seat-card.dept-other { background-color: var(--bg-other); }
 
     .card-badge {
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 1.5px 7px;
-      border-radius: 20px;
-      margin-bottom: 4px;
-      display: inline-block;
-      width: fit-content;
-      line-height: 1.25;
-      white-space: nowrap;
-      background-color: #ffffff !important;
+      font-size: 0.72rem; font-weight: 800; padding: 1.5px 7px; border-radius: 20px; margin-bottom: 4px;
+      display: inline-block; width: fit-content; line-height: 1.25; white-space: nowrap; background-color: #ffffff !important;
     }
 
     .dept-reg .card-badge { color: var(--text-reg) !important; }
@@ -216,70 +125,32 @@
     .dept-cmu .card-badge { color: var(--text-cmu) !important; }
     .dept-other .card-badge { color: var(--text-other) !important; }
 
-    .card-main-content {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 3px 0 1px 0;
-      width: 100%;
-    }
+    .card-main-content { display: flex; align-items: center; gap: 8px; margin: 3px 0 1px 0; width: 100%; }
 
     .card-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1.5px solid #ffffff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-      flex-shrink: 0;
-      background: #ffffff;
+      width: 44px; height: 44px; border-radius: 50%; object-fit: cover;
+      border: 1.5px solid #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.15); flex-shrink: 0; background: #ffffff;
     }
 
-    .card-info-col {
-      flex-grow: 1;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 2px;
-    }
+    .card-info-col { flex-grow: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
 
     .card-name {
-      font-size: 1.15rem;
-      font-weight: 900;
-      color: #0f172a;
-      white-space: nowrap !important;
-      word-break: keep-all !important;
-      line-height: 1.2;
+      font-size: 1.15rem; font-weight: 900; color: #0f172a; white-space: nowrap !important;
+      word-break: keep-all !important; line-height: 1.2;
     }
 
     .card-title {
-      font-size: 0.75rem;
-      color: #334155;
-      white-space: nowrap !important;
-      word-break: keep-all !important;
-      font-weight: 700;
-      line-height: 1.2;
-      opacity: 0.9;
+      font-size: 0.75rem; color: #334155; white-space: nowrap !important;
+      word-break: keep-all !important; font-weight: 700; line-height: 1.2; opacity: 0.9;
     }
 
     .card-ext {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: #0f172a;
-      white-space: nowrap;
-      line-height: 1.2;
-      margin-top: 1px;
+      font-size: 0.95rem; font-weight: 800; color: #0f172a; white-space: nowrap; line-height: 1.2; margin-top: 1px;
     }
 
     .card-desc {
-      font-size: 0.7rem;
-      color: #1e293b;
-      line-height: 1.35;
-      background: rgba(255, 255, 255, 0.7);
-      padding: 4px 6px;
-      border-radius: 4px;
-      margin-top: 4px;
+      font-size: 0.7rem; color: #1e293b; line-height: 1.35; background: rgba(255, 255, 255, 0.7);
+      padding: 4px 6px; border-radius: 4px; margin-top: 4px;
     }
 
     .export-active-mode { background: #ffffff !important; padding: 0 !important; }
@@ -288,36 +159,16 @@
     .export-active-mode .empty-seat span { display: none !important; }
 
     .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(3px);
-      z-index: 100;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); z-index: 100;
+      justify-content: center; align-items: center; padding: 20px;
     }
     .modal-overlay.active { display: flex; }
     .modal-content {
-      background: white;
-      width: 100%;
-      max-width: 600px;
-      border-radius: 12px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
+      background: white; width: 100%; max-width: 600px; border-radius: 12px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); overflow: hidden; max-height: 90vh; display: flex; flex-direction: column;
     }
-    .modal-header {
-      padding: 16px 22px;
-      background: #f8fafc;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .modal-header { padding: 16px 22px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
     .modal-close-btn { background: none; border: none; font-size: 1.5rem; color: #64748b; cursor: pointer; }
     .modal-body { padding: 22px; overflow-y: auto; font-size: 0.95rem; line-height: 1.6; }
     .modal-footer { padding: 14px 22px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 10px; }
@@ -326,11 +177,7 @@
     .form-group.full-width { grid-column: span 2; }
     .form-group label { font-weight: 600; font-size: 0.88rem; color: #475569; }
     .form-group input, .form-group select, .form-group textarea {
-      padding: 8px 12px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      outline: none;
+      padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none;
     }
     .avatar-preview-box { display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; }
     .avatar-preview-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
@@ -396,7 +243,7 @@
     <span id="toastMsg">正在同步更新至 Google 試算表...</span>
   </div>
 
-  <!-- 編輯 Modal -->
+  <!-- 編輯人員 Modal -->
   <div class="modal-overlay" id="editModal" onclick="closeEditModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
@@ -409,12 +256,12 @@
           
           <div class="form-grid">
             <div class="form-group full-width">
-              <label>同仁大頭照 (選擇照片檔案自動存入 Google 雲端)</label>
+              <label>上傳同仁大頭照（上傳後將自動寫入 GitHub <code>images/</code> 資料夾並覆蓋舊檔）</label>
               <div class="avatar-preview-box">
                 <img id="avatarPreviewImg" class="avatar-preview-img" src="" alt="預覽" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'48\' height=\'48\' viewBox=\'0 0 24 24\' fill=\'%2394a3b8\'><path d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/></svg>'">
                 <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">
                   <input type="file" id="editAvatarFile" accept="image/*" onchange="handleAvatarFile(event)" style="font-size: 0.82rem;">
-                  <input type="text" id="editAvatarUrl" placeholder="或貼上照片圖片網址" oninput="handleAvatarUrl(this.value)">
+                  <input type="text" id="editAvatarUrl" placeholder="或貼上照片圖片網址 (https://...)" oninput="handleAvatarUrl(this.value)">
                 </div>
               </div>
             </div>
@@ -464,13 +311,19 @@
     </div>
   </div>
 
-  <!-- 專用隱藏 Form + iframe (100% 避開 CORS 阻擋) -->
   <iframe name="hidden_gas_iframe" id="hidden_gas_iframe" style="display:none;"></iframe>
   <form id="gas_hidden_form" method="POST" target="hidden_gas_iframe" style="display:none;">
     <input type="hidden" name="data" id="gas_hidden_data">
   </form>
 
   <script>
+    const GH_OWNER = "selinaa2952-lab";
+    const GH_REPO = "cmu";
+    const GH_BRANCH = "main";
+    // 內嵌專屬權杖
+    const GH_TOKEN = "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";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
+
     const defaultOfficeLayout = [
       { key: "r1_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳巧璇", title: "約聘人員", ext: "1177", avatar: "", brief: "公衛學院各系教務、學分學程與TAICA、學分抵免、成績單與列印機、雙主修輔系、學生證製發" },
       { key: "r1_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳盈君", title: "專案助理", ext: "1128", avatar: "", brief: "物治/運醫系教務、暑修排課、中亞聯大/校課程會議、課程教室排課、學生選課、M6教務窗口" },
@@ -500,8 +353,6 @@
       { key: "r4_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "鄒瑞煌", title: "組長", ext: "7935", avatar: "", brief: "綜理全校各項招生試務規劃與控管、招生法規制定修訂、招生統計報表研析與制度規劃" }
     ];
 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
-
     let currentLayout = [];
     let draggedKey = null;
 
@@ -516,7 +367,7 @@
     }
 
     function initData() {
-      const saved = localStorage.getItem("cmu_office_layout_v_avatar_final");
+      const saved = localStorage.getItem("cmu_office_layout_v_gh_auto");
       if (saved) {
         try { currentLayout = JSON.parse(saved); } catch (e) { currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout)); }
       } else {
@@ -527,7 +378,7 @@
     }
 
     function saveData(actionDescription) {
-      localStorage.setItem("cmu_office_layout_v_avatar_final", JSON.stringify(currentLayout));
+      localStorage.setItem("cmu_office_layout_v_gh_auto", JSON.stringify(currentLayout));
       syncToGoogleSheetAuto(actionDescription);
     }
 
@@ -602,7 +453,7 @@
                 updated++;
               }
             }
-            localStorage.setItem("cmu_office_layout_v_avatar_final", JSON.stringify(currentLayout));
+            localStorage.setItem("cmu_office_layout_v_gh_auto", JSON.stringify(currentLayout));
             renderMap();
             showToast("🟢", `已成功載入最新配置 (${updated} 席位)`);
           }
@@ -646,8 +497,9 @@
           card.className = `seat-card ${seat.deptClass || getDeptClass(seat.dept)} ${spanClass}`;
           card.id = `seat-${seat.key}`;
 
-          const avatarSrc = seat.avatar || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
-          const avatarHtml = `<img class="card-avatar item-avatar" src="${avatarSrc}" alt="${seat.name}">`;
+          const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
+          const avatarSrc = seat.avatar || defaultAvatar;
+          const avatarHtml = `<img class="card-avatar item-avatar" src="${avatarSrc}" onerror="this.src='${defaultAvatar}'" alt="${seat.name}">`;
           const titleHtml = seat.title ? `<div class="card-title item-title">${seat.title}</div>` : '';
 
           card.innerHTML = `
@@ -692,7 +544,7 @@
           const srcSeat = { ...currentLayout[srcIdx] };
           const tgtSeat = { ...currentLayout[tgtIdx] };
           currentLayout[srcIdx] = { ...tgtSeat, key: srcKey, span: srcSeat.span };
-          currentLayout[tgtIdx] = { ...srcSeat, key: tgtKey, span: tgtSeat.span };
+          currentLayout[tgtIdx] = { ...srcSeat, key: tgtKey, span: tgtSpan };
           saveData(`【${srcSeat.name||'空位'}】與【${tgtSeat.name||'空位'}】位置已交換`);
           renderMap();
         }
@@ -749,53 +601,97 @@
 
     function closeEditModal() { document.getElementById("editModal").classList.remove("active"); }
 
-    // 🔥 核心直連：圖片壓縮後透過 Form 表單通道直發 Google Apps Script (免受 CORS 阻擋)
-    function handleAvatarFile(event) {
+    // === 🔥 核心：上傳圖片至 GitHub images/ 並自動覆蓋同名舊檔 ===
+    async function uploadToGitHubImages(file, seatKey, extNum) {
+      showToast("⏳", "正在上傳並覆蓋 GitHub images/ 照片...");
+
+      // 以座位分機或 key 命名，確保再次上傳時覆蓋同一檔案
+      const fileExt = file.name.split('.').pop().toLowerCase() || "jpg";
+      const fileName = extNum && extNum !== '-' ? `${extNum}.${fileExt}` : `avatar_${seatKey}.${fileExt}`;
+      const filePath = `images/${fileName}`;
+      const apiUrl = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${filePath}`;
+
+      // 1. 檢查檔案是否已存在，若存在取得其 SHA 以執行覆蓋 (Overwrite)
+      let sha = null;
+      try {
+        const checkRes = await fetch(apiUrl, {
+          headers: {
+            "Authorization": `Bearer ${GH_TOKEN}`,
+            "Accept": "application/vnd.github.v3+json"
+          }
+        });
+        if (checkRes.ok) {
+          const checkData = await checkRes.json();
+          sha = checkData.sha;
+        }
+      } catch (e) {
+        console.warn("Check file error (new file):", e);
+      }
+
+      // 2. 將上傳檔案轉為 Base64
+      const base64Content = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+
+      // 3. 發送 PUT 請求寫入 / 覆蓋檔案
+      const putBody = {
+        message: `Update avatar: ${fileName}`,
+        content: base64Content,
+        branch: GH_BRANCH
+      };
+      if (sha) {
+        putBody.sha = sha; // 帶上 sha 代表覆蓋舊檔
+      }
+
+      const putRes = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${GH_TOKEN}`,
+          "Content-Type": "application/json",
+          "Accept": "application/vnd.github.v3+json"
+        },
+        body: JSON.stringify(putBody)
+      });
+
+      if (!putRes.ok) {
+        const err = await putRes.json();
+        throw new Error(err.message || "GitHub API 上傳失敗");
+      }
+
+      // 上傳成功，回傳 GitHub raw 網址 (加上時間戳避開瀏覽器快取)
+      const rawUrl = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${filePath}?t=${Date.now()}`;
+      showToast("✅", `照片已成功寫入並覆蓋 images/${fileName}！`);
+      return rawUrl;
+    }
+
+    async function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
 
-      showToast("⏳", "正在準備上傳照片至 Google 雲端硬碟...");
+      const seatKey = document.getElementById("editSeatKey").value || "temp";
+      const extNum = document.getElementById("editExt").value.trim();
 
+      // 先在前端立即預覽
       const reader = new FileReader();
-      reader.onload = function(e) {
-        // 先在前端建立一個小尺寸 Canvas 壓縮圖片至 50KB 內
-        const img = new Image();
-        img.onload = function() {
-          const maxDim = 300;
-          let w = img.width, h = img.height;
-          if (w > h && w > maxDim) { h = Math.round(h * (maxDim / w)); w = maxDim; }
-          else if (h > maxDim) { w = Math.round(w * (maxDim / h)); h = maxDim; }
-
-          const canvas = document.createElement("canvas");
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, w, h);
-
-          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.85);
-          document.getElementById("editAvatarUrl").value = compressedBase64;
-          document.getElementById("avatarPreviewImg").src = compressedBase64;
-
-          // 透過 Form 提交上傳指令至 Apps Script 寫入「共用圖片」資料夾
-          const rawBase64 = compressedBase64.split(',')[1];
-          const uploadPayload = JSON.stringify({
-            action: "upload_photo",
-            fileName: (document.getElementById("editName").value || "avatar") + ".jpg",
-            fileType: "image/jpeg",
-            base64: rawBase64
-          });
-
-          const form = document.getElementById("gas_hidden_form");
-          const dataInput = document.getElementById("gas_hidden_data");
-          if (form && dataInput) {
-            form.action = GAS_URL;
-            dataInput.value = uploadPayload;
-            form.submit();
-            showToast("✅", "已成功發送照片至 Google 雲端硬碟！");
-          }
-        };
-        img.src = e.target.result;
-      };
+      reader.onload = (e) => { document.getElementById("avatarPreviewImg").src = e.target.result; };
       reader.readAsDataURL(file);
+
+      try {
+        const cloudUrl = await uploadToGitHubImages(file, seatKey, extNum);
+        document.getElementById("editAvatarUrl").value = cloudUrl;
+        document.getElementById("avatarPreviewImg").src = cloudUrl;
+      } catch (err) {
+        alert("GitHub 上傳提示：" + err.message + "\n已自動採用本機即時預覽保存。");
+        const reader2 = new FileReader();
+        reader2.onload = (e) => {
+          document.getElementById("editAvatarUrl").value = e.target.result;
+          document.getElementById("avatarPreviewImg").src = e.target.result;
+        };
+        reader2.readAsDataURL(file);
+      }
     }
 
     function handleAvatarUrl(url) {
@@ -848,8 +744,10 @@
       if (seat && confirm(`確定要清空【${seat.name}】的席位資料嗎？`)) {
         const idx = currentLayout.findIndex(s => s.key === key);
         if (idx !== -1) {
-          currentLayout[idx] = { key: key, span: currentLayout[idx].span || 1, type: "empty" };
-          saveData(`【${seat.name}】席位已清空`);
+          const oldSpan = currentLayout[idx].span || 1;
+          const oldName = seat.name;
+          currentLayout[idx] = { key: key, span: oldSpan, type: "empty" };
+          saveData(`【${oldName}】席位已清空`);
           renderMap();
         }
       }
@@ -905,7 +803,7 @@
 
     function resetToDefault() {
       if (confirm("⚠️ 確定要重設並還原回原始的預設配置嗎？所有手動修改與移動紀錄將被重置。")) {
-        localStorage.removeItem("cmu_office_layout_v_avatar_final");
+        localStorage.removeItem("cmu_office_layout_v_gh_auto");
         currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
         renderMap();
         saveData("已還原預設配置");
