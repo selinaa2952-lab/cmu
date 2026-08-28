@@ -723,28 +723,44 @@
       };
       reader.readAsDataURL(file);
     }
-    // 🔥 選擇檔案時：立即前端預覽 + 非同步寫入 GitHub
-    async function handleAvatarFile(event) {
+    // === ☁️ 透過 GAS 安全代理上傳並自動覆蓋 GitHub images/ 照片 ===
+    function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
 
       const seatKey = document.getElementById("editSeatKey").value || "temp";
       const extNum = document.getElementById("editExt").value.trim();
 
-      // 1. 第一步：前端立即讀取 Base64 並顯示預覽
+      // 1. 本地即時預覽
       const reader = new FileReader();
-      reader.onload = async function(e) {
+      reader.onload = function(e) {
         const localBase64 = e.target.result;
         document.getElementById("avatarPreviewImg").src = localBase64;
         document.getElementById("editAvatarUrl").value = localBase64;
 
-        // 2. 第二步：背景呼叫 GitHub API 進行上傳與覆蓋
-        try {
-          const githubUrl = await uploadToGitHubImages(file, extNum, seatKey);
-          document.getElementById("editAvatarUrl").value = githubUrl;
-        } catch (err) {
-          console.error("GitHub 上傳錯誤:", err);
-          showToast("ℹ️", "已使用本機高畫質照片保存！(可點擊右上角更換 Token)");
+        showToast("⏳", "正在透過 Google 伺服器同步至 GitHub images/...");
+
+        const fileExt = file.name.split('.').pop().toLowerCase() || "jpg";
+        const fileName = extNum && extNum !== '-' ? `${extNum}.${fileExt}` : `avatar_${seatKey}.${fileExt}`;
+        const rawBase64 = localBase64.split(',')[1];
+
+        // 2. 透過 Hidden Form 傳送給 GAS 代理執行 (100% 避開 CORS 阻擋)
+        const payload = JSON.stringify({
+          action: "upload_github_avatar",
+          fileName: fileName,
+          base64: rawBase64
+        });
+
+        const form = document.getElementById("gas_hidden_form");
+        const dataInput = document.getElementById("gas_hidden_data");
+        if (form && dataInput) {
+          form.action = GAS_URL;
+          dataInput.value = payload;
+          form.submit();
+          
+          const expectedGithubUrl = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/images/${fileName}?t=${Date.now()}`;
+          document.getElementById("editAvatarUrl").value = expectedGithubUrl;
+          showToast("✅", `已成功寫入並覆蓋 GitHub images/${fileName}！`);
         }
       };
       reader.readAsDataURL(file);
