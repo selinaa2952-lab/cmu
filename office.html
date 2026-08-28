@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>中國醫藥大學 教務處水湳校區辦公室配置圖</title>
+  <title>中國醫藥大學 教務處辦公室配置圖</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
@@ -34,7 +34,18 @@
       margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;
     }
 
-    h1 { font-size: 1.45rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+    .campus-tabs {
+      display: flex; gap: 10px; align-items: center;
+    }
+    .campus-tab-btn {
+      padding: 8px 18px; border-radius: 8px; font-size: 1.05rem; font-weight: 800; cursor: pointer;
+      border: 2px solid transparent; background: #f1f5f9; color: #475569; transition: all 0.2s ease;
+    }
+    .campus-tab-btn:hover { background: #e2e8f0; }
+    .campus-tab-btn.active {
+      background: #0284c7; color: #ffffff; border-color: #0284c7; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+    }
+
     .top-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
     .btn {
@@ -57,15 +68,26 @@
     .legend-tag { padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 800; display: inline-flex; align-items: center; }
 
     .office-map-wrapper { width: 100%; overflow-x: auto; }
-    .office-map { background: white; padding: 14px; border-radius: 12px; width: 100%; min-width: 1240px; margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-    .map-header-bar { text-align: right; margin-bottom: 8px; }
+    .office-map { background: white; padding: 16px; border-radius: 12px; width: 100%; margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    
+    /* 水湳校區寬度與 10 欄格局 */
+    .map-sn { min-width: 1240px; }
+    .grid-container-sn { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; width: 100%; }
 
+    /* 英才校區適中寬度與 2x2 格局 */
+    .map-yc { max-width: 720px; }
+    .grid-container-yc { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%; }
+
+    .map-header-bar { text-align: right; margin-bottom: 8px; }
     .counter-bar {
       display: inline-block; width: 40%; background: #0f172a !important; color: #ffffff !important;
       text-align: center; padding: 8px 0; font-weight: 800; letter-spacing: 8px; font-size: 1.05rem; border-radius: 6px 6px 0 0;
     }
-
-    .grid-container { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; width: 100%; }
+    .header-bar-yc { text-align: center; width: 100%; margin-bottom: 12px; }
+    .bar-yc {
+      width: 100%; background: #0f172a !important; color: #ffffff !important;
+      text-align: center; padding: 8px 0; font-weight: 800; letter-spacing: 6px; font-size: 1.1rem; border-radius: 8px;
+    }
 
     .room-seal {
       grid-column: 1 / span 3; grid-row: 1 / span 2; background: var(--bg-room);
@@ -150,7 +172,7 @@
     }
 
     .card-desc {
-      font-size: 0.7rem; color: #1e293b; line-height: 1.35; background: rgba(255, 255, 255, 0.75);
+      font-size: 0.72rem; color: #1e293b; line-height: 1.35; background: rgba(255, 255, 255, 0.8);
       padding: 4px 6px; border-radius: 4px; margin-top: 6px; width: 100%; text-align: left;
     }
 
@@ -197,7 +219,10 @@
   <div class="container">
     <header>
       <div class="title-area">
-        <h1>🏫 中國醫藥大學 教務處水湳校區辦公室配置圖</h1>
+        <div class="campus-tabs">
+          <button class="campus-tab-btn active" id="tabSN" onclick="switchCampus('水湳校區')">🏫 水湳校區辦公室</button>
+          <button class="campus-tab-btn" id="tabYC" onclick="switchCampus('英才校區')">🌿 英才校區辦公室</button>
+        </div>
         <div class="top-actions">
           <button class="btn btn-color" onclick="exportOfficeImage()" id="btnExportColor">🎨 匯出 A4 彩色圖</button>
         </div>
@@ -225,11 +250,9 @@
     </header>
 
     <div class="office-map-wrapper">
-      <div class="office-map" id="captureArea">
-        <div class="map-header-bar">
-          <div class="counter-bar">【 櫃 台 】</div>
-        </div>
-        <div class="grid-container" id="gridMap"></div>
+      <div class="office-map map-sn" id="captureArea">
+        <div id="mapHeader"></div>
+        <div id="gridMap"></div>
       </div>
     </div>
   </div>
@@ -258,7 +281,6 @@
                 <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 6px;">
                   <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <input type="file" id="editAvatarFile" accept="image/*" onchange="handleAvatarFile(event)" style="font-size: 0.82rem; flex-grow: 1;">
-                    <!-- 🔥 移除目前頭像按鈕 -->
                     <button type="button" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.78rem; color: #dc2626; border-color: #fca5a5;" onclick="clearAvatar()">❌ 移除目前頭像</button>
                   </div>
                   <input type="text" id="editAvatarUrl" placeholder="照片網址或留空使用預設圖" oninput="handleAvatarUrl(this.value)">
@@ -315,7 +337,8 @@
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxWc9rufEYtVtpsv8A5sxrQw39e6PiNVqge9OGMB0cWDzSe1-C3qf3z20N8ZNHdwoPn/exec";
     const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='75' height='75' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
 
-    const defaultOfficeLayout = [
+    // 水湳校區初始配置
+    const defaultSNLayout = [
       { key: "r1_c7", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳巧璇", title: "約聘人員", ext: "1177", avatar: "", brief: "公衛學院各系教務、學分學程與TAICA、學分抵免、成績單與列印機、雙主修輔系、學生證製發" },
       { key: "r1_c8", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "陳盈君", title: "專案助理", ext: "1128", avatar: "", brief: "物治/運醫系教務、暑修排課、中亞聯大/校課程會議、課程教室排課、學生選課、M6教務窗口" },
       { key: "r1_c9", span: 1, dept: "雙語教學中心", deptClass: "dept-other", name: "賴晏翎", title: "計畫人員", ext: "1129", avatar: "", brief: "雙語教學資源整合、EMI課程推動與全校雙語教學各項行政支援" },
@@ -344,9 +367,19 @@
       { key: "r4_c10", span: 1, dept: "招生組", deptClass: "dept-adm", name: "鄒瑞煌", title: "組長", ext: "7935", avatar: "", brief: "綜理全校各項招生試務規劃與控管、招生法規制定修訂、招生統計報表研析與制度規劃" }
     ];
 
+    // 英才校區 4 席位初始配置
+    const defaultYCLayout = [
+      { key: "yc_r1_c1", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "徐郁凱", title: "專案助理", ext: "1120", avatar: "", brief: "中醫系甲組/乙組、學士後中醫學系各項教務與學生業務" },
+      { key: "yc_r1_c2", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "葉庭雯", title: "約聘人員", ext: "1121", avatar: "", brief: "醫學系、生醫影像放射學系、中藥中資系教務與學生業務" },
+      { key: "yc_r2_c1", span: 1, dept: "註冊課務組", deptClass: "dept-reg", name: "簡伶芳", title: "約聘人員", ext: "1131", avatar: "", brief: "牙醫系、醫檢生技系、生醫工程系、醫資系教務與學生業務" },
+      { key: "yc_r2_c2", span: 1, type: "empty" }
+    ];
+
+    let currentCampus = "水湳校區";
     let currentLayout = [];
     let draggedKey = null;
     let pendingUploadData = null;
+    let deleteAvatarFileNamePending = null;
     let isEditing = false;
 
     function getDeptClass(dept) {
@@ -360,14 +393,28 @@
     }
 
     function initData() {
-      currentLayout = JSON.parse(JSON.stringify(defaultOfficeLayout));
-      renderMap();
-      fetchLatestFromGoogleSheet();
-      
-      // 多人線上協作：每 10 秒自動同步試算表最新狀態
+      switchCampus("水湳校區");
       setInterval(() => {
         if (!isEditing) fetchLatestFromGoogleSheet();
       }, 10000);
+    }
+
+    function switchCampus(campusName) {
+      currentCampus = campusName;
+      document.getElementById("tabSN").classList.toggle("active", campusName === "水湳校區");
+      document.getElementById("tabYC").classList.toggle("active", campusName === "英才校區");
+
+      const captureArea = document.getElementById("captureArea");
+      if (campusName === "水湳校區") {
+        captureArea.className = "office-map map-sn";
+        currentLayout = JSON.parse(JSON.stringify(defaultSNLayout));
+      } else {
+        captureArea.className = "office-map map-yc";
+        currentLayout = JSON.parse(JSON.stringify(defaultYCLayout));
+      }
+
+      renderMap();
+      fetchLatestFromGoogleSheet();
     }
 
     function saveData(actionDescription) {
@@ -394,9 +441,10 @@
     }
 
     function sendPayloadToGAS(actionDescription) {
-      showToast("⏳", "正在同步至 Google 雲端硬碟與試算表...");
+      showToast("⏳", `正在同步【${currentCampus}】至 Google 試算表...`);
 
       const payloadObj = {
+        campus: currentCampus,
         layout: currentLayout
       };
       if (pendingUploadData) {
@@ -423,7 +471,7 @@
     }
 
     function fetchLatestFromGoogleSheet() {
-      fetch(GAS_URL + "?t=" + Date.now())
+      fetch(GAS_URL + "?campus=" + encodeURIComponent(currentCampus) + "&t=" + Date.now())
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data) && data.length > 1) {
@@ -467,18 +515,27 @@
     }
 
     function renderMap() {
+      const headerDiv = document.getElementById("mapHeader");
       const grid = document.getElementById("gridMap");
       grid.innerHTML = "";
 
-      const roomSeal = document.createElement("div");
-      roomSeal.className = "room-seal";
-      roomSeal.innerText = "印卷室";
-      grid.appendChild(roomSeal);
+      if (currentCampus === "水湳校區") {
+        headerDiv.innerHTML = `<div class="map-header-bar"><div class="counter-bar">【 櫃 台 】</div></div>`;
+        grid.className = "grid-container-sn";
 
-      const roomExam = document.createElement("div");
-      roomExam.className = "room-exam";
-      roomExam.innerHTML = "<div>招生組</div><div>試務室</div>";
-      grid.appendChild(roomExam);
+        const roomSeal = document.createElement("div");
+        roomSeal.className = "room-seal";
+        roomSeal.innerText = "印卷室";
+        grid.appendChild(roomSeal);
+
+        const roomExam = document.createElement("div");
+        roomExam.className = "room-exam";
+        roomExam.innerHTML = "<div>招生組</div><div>試務室</div>";
+        grid.appendChild(roomExam);
+      } else {
+        headerDiv.innerHTML = `<div class="header-bar-yc"><div class="bar-yc">【 英 才 校 區 辦 公 室 】</div></div>`;
+        grid.className = "grid-container-yc";
+      }
 
       currentLayout.forEach((seat) => {
         const card = document.createElement("div");
@@ -570,7 +627,7 @@
     function openEditModal(key, isNew) {
       isEditing = true;
       document.getElementById("editSeatKey").value = key;
-      document.getElementById("editModalTitle").innerText = isNew ? "➕ 新增人員席位" : "✏️ 編輯人員、照片與職掌資料";
+      document.getElementById("editModalTitle").innerText = isNew ? "➕ 新增人員席位" : `✏️ 編輯【${currentCampus}】人員資料`;
       const seat = currentLayout.find(s => s.key === key) || {};
       document.getElementById("editDept").value = seat.dept || "註冊課務組";
       document.getElementById("editName").value = seat.name || "";
@@ -591,9 +648,6 @@
       document.getElementById("editModal").classList.remove("active");
     }
 
-    let deleteAvatarFileNamePending = null;
-
-    // === 🔥 核心：徹底移除頭像，標記刪除雲端圖檔 ===
     function clearAvatar() {
       const extNum = document.getElementById("editExt").value.trim();
       const seatKey = document.getElementById("editSeatKey").value || "temp";
@@ -602,13 +656,10 @@
       document.getElementById("editAvatarFile").value = "";
       document.getElementById("avatarPreviewImg").src = DEFAULT_AVATAR_SVG;
       pendingUploadData = null;
-
-      // 記錄待刪除的雲端圖檔名稱
       deleteAvatarFileNamePending = (extNum && extNum !== '-') ? `${extNum}.jpg` : `avatar_${seatKey}.jpg`;
       showToast("ℹ️", "已移除大頭照，儲存後將恢復為預設圖案。");
     }
 
-    // === 🔥 250x250 超高清大頭照 ===
     function handleAvatarFile(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -743,7 +794,7 @@
           const downloadLink = document.createElement("a");
           const dateStr = new Date().toISOString().slice(0, 10);
           downloadLink.href = imageURL;
-          downloadLink.download = `中國醫藥大學_教務處辦公室配置圖_A4全彩版_${dateStr}.png`;
+          downloadLink.download = `中國醫藥大學_教務處_${currentCampus}_辦公室配置圖_${dateStr}.png`;
           document.body.appendChild(downloadLink);
           downloadLink.click();
           document.body.removeChild(downloadLink);
